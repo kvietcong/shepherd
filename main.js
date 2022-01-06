@@ -18,11 +18,13 @@ const initializeCanvas = () => {
 
 const canvas = initializeCanvas();
 
-const entities = [
-	new Entity(200, 200, 100),
-	new Entity(400, 400, 50),
-	new Entity(600, 100, 150),
-];
+const entities = [];
+for (let i = 0; i < 20; i++) {
+	let x = randomInt(canvas.width);
+	let y = randomInt(canvas.height);
+	console.log(x, y)
+	entities.push(new Sheep(x, y));
+}
 gameEngine.addEntities(entities);
 
 assetManager.downloadAll(() => {
