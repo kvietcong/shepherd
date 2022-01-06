@@ -38,12 +38,12 @@ class Shepherd extends Entity {
 }
 
 class Sheep extends Entity {
-    constructor(x, y, radius = 10) {
+    constructor(x, y, velocity, maxSpeed = 200, radius = 10) {
         super(x, y, radius);
-        this.velocity = new Vector(0, 0);
+        this.velocity = velocity || Vector.randomUnitVector();
         this.detectionRadius = this.radius * 10;
-        this.flockingRadius = this.detectionRadius * 5;
-        this.speed = 300;
+        this.flockingRadius = this.detectionRadius * 2;
+        this.maxSpeed = maxSpeed;
     }
 
     update(gameEngine) {
@@ -62,7 +62,7 @@ class Sheep extends Entity {
             if (getDistance(this.x, this.y, entity.x, entity.y) < this.flockingRadius + entity.radius) {
                 flock++;
                 averagePosition.addInPlace(entity.x, entity.y);
-                averageDirection.addInPlace(entity.velocity).scaleInPlace(0.5);
+                averageDirection.addInPlace(entity.velocity.unit);
             }
 
             // Separation
@@ -70,46 +70,47 @@ class Sheep extends Entity {
                 const vectorTo =
                     new Vector(entity.x - this.x, entity.y - this.y);
                 this.velocity.lerpToInPlace(
-                    vectorTo.scale(-50 / vectorTo.magnitude),
-                    1.5 * gameEngine.deltaTime
+                    vectorTo.scale(-2000 / vectorTo.magnitude),
+                    1 * gameEngine.deltaTime
                 );
             }
         });
 
         // Cohesion
         this.velocity.lerpToInPlace(
-            averagePosition.scale(1/flock).subtract(this.x, this.y).scale(0.5),
-            1.5 * gameEngine.deltaTime
+            averagePosition.scale(1/flock).subtract(this.x, this.y).unit.scale(this.maxSpeed * 10),
+            1 * gameEngine.deltaTime
         );
 
         // Alignment
         this.velocity.lerpToInPlace(
-            averageDirection.unit.scale(this.velocity.magnitude),
-            2 * gameEngine.deltaTime
+            averageDirection.scale(1/flock).unit.scale(this.maxSpeed * 300),
+            1 * gameEngine.deltaTime
         );
 
-        this.velocity.setUnit().scaleInPlace(this.speed);
+        this.velocity.setUnit().scaleInPlace(this.maxSpeed);
 
         this.x += this.velocity.x * gameEngine.deltaTime;
         this.y += this.velocity.y * gameEngine.deltaTime;
 
-        if (this.x > gameEngine.ctx.canvas.width) this.x = 0;
-        if (this.y > gameEngine.ctx.canvas.height) this.y = 0;
-        if (this.x < 0) this.x = gameEngine.ctx.canvas.width;
-        if (this.y < 0) this.y = gameEngine.ctx.canvas.height;
+        if (gameEngine.options.hasWorldBorder) {
+            const worldWidth = gameEngine.width * 2;
+            const worldHeight = gameEngine.height * 2;
+            if (this.x > worldWidth) this.x = 0;
+            if (this.y > worldHeight) this.y = 0;
+            if (this.x < 0) this.x = worldWidth;
+            if (this.y < 0) this.y = worldHeight;
+        }
     }
 
     draw(ctx, gameEngine) {
         super.draw(ctx, gameEngine);
 
         if (params.isDebugging) {
-            const debugLine = this.velocity.unit.scale(50);
+            const debugLine = this.velocity.unit.scale(25);
             ctx.beginPath();
             ctx.moveTo(this.x + debugLine.x, this.y + debugLine.y);
             ctx.lineTo(this.x, this.y);
-
-            ctx.fillStyle = rgba(255, 0, 0, 0.2);
-            ctx.fill();
             ctx.stroke();
         }
     }

@@ -165,7 +165,7 @@ class Vector {
     }
 
     lerpTo(destinationVector, t) {
-        return this.clone().lerpInPlace(destinationVector, t);
+        return this.clone().lerpToInPlace(destinationVector, t);
     }
 
     lerpToInPlace(destinationVector, t) {
