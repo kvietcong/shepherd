@@ -15,12 +15,10 @@ class GameEngine {
         this.click = null;
         this.mouse = null;
         this.wheel = null;
+        this.keys = {};
 
         // THE KILL SWITCH
         this.running = false;
-
-        // Input detection
-        this.keys = {};
 
         // Options and the Details
         this.options = options || {
@@ -106,9 +104,6 @@ class GameEngine {
         this.entitiesToAdd = this.entitiesToAdd.concat(entities);
     };
 
-    get["width"]() { return this.ctx.canvas.width; }
-    get["height"]() { return this.ctx.canvas.height; }
-
     drawRelative(func) {
         if (this.camera) {
             this.ctx.translate(
@@ -160,6 +155,8 @@ class GameEngine {
     };
 
     get["deltaTime"]() { return this.clockTick; }
+    get["width"]() { return this.ctx?.canvas?.width || 0; }
+    get["height"]() { return this.ctx?.canvas?.height || 0; }
 };
 
 // KV Le was here :)
