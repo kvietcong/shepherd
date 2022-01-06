@@ -32,6 +32,8 @@ assetManager.downloadAll(() => {
 
 	const cameraTarget = new class Target {
 		constructor(x = 100, y = 100) {
+			this.initialX = x;
+			this.initialY = y;
 			this.x = x;
 			this.y = y;
 		}
@@ -48,6 +50,11 @@ assetManager.downloadAll(() => {
 			if (gameEngine.keys.s) this.y += 8;
 		}
 
+		reset() {
+			this.x = this.initialX;
+			this.y = this.initialY;
+		}
+
 		draw(ctx, gameEngine) { }
 	}(gameEngine.width / 2, gameEngine.height / 2);
 
@@ -60,6 +67,8 @@ assetManager.downloadAll(() => {
 
 const toggleWorldBorder = () =>
 	gameEngine.options.hasWorldBorder = !gameEngine.options.hasWorldBorder;
+
+const resetTarget = () => gameEngine.camera?.target.reset();
 
 // Event Hooks
 window.addEventListener("resize", () => { resizeCanvas(canvas) });
