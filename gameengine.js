@@ -115,17 +115,29 @@ class GameEngine {
         this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
 
+    drawZoom(func) {
+        if (this.camera) {
+            this.ctx.scale(this.camera.zoom, this.camera.zoom);
+            func();
+            this.ctx.scale(1, 1);
+        }
+    }
+
+    drawEffects(func) {
+        this.drawZoom(() => this.drawRelative(func));
+    }
+
     draw() {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
         // Draw latest things first
         for (let i = this.entities.length - 1; i >= 0; i--) {
-            this.drawRelative(() => this.entities[i].draw(this.ctx, this));
+            this.drawEffects(() => this.entities[i].draw(this.ctx, this));
         }
 
         if (this.options.hasWorldBorder) {
-            this.drawRelative(() => {
+            this.drawEffects(() => {
                 this.ctx.beginPath();
                 this.ctx.rect(0, 0, this.width*2, this.height*2);
                 this.ctx.strokeStyle = "black";
@@ -154,9 +166,9 @@ class GameEngine {
         this.draw();
     };
 
-    get["deltaTime"]() { return this.clockTick; }
-    get["width"]() { return this.ctx?.canvas?.width || 0; }
-    get["height"]() { return this.ctx?.canvas?.height || 0; }
+    get deltaTime() { return this.clockTick; }
+    get width() { return this.ctx?.canvas?.width || 0; }
+    get height() { return this.ctx?.canvas?.height || 0; }
 };
 
 // KV Le was here :)
