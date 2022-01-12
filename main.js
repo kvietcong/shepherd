@@ -30,45 +30,16 @@ assetManager.downloadAll(() => {
 	}
 	gameEngine.addEntities(entities);
 
-	const cameraTarget = new class Target {
-		constructor(x = 100, y = 100) {
-			this.initialX = x;
-			this.initialY = y;
-			this.x = x;
-			this.y = y;
-		}
-
-		update(gameEngine) {
-			if (gameEngine.rightclick) {
-				this.x += gameEngine.rightclick.x - gameEngine.width / 2;
-				this.y += gameEngine.rightclick.y - gameEngine.height / 2;
-				gameEngine.rightclick = null;
-			}
-			if (gameEngine.keys.d) this.x += 8;
-			if (gameEngine.keys.a) this.x -= 8;
-			if (gameEngine.keys.w) this.y -= 8;
-			if (gameEngine.keys.s) this.y += 8;
-		}
-
-		reset() {
-			this.x = this.initialX;
-			this.y = this.initialY;
-		}
-
-		draw(ctx, gameEngine) { }
-	}(gameEngine.width / 2, gameEngine.height / 2);
-
-	const camera =
-		new Camera(gameEngine.width / 2, gameEngine.height / 2, cameraTarget);
+	const camera = new Camera(gameEngine.width / 2, gameEngine.height / 2);
 	gameEngine.setCamera(camera);
-	gameEngine.addEntity(cameraTarget);
 	gameEngine.start();
 });
 
 const toggleWorldBorder = () =>
 	gameEngine.options.hasWorldBorder = !gameEngine.options.hasWorldBorder;
 
-const resetTarget = () => gameEngine.camera.target.reset();
+const resetTarget = () => gameEngine.camera
+	.setPosition(gameEngine.width / 2, gameEngine.height / 2);
 
 const resetZoom = () => gameEngine.camera.zoom = 1;
 
