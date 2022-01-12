@@ -51,8 +51,10 @@ class Sheep extends Entity {
 
         const averagePosition = new Vector(this.x, this.y);
         const averageDirection = this.velocity.clone();
+        const averageRepel = this.velocity.unit.scale(-1);
 
         let flock = 1;
+        let close = 1;
 
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
@@ -67,28 +69,64 @@ class Sheep extends Entity {
 
             // Separation
             if (getDistance(this.x, this.y, entity.x, entity.y) < this.detectionRadius + entity.radius) {
-                const vectorTo =
-                    new Vector(entity.x - this.x, entity.y - this.y);
-                this.velocity.lerpToInPlace(
-                    vectorTo.scale(-2000 / vectorTo.magnitude),
-                    1 * gameEngine.deltaTime
+                averageRepel.addInPlace(
+                    new Vector(entity.x - this.x, entity.y - this.y)
+                        .unit.scale(-1)
                 );
+                close++;
             }
         });
 
+        const separation = averageRepel.scale(1/close).unit;
+        const cohesion = averagePosition.scale(1/flock)
+            .subtract(this.x, this.y).unit;
+        const alignment = averageDirection.scale(1/flock).unit;
+
+        // Separation
+        this.velocity.lerpToInPlace(
+            separation.scale(this.maxSpeed * 18),
+            1 * gameEngine.deltaTime
+        );
+
         // Cohesion
         this.velocity.lerpToInPlace(
-            averagePosition.scale(1/flock).subtract(this.x, this.y).unit.scale(this.maxSpeed * 10),
+            cohesion.scale(this.maxSpeed * 10),
             1 * gameEngine.deltaTime
         );
 
         // Alignment
         this.velocity.lerpToInPlace(
-            averageDirection.scale(1/flock).unit.scale(this.maxSpeed * 300),
+            alignment.scale(this.maxSpeed * 300),
             1 * gameEngine.deltaTime
         );
 
         this.velocity.setUnit().scaleInPlace(this.maxSpeed);
+
+        // This commented out part is attempting to do cardinal directions
+
+        // this.velocity = separation.scale(2)
+        //     .add(cohesion.scale(1))
+        //     .add(alignment.scale(3))
+        //     .scale(1/3).unit.scale(this.maxSpeed);
+
+        // const validDirections = [
+        //     new Vector(1, 0),
+        //     new Vector(0, 1),
+        //     new Vector(-1, 0),
+        //     new Vector(0, -1),
+
+        //     new Vector(1, 1),
+        //     new Vector(-1, 1),
+        //     new Vector(-1, -1),
+        //     new Vector(1, -1),
+        // ];
+
+        // validDirections.sort((a, b) => {
+        //     return this.velocity.angleTo(a) - this.velocity.angleTo(b);
+        // });
+
+        // this.velocity = validDirections[0].clone();
+        // this.velocity.scaleInPlace(this.maxSpeed);
 
         this.x += this.velocity.x * gameEngine.deltaTime;
         this.y += this.velocity.y * gameEngine.deltaTime;
