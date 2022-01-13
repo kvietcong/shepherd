@@ -130,15 +130,6 @@ class Sheep extends Entity {
 
         this.x += this.velocity.x * gameEngine.deltaTime;
         this.y += this.velocity.y * gameEngine.deltaTime;
-
-        if (gameEngine.options.hasWorldBorder) {
-            const worldWidth = gameEngine.width * 2;
-            const worldHeight = gameEngine.height * 2;
-            if (this.x > worldWidth) this.x = 0;
-            if (this.y > worldHeight) this.y = 0;
-            if (this.x < 0) this.x = worldWidth;
-            if (this.y < 0) this.y = worldHeight;
-        }
     }
 
     draw(ctx, gameEngine) {

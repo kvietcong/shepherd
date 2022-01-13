@@ -148,7 +148,18 @@ class GameEngine {
 
     update() {
         // Update Entities
-        this.entities.forEach(entity => entity.update(this));
+        this.entities.forEach(entity => {
+            entity.update(this);
+            if (this.options.hasWorldBorder) {
+                const worldWidth = gameEngine.width * 2;
+                const worldHeight = gameEngine.height * 2;
+                if (entity.x > worldWidth) entity.x = 0;
+                if (entity.y > worldHeight) entity.y = 0;
+                if (entity.x < 0) entity.x = worldWidth;
+                if (entity.y < 0) entity.y = worldHeight;
+            }
+        });
+        if (this.camera) this.camera.update(this);
 
         // Remove dead things
         this.entities = this.entities.filter(entity => !entity.removeFromWorld);
@@ -157,7 +168,6 @@ class GameEngine {
         this.entities = this.entities.concat(this.entitiesToAdd);
         this.entitiesToAdd = [];
 
-        if (this.camera) this.camera.update(this);
     };
 
     loop() {
