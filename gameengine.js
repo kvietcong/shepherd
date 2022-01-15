@@ -104,8 +104,8 @@ class GameEngine {
         this.entitiesToAdd = this.entitiesToAdd.concat(entities);
     };
 
-    drawRelative(func) {
-        if (this.camera) {
+    drawRelative(entity, func) {
+        if (this.camera && entity.isRelative) {
             this.ctx.translate(
                 (this.width / 2) - this.camera.x,
                 (this.height / 2) - this.camera.y
@@ -115,16 +115,16 @@ class GameEngine {
         this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
 
-    drawZoom(func) {
-        if (this.camera) {
+    drawZoom(entity, func) {
+        if (this.camera && entity.isZoomable) {
             this.ctx.scale(this.camera.zoom, this.camera.zoom);
-            func();
-            this.ctx.scale(1, 1);
         }
+        func();
+        this.ctx.scale(1, 1);
     }
 
-    drawEffects(func) {
-        this.drawZoom(() => this.drawRelative(func));
+    drawEffects(entity, func) {
+        this.drawZoom(entity, () => this.drawRelative(entity, func));
     }
 
     draw() {
@@ -133,11 +133,12 @@ class GameEngine {
 
         // Draw latest things first
         for (let i = this.entities.length - 1; i >= 0; i--) {
-            this.drawEffects(() => this.entities[i].draw(this.ctx, this));
+            const entity = this.entities[i];
+            this.drawEffects(entity, () => entity.draw(this.ctx, this));
         }
 
         if (this.options.hasWorldBorder) {
-            this.drawEffects(() => {
+            this.drawEffects({isRelative: true, isZoomable: true}, () => {
                 this.ctx.beginPath();
                 this.ctx.rect(0, 0, this.width*2, this.height*2);
                 this.ctx.strokeStyle = "black";
