@@ -30,7 +30,17 @@ class Entity {
           && this.y < other.y + other.height
           && this.y + this.height > other.y
         ) {
-            return true;
+            // Auto Generated. Haven't checked XD
+            return {
+                x: this.x < other.x ? other.x : this.x,
+                y: this.y < other.y ? other.y : this.y,
+                width: this.x + this.width > other.x + other.width
+                    ? other.x + other.width - this.x
+                    : this.x + this.width - other.x,
+                height: this.y + this.height > other.y + other.height
+                    ? other.y + other.height - this.y
+                    : this.y + this.height - other.y,
+            };
         } else return false
     }
 
@@ -68,7 +78,7 @@ class Sheep extends Entity {
     constructor(x, y, velocity, maxSpeed = 200) {
         super(x, y, 20, 20);
         this.velocity = velocity || Vector.randomUnitVector();
-        this.detectionRadius = this.width * 10;
+        this.detectionRadius = this.width * 4;
         this.flockingRadius = this.detectionRadius * 2;
         this.maxSpeed = maxSpeed;
     }
