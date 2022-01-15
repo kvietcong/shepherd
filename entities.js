@@ -16,6 +16,7 @@ class Entity {
 
         this.isZoomable = true;
         this.isRelative = true;
+        this.isCollidable = true;
 
         this.animator;
     }
@@ -24,6 +25,9 @@ class Entity {
         this.animator = animator;
     }
 
+    // Sees if this entity is colliding with another entity
+    // (Ignores isCollidable. Check with that boolean to see if you want to
+    //  act on the information returned here)
     collidesWith(other) {
         if ( this.x < other.x + other.width
           && this.x + this.width > other.x
