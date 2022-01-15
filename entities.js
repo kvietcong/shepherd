@@ -1,17 +1,45 @@
 // Everything has circle colliders XD
 class Entity {
-    constructor(x = 0, y = 0, radius = 100, animator = null) {
+    constructor(x = 0, y, width, height) {
+        if (!y) y = x;
+
+        if (!width) {
+            width = 100;
+            height = 100;
+        }
+        if (width && !height) height = width;
+
         this.x = x;
         this.y = y;
-        this.radius = radius;
+        this.width = width;
+        this.height = height;
+
+        this.isZoomable = true;
+        this.isRelative = true;
+
+        this.animator;
+    }
+
+    setAnimator(animator) {
+        this.animator = animator;
     }
 
     collidesWith(other) {
-        return this.radius + other.radius > this.distanceTo(other);
+        if ( this.x < other.x + other.width
+          && this.x + this.width > other.x
+          && this.y < other.y + other.height
+          && this.y + this.height > other.y
+        ) {
+            return true;
+        } else return false
     }
 
+    get xCenter() { return this.x + this.width / 2; }
+    get yCenter() { return this.y + this.height / 2; }
+
     distanceTo(other) {
-        return sqrt(pow(this.x - other.x, 2) + pow(this.y - other.y, 2));
+        return getDistance(this.xCenter, this.yCenter,
+                           other.xCenter, other.yCenter);
     }
 
     update(gameEngine) {
@@ -20,15 +48,14 @@ class Entity {
 
     draw(ctx, gameEngine) {
         if (this.animator) this.animator.getDrawFunction()(ctx, this.x, this.y);
-        if (params.isDebugging) {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, 2 * PI);
 
+        // Collision Box
+        if (params.isDebugging) {
             ctx.fillStyle = rgba(255, 0, 0, 0.2);
-            ctx.fill();
+            ctx.fillRect(this.x, this.y, this.width, this.height);
 
             ctx.strokeStyle = "red";
-            ctx.stroke();
+            ctx.strokeRect(this.x, this.y, this.width, this.height);
         }
     }
 }
@@ -38,10 +65,10 @@ class Shepherd extends Entity {
 }
 
 class Sheep extends Entity {
-    constructor(x, y, velocity, maxSpeed = 200, radius = 10) {
-        super(x, y, radius);
+    constructor(x, y, velocity, maxSpeed = 200) {
+        super(x, y, 20, 20);
         this.velocity = velocity || Vector.randomUnitVector();
-        this.detectionRadius = this.radius * 10;
+        this.detectionRadius = this.width * 10;
         this.flockingRadius = this.detectionRadius * 2;
         this.maxSpeed = maxSpeed;
     }
@@ -61,14 +88,14 @@ class Sheep extends Entity {
             if (!(entity instanceof Sheep)) return;
 
             // Cohesion and Alignment
-            if (getDistance(this.x, this.y, entity.x, entity.y) < this.flockingRadius + entity.radius) {
+            if (this.distanceTo(entity) < this.flockingRadius) {
                 flock++;
                 averagePosition.addInPlace(entity.x, entity.y);
                 averageDirection.addInPlace(entity.velocity.unit);
             }
 
             // Separation
-            if (getDistance(this.x, this.y, entity.x, entity.y) < this.detectionRadius + entity.radius) {
+            if (this.distanceTo(entity) < this.detectionRadius) {
                 averageRepel.addInPlace(
                     new Vector(entity.x - this.x, entity.y - this.y)
                         .unit.scale(-1)
@@ -135,11 +162,12 @@ class Sheep extends Entity {
     draw(ctx, gameEngine) {
         super.draw(ctx, gameEngine);
 
+        // Directional Line
         if (params.isDebugging) {
             const debugLine = this.velocity.unit.scale(25);
             ctx.beginPath();
-            ctx.moveTo(this.x + debugLine.x, this.y + debugLine.y);
-            ctx.lineTo(this.x, this.y);
+            ctx.moveTo(this.xCenter + debugLine.x, this.yCenter + debugLine.y);
+            ctx.lineTo(this.xCenter, this.yCenter);
             ctx.stroke();
         }
     }
