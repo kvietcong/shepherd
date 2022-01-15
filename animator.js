@@ -173,6 +173,14 @@ class Animator {
         this.timeSinceLastFrameChange = 0;
     }
 
+    serialize() {
+        // TODO
+    }
+
+    static deserialize() {
+        // TODO
+    }
+
     /**
      * Get a function that can draw the animation to the canvas
      * @returns {(CanvasRenderingContext2D, Number, Number) => void}

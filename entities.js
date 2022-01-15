@@ -25,6 +25,37 @@ class Entity {
         this.animator = animator;
     }
 
+    serialize() {
+        return {
+            x: this.x,
+            y: this.y,
+            width: this.width,
+            height: this.height,
+            isZoomable: this.isZoomable,
+            isRelative: this.isRelative,
+            isCollidable: this.isCollidable,
+            animator: this.animator.serialize(),
+        };
+    }
+
+    static deserialize(data) {
+        const {
+            x, y,
+            width, height,
+            isZoomable, isRelative, isCollidable,
+            animator: animatorData,
+        } = data;
+        const entity = new Entity(x, y, width, height);
+        const animator = Animator.deserialize(animatorData);
+
+        entity.isZoomable = isZoomable;
+        entity.isRelative = isRelative;
+        entity.isCollidable = isCollidable;
+        entity.setAnimator(animator);
+
+        return entity;
+    }
+
     // Sees if this entity is colliding with another entity
     // (Ignores isCollidable. Check with that boolean to see if you want to
     //  act on the information returned here)
