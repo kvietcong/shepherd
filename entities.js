@@ -34,7 +34,7 @@ class Entity {
             isZoomable: this.isZoomable,
             isRelative: this.isRelative,
             isCollidable: this.isCollidable,
-            animator: this.animator.serialize(),
+            animatorData: this.animator.serialize(),
         };
     }
 
@@ -43,7 +43,7 @@ class Entity {
             x, y,
             width, height,
             isZoomable, isRelative, isCollidable,
-            animator: animatorData,
+            animatorData,
         } = data;
         const entity = new Entity(x, y, width, height);
         const animator = Animator.deserialize(animatorData);
