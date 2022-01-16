@@ -17,6 +17,12 @@ class Environment {
      */
     constructor(width, height, tileSet, tileData, tileTypes) {
         if (!("default" in tileData)) throw new Error("No default tile defined");
+        for (const tileType in tileData) {
+            const tile = tileData[tileType];
+            if (!("x" in tile) || !("y" in tile) || !("width" in tile)) {
+                throw new Error("Tile data must contain x, y, and width");
+            }
+        }
 
         this.entities = [];
 
@@ -77,8 +83,7 @@ class Environment {
                 const worldY = i * this.pixels;
 
                 const wasImageSmoothingEnabled = ctx.imageSmoothingEnabled;
-                ctx.imageSmoothingEnabled = this.isImageSmoothingEnabled;
-                ctx.save();
+                ctx.imageSmoothingEnabled = false;
                 ctx.drawImage(
                     this.tileSet,
                     x, y,
@@ -86,7 +91,6 @@ class Environment {
                     worldX, worldY,
                     scaleFactor * width, scaleFactor * width
                 );
-                ctx.restore();
                 ctx.imageSmoothingEnabled = wasImageSmoothingEnabled;
             }
         }
