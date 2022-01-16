@@ -56,14 +56,22 @@ class Entity {
         return entity;
     }
 
-    // Sees if this entity is colliding with another entity
-    // (Ignores isCollidable. Check with that boolean to see if you want to
-    //  act on the information returned here)
+    /**
+     * Sees if this entity is colliding with another entity
+     * (Ignores isCollidable. Check with that boolean to see if you want to
+     *  act on the information returned here)
+     * @param {Entity} other Other entity that can be collided with
+     * @returns A object with the collision rectangle and where it has collided
+     *         (false if no collision)
+     */
     collidesWith(other) {
-        if ( this.x < other.x + other.width
-          && this.x + this.width > other.x
-          && this.y < other.y + other.height
-          && this.y + this.height > other.y
+        const isCollidingRight = this.x + this.width > other.x;
+        const isCollidingLeft = this.x < other.x + other.width;
+        const isCollidingTop = this.y < other.y + other.height;
+        const isCollidingBottom = this.y + this.height > other.y;
+
+        if (isCollidingRight && isCollidingLeft
+            && isCollidingTop && isCollidingBottom
         ) {
             // Auto Generated. Haven't checked XD
             return {
@@ -75,6 +83,9 @@ class Entity {
                 height: this.y + this.height > other.y + other.height
                     ? other.y + other.height - this.y
                     : this.y + this.height - other.y,
+
+                isCollidingLeft, isCollidingRight,
+                isCollidingTop, isCollidingBottom,
             };
         } else return false
     }
@@ -144,6 +155,15 @@ class Sheep extends Entity {
                 averageRepel.addInPlace(
                     new Vector(entity.x - this.x, entity.y - this.y)
                         .unit.scale(-1)
+                );
+                close++;
+            }
+
+            // Avoid Overlap
+            if (this.collidesWith(entity)) {
+                averageRepel.addInPlace(
+                    new Vector(entity.x - this.x, entity.y - this.y)
+                        .unit.scale(-50)
                 );
                 close++;
             }
