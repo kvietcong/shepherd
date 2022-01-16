@@ -1,3 +1,10 @@
+// IDK if this should be used. Kind of like a jank way to do interfaces.
+class Serializable {
+    constructor() {}
+    serialize() { throw new Error("Not implemented!"); }
+    static deserialize(data) { throw new Error("Not implemented!"); }
+}
+
 // Everything has circle colliders XD
 class Entity {
     constructor(x = 0, y, width, height) {
@@ -27,10 +34,8 @@ class Entity {
 
     serialize() {
         return {
-            x: this.x,
-            y: this.y,
-            width: this.width,
-            height: this.height,
+            x: this.x, y: this.y,
+            width: this.width, height: this.height,
             isZoomable: this.isZoomable,
             isRelative: this.isRelative,
             isCollidable: this.isCollidable,
