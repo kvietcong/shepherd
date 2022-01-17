@@ -10,23 +10,25 @@ class Environment {
      *    tileTypeName: {
      *      x: 0, // x pixel position
      *      y: 0, // y pixel position
-     *      width: 32 // pixel width/height of the tile
+     *      width: 32, // pixel width/height of the tile
+     *      image: new Image(), // image to draw from
      *   }
      * }
      * @param {Array<Array<String>>} tileTypes 2D array of tile types
      */
-    constructor(width, height, tileSet, tileData, tileTypes) {
+    constructor(width, height, tileData, tileTypes, tileSize = 50) {
         if (!("default" in tileData)) throw new Error("No default tile defined");
         for (const tileType in tileData) {
             const tile = tileData[tileType];
-            if (!("x" in tile) || !("y" in tile) || !("width" in tile)) {
-                throw new Error("Tile data must contain x, y, and width");
+            if ( !("x" in tile) || !("y" in tile)
+              || !("width" in tile) || !("image" in tile)
+            ) {
+                throw new Error("Tile data must contain x, y, width, and image");
             }
         }
 
         this.entities = [];
-
-        this.pixels = 50;
+        this.tileSize = tileSize;
 
         this.tileTypes;
         if (tileTypes) {
@@ -77,15 +79,15 @@ class Environment {
         for (let i = 0; i < this.height; i++) {
             for (let j = 0; j < this.width; j++) {
                 const tileType = this.tileTypes[i][j];
-                const { x, y, width } = this.tileData[tileType];
-                const scaleFactor = this.pixels / width;
-                const worldX = j * this.pixels;
-                const worldY = i * this.pixels;
+                const { x, y, width, image } = this.tileData[tileType];
+                const scaleFactor = this.tileSize / width;
+                const worldX = j * this.tileSize;
+                const worldY = i * this.tileSize;
 
                 const wasImageSmoothingEnabled = ctx.imageSmoothingEnabled;
                 ctx.imageSmoothingEnabled = false;
                 ctx.drawImage(
-                    this.tileSet,
+                    image,
                     x, y,
                     this.width, this.width,
                     worldX, worldY,
