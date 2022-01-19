@@ -5,10 +5,10 @@
         <meta charset="utf-8">
         <title>Shepherd</title>
 
+        <script type="text/javascript" src="./util.js"></script>
         <script type="text/javascript" src="./assetmanager.js"></script>
         <script type="text/javascript" src="./timer.js"></script>
         <script type="text/javascript" src="./gameengine.js"></script>
-        <script type="text/javascript" src="./util.js"></script>
         <script type="text/javascript" src="./camera.js"></script>
         <script type="text/javascript" src="./animator.js"></script>
         <script type="text/javascript" src="./entities.js"></script>
@@ -41,6 +41,8 @@
             <button onclick="resetZoom()">Reset Camera Zoom</button>
             <button onclick="resetTarget()">Reset Camera Position</button>
             <button onclick="toggleWorldBorder()">Toggle World Border</button>
+            <label for="volume">Volume</label>
+            <input type="range" min="0" max="1" step="0.01" value="0.2" id="volume-slider">
         </section>
     </body>
 </html>

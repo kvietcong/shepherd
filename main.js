@@ -18,6 +18,9 @@ const initializeCanvas = () => {
 
 const canvas = initializeCanvas();
 
+assetManager.queueDownload("./resources/shepherd.png")
+assetManager.queueDownload("./resources/No Worries.mp3")
+assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3")
 assetManager.downloadAll(() => {
 	const ctx = canvas.getContext("2d");
 	gameEngine.init(ctx);
@@ -29,6 +32,21 @@ assetManager.downloadAll(() => {
 		entities.push(new Sheep(x, y));
 	}
 	gameEngine.addEntities(entities);
+
+	const volumeSlider = document.getElementById("volume-slider");
+	const backgroundMusic = assetManager.getAsset("./resources/No Worries.mp3");
+	backgroundMusic.loop = true;
+	volumeSlider.addEventListener("change", event => {
+		const newVolume = event.target.value;
+		backgroundMusic.volume = newVolume;
+		backgroundMusic.play();
+	});
+	backgroundMusic.volume = volumeSlider.value;
+	const autoPlayID = setInterval(() => {
+		backgroundMusic.play()
+			.then(() => clearInterval(autoPlayID))
+			.catch(console.error);
+	}, 500);
 
 	const camera = new Camera(gameEngine.width / 2, gameEngine.height / 2);
 	gameEngine.setCamera(camera);
