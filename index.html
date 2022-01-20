@@ -37,12 +37,37 @@
                 <li>2</li>
                 <li>3</li>
             </ul>
-            <button onclick="resetCamera()">Reset Camera</button>
-            <button onclick="resetZoom()">Reset Camera Zoom</button>
-            <button onclick="resetTarget()">Reset Camera Position</button>
-            <button onclick="toggleWorldBorder()">Toggle World Border</button>
-            <label for="volume">Volume</label>
-            <input type="range" min="0" max="1" step="0.01" value="0.2" id="volume-slider">
+            <hr>
+            <div>
+                <h3>Camera</h3>
+                <p>WASD or right click to move. Scroll to zoom.</p>
+                <button onclick="resetCamera()">Reset Camera</button>
+                <button onclick="resetZoom()">Reset Camera Zoom</button>
+                <button onclick="resetTarget()">Reset Camera Position</button>
+                <button onclick="toggleWorldBorder()">Toggle World Border</button>
+            </div>
+            <hr>
+            <div class="slider">
+                <h3><label for="volume-slider">Volume</label></h3>
+                <input type="range" min="0" max="1" step="0.01" value="0.2" id="volume-slider">
+            </div>
+            <hr>
+            <div>
+                <h3>Factors</h3>
+                <button onclick="resetFactors()">Reset Factors</button>
+                <div class="input">
+                    <label for="separation">Separation</label>
+                    <input type="number" min="1" id="separation">
+                </div>
+                <div class="input">
+                    <label for="cohesion">Cohesion</label>
+                    <input type="number" min="1" id="cohesion">
+                </div>
+                <div class="input">
+                    <label for="alignment">Alignment</label>
+                    <input type="number" min="1" id="alignment">
+                </div>
+            </div>
         </section>
     </body>
 </html>

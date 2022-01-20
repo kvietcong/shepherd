@@ -125,6 +125,11 @@ class Shepherd extends Entity {
 
 }
 
+params.sheep = {
+    separationFactor: 18,
+    cohesionFactor: 10,
+    alignmentFactor: 300,
+};
 class Sheep extends Entity {
     constructor(x, y, velocity, maxSpeed = 200) {
         super(x, y, 20, 20);
@@ -179,27 +184,32 @@ class Sheep extends Entity {
             .subtract(this.x, this.y).unit;
         const alignment = averageDirection.scale(1/flock).unit;
 
+        const {
+            separationFactor, cohesionFactor, alignmentFactor
+        } = params.sheep;
+
         // Separation
         this.velocity.lerpToInPlace(
-            separation.scale(this.maxSpeed * 18),
+            separation.scale(this.maxSpeed * separationFactor),
             1 * gameEngine.deltaTime
         );
 
         // Cohesion
         this.velocity.lerpToInPlace(
-            cohesion.scale(this.maxSpeed * 10),
+            cohesion.scale(this.maxSpeed * cohesionFactor),
             1 * gameEngine.deltaTime
         );
 
         // Alignment
         this.velocity.lerpToInPlace(
-            alignment.scale(this.maxSpeed * 300),
+            alignment.scale(this.maxSpeed * alignmentFactor),
             1 * gameEngine.deltaTime
         );
 
         this.velocity.setUnit().scaleInPlace(this.maxSpeed);
 
         // This commented out part is attempting to do cardinal directions
+        // It kind of failed miserably though
 
         // this.velocity = separation.scale(2)
         //     .add(cohesion.scale(1))

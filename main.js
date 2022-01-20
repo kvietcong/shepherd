@@ -65,3 +65,42 @@ const resetCamera = () => { resetTarget(); resetZoom(); };
 
 // Event Hooks
 window.addEventListener("resize", () => { resizeCanvas(canvas) });
+
+const alignmentInput = document.getElementById("alignment");
+const cohesionInput = document.getElementById("cohesion");
+const separationInput = document.getElementById("separation");
+
+alignmentInput.value = params.sheep.alignmentFactor;
+cohesionInput.value = params.sheep.cohesionFactor;
+separationInput.value = params.sheep.separationFactor;
+
+alignmentInput.addEventListener("change", event => {
+	let { value } = event.target;
+	if (value < 1) {
+		value = 1;
+		alignmentInput.value = value;
+	}
+	params.sheep.alignmentFactor = value;
+});
+cohesionInput.addEventListener("change", event => {
+	let { value } = event.target;
+	if (value < 1) {
+		value = 1;
+		cohesionInput.value = value;
+	}
+	params.sheep.cohesionFactor = value;
+});
+separationInput.addEventListener("change", event => {
+	let { value } = event.target;
+	if (value < 1) {
+		value = 1;
+		separationInput.value = value;
+	}
+	params.sheep.separationFactor = value;
+});
+
+const resetFactors = () => {
+	separationInput.value = params.sheep.separationFactor = 18;
+	cohesionInput.value = params.sheep.cohesionFactor = 10;
+	alignmentInput.value = params.sheep.alignmentFactor = 300;
+};
