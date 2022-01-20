@@ -60,8 +60,8 @@ class Animator {
         this.frameWidth = frameWidth;
         this.frameHeight = frameHeight;
 
-        this.currentX = this.currentAnimationInfo.startX;
-        this.currentY = this.currentAnimationInfo.startY;
+        this.frameX = this.currentAnimationInfo.startX;
+        this.frameY = this.currentAnimationInfo.startY;
 
         this.frameDuration = frameDuration;
         this.timeSinceLastFrameChange = 0;
@@ -102,7 +102,7 @@ class Animator {
 
         // Frame Change Logic
         if (this.timeSinceLastFrameChange >= this.frameDuration) {
-            const mainDirection = this.isHorizontal ? "currentX" : "currentY";
+            const mainDirection = this.isHorizontal ? "frameX" : "frameY";
             const pixelChange = this.isHorizontal ?
                 this.frameWidth : this.frameHeight;
             const mainInitialPosition = this.currentAnimationInfo[
@@ -163,10 +163,10 @@ class Animator {
 
     // Reset the animation to the first frame of the animation and play it
     reset() {
-        this.currentX = this.currentAnimationInfo.startX
+        this.frameX = this.currentAnimationInfo.startX
             + this.isReverse * this.frameWidth *
                 (this.currentAnimationInfo.frameAmount - 1) * this.isHorizontal;
-        this.currentY = this.currentAnimationInfo.startY
+        this.frameY = this.currentAnimationInfo.startY
             + this.isReverse * this.frameHeight *
                 (this.currentAnimationInfo.frameAmount - 1) * !this.isHorizontal;
 
@@ -183,19 +183,20 @@ class Animator {
 
     /**
      * Get a function that can draw the animation to the canvas
-     * @returns {(CanvasRenderingContext2D, Number, Number) => void}
+     * @returns {(CanvasRenderingContext2D, Number, Number, Number) => void}
      *      Function to actually draw the animation frame to the canvas.
      *      This returns a function that you must call!
      */
     getDrawFunction() {
-        return (ctx, x, y) => {
+        return (ctx, x, y, rotation = 0) => {
             const wasImageSmoothingEnabled = ctx.imageSmoothingEnabled;
             ctx.imageSmoothingEnabled = this.isImageSmoothingEnabled;
             ctx.save();
             ctx.scale(this.willFlipX ? -1 : 1, this.willFlipY ? -1 : 1);
+            if (rotation) ctx.rotate(rotation * PI / 180);
             ctx.drawImage(
                 this.spriteSheet,
-                this.currentX, this.currentY,
+                this.frameX, this.frameY,
                 this.frameWidth, this.frameHeight,
                 x - this.frameWidth * this.scale * this.willFlipX,
                 y - this.frameHeight * this.scale * this.willFlipY,
