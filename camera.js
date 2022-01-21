@@ -43,7 +43,6 @@ class Camera {
         if (gameEngine.rightclick) {
             this.targetX += gameEngine.rightclick.x - gameEngine.width / 2;
             this.targetY += gameEngine.rightclick.y - gameEngine.height / 2;
-            gameEngine.rightclick = null;
         }
         if (gameEngine.keys.d) this.targetX += 8;
         if (gameEngine.keys.a) this.targetX -= 8;

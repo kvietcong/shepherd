@@ -206,7 +206,7 @@ class Animator {
             ctx.restore();
             ctx.imageSmoothingEnabled = wasImageSmoothingEnabled;
         };
-    };
+    }
 
     // Not recommended to use this function. Use getDrawFunction instead
     draw(ctx) { this.getDrawFunction()(ctx, this.x, this.y); }

@@ -92,7 +92,7 @@ class Entity {
                 isCollidingLeft, isCollidingRight,
                 isCollidingTop, isCollidingBottom,
             };
-        } else return false
+        } else return false;
     }
 
     get xCenter() { return this.x + this.width / 2; }
@@ -130,6 +130,7 @@ params.sheep = {
     cohesionFactor: 10,
     alignmentFactor: 300,
 };
+
 class Sheep extends Entity {
     constructor(x, y, velocity, maxSpeed = 200) {
         super(x, y, 20, 20);

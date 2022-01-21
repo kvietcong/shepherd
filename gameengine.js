@@ -169,6 +169,10 @@ class GameEngine {
         this.entities = this.entities.concat(this.entitiesToAdd);
         this.entitiesToAdd = [];
 
+        // Reset the inputs
+        this.rightclick = null;
+        this.click = null;
+        this.wheel = null;
     };
 
     loop() {
