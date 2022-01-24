@@ -1,0 +1,3 @@
+class Shepherd extends Entity {
+
+}
