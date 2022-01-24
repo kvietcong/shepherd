@@ -132,6 +132,14 @@ class Vector {
         throw new Error("Invalid input");
     }
 
+    getDistanceTo(other) {
+        return getDistance(this.x, this.y, other.x, other.y);
+    }
+
+    static getDistanceBetween(v1, v2) {
+        return getDistance(v1.x, v1.y, v2.x, v2.y);
+    }
+
     set(...input) {
         const { x, y } = Vector.detectInput(...input);
         this.x = x; this.y = y; return this;
