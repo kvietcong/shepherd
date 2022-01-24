@@ -141,6 +141,7 @@ class Animator {
     setAnimation(animationKey) {
         if (!(animationKey in this.animationInfo))
             throw new Error("Animation does not exist");
+        if (this.currentAnimationKey === animationKey) return;
         this.currentAnimationKey = animationKey;
         this.currentAnimationInfo = this.animationInfo[animationKey];
         this.reset();
@@ -194,14 +195,17 @@ class Animator {
             ctx.save();
             ctx.scale(this.willFlipX ? -1 : 1, this.willFlipY ? -1 : 1);
             if (rotation) ctx.rotate(rotation * PI / 180);
+            const pixelWidth = this.frameWidth * this.scale;
+            const pixelHeight = this.frameHeight * this.scale;
             ctx.drawImage(
                 this.spriteSheet,
                 this.frameX, this.frameY,
                 this.frameWidth, this.frameHeight,
-                x - this.frameWidth * this.scale * this.willFlipX,
-                y - this.frameHeight * this.scale * this.willFlipY,
-                this.frameWidth * this.scale,
-                this.frameHeight * this.scale
+                // Not sure why the factor to center sprite is 0.25 rather
+                // than 0.5.
+                x - (0.25 * pixelWidth) - (pixelWidth * this.willFlipX),
+                y - (0.25 * pixelHeight) - (pixelHeight * this.willFlipY),
+                pixelWidth, pixelHeight
             );
             ctx.restore();
             ctx.imageSmoothingEnabled = wasImageSmoothingEnabled;
