@@ -392,25 +392,21 @@ class Wolf extends Entity {
         this.y += this.velocity.y * gameEngine.deltaTime;
 
         // Visual
-        let angleFromForward =
-            this.velocity.angleTo(new Vector(0, 1)) * 180 / PI;
-        while (angleFromForward < 0) angleFromForward = 360 + angleFromForward;
-        while (angleFromForward > 360) angleFromForward = angleFromForward - 360;
+        const angleFromForward = normalizeAngle(
+            this.velocity.angleTo(new Vector(1, 0)) * 180 / PI
+        );
 
-        let angleFromRight =
-            this.velocity.angleTo(new Vector(1, 0)) * 180 / PI;
-        while (angleFromRight < 0) angleFromRight = 360 + angleFromRight;
-        while (angleFromRight > 360) angleFromRight = angleFromRight - 360;
+        const angleFromRight = normalizeAngle(
+            this.velocity.angleTo(new Vector(1, 0)) * 180 / PI
+        );
 
-        let angleFromBack =
-            this.velocity.angleTo(new Vector(0, -1)) * 180 / PI;
-        while (angleFromBack < 0) angleFromBack = 360 + angleFromBack;
-        while (angleFromBack > 360) angleFromBack = angleFromBack - 360;
+        const angleFromBack = normalizeAngle(
+            this.velocity.angleTo(new Vector(0, -1)) * 180 / PI
+        );
 
-        let angleFromLeft =
-            this.velocity.angleTo(new Vector(-1, 0)) * 180 / PI;
-        while (angleFromLeft < 0) angleFromLeft = 360 + angleFromLeft;
-        while (angleFromLeft > 360) angleFromLeft = angleFromLeft - 360;
+        const angleFromLeft = normalizeAngle(
+            this.velocity.angleTo(new Vector(-1, 0)) * 180 / PI
+        );
 
         const directions = {
             walkForward: angleFromForward,

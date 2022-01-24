@@ -100,6 +100,13 @@ const getDistance = (x1, y1, x2, y2) => {
     return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
 };
 
+const normalizeAngle = angle => {
+    let normalizedAngle = angle;
+    while (normalizedAngle < 0) normalizedAngle = 360 + normalizedAngle;
+    while (normalizedAngle > 360) normalizedAngle = normalizedAngle - 360;
+    return normalizedAngle;
+};
+
 /**
  * Returns random element from array
  * @param {Array} items
