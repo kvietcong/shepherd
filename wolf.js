@@ -132,32 +132,18 @@ class Wolf extends Entity {
         this.y += this.velocity.y * gameEngine.deltaTime;
 
         // Visual
-        const angleFromForward = normalizeAngle(
-            this.velocity.angleTo(new Vector(1, 0)) * 180 / PI
-        );
-
-        const angleFromRight = normalizeAngle(
-            this.velocity.angleTo(new Vector(1, 0)) * 180 / PI
-        );
-
-        const angleFromBack = normalizeAngle(
-            this.velocity.angleTo(new Vector(0, -1)) * 180 / PI
-        );
-
-        const angleFromLeft = normalizeAngle(
-            this.velocity.angleTo(new Vector(-1, 0)) * 180 / PI
-        );
-
-        const directions = {
-            walkForward: angleFromForward,
-            walkRight: angleFromRight,
-            walkBack: angleFromBack,
-            walkLeft: angleFromLeft,
+        const directionInfo = {
+            walkForward: new Vector(0, 1), walkRight: new Vector(1, 0),
+            walkBack: new Vector(0, -1), walkLeft: new Vector(-1, 0),
         };
-
-        const directionArray = Object.keys(directions);
-        directionArray.sort((a, b) => directions[a] - directions[b]);
-        this.animator.setAnimation(directionArray[0]);
+        const directions = Object.keys(directionInfo);
+        directions.forEach(direction => {
+            // Convert to degrees
+            directionInfo[direction] = normalizeAngle(
+                this.velocity.angleTo(directionInfo[direction]) * 180 / PI);
+        });
+        this.animator.setAnimation(directions
+            .sort((a, b) => directionInfo[a] - directionInfo[b])[0]);
     }
 
     draw(ctx, gameEngine) {
