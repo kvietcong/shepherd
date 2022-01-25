@@ -111,3 +111,9 @@ const resetFactors = () => {
 	cohesionInput.value = params.sheep.cohesionFactor = 10;
 	alignmentInput.value = params.sheep.alignmentFactor = 300;
 };
+
+const debugInput = document.getElementById("debug");
+debugInput.checked = params.isDebugging;
+debugInput.addEventListener("change", event => {
+	params.isDebugging = event.target.checked;
+});
