@@ -4,7 +4,6 @@ class Environment {
      *
      * @param {Number} width Width of the environment in tiles
      * @param {Number} height Height of the environment in tiles
-     * @param {Image} tileSet Image containing all the tiles
      * @param {Object} tileData All types of tiles in the format:
      * {
      *    tileTypeName: {
