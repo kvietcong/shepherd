@@ -35,6 +35,7 @@ assetManager.downloadAll(() => {
 		}
 		entities.push(new Sheep(x, y));
 	}
+	entities.push(new Shepherd(50, 50));
 	gameEngine.addEntities(entities);
 
 	const volumeSlider = document.getElementById("volume-slider");
