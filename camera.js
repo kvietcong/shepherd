@@ -10,6 +10,18 @@ class Camera {
         this._zoom = zoom;
         this.zoomMin = zoomMin;
         this.zoomMax = zoomMax;
+
+        this.following = null;
+        this.isFollowing = false;
+    }
+
+    follow(entity) {
+        this.following = entity;
+        this.isFollowing = true;
+    }
+
+    unfollow() {
+        this.isFollowing = false;
     }
 
     setX(x) { this.targetX = x; }
@@ -44,10 +56,22 @@ class Camera {
             this.targetX += gameEngine.rightclick.x - gameEngine.width / 2;
             this.targetY += gameEngine.rightclick.y - gameEngine.height / 2;
         }
-        if (gameEngine.keys.d) this.targetX += 8;
-        if (gameEngine.keys.a) this.targetX -= 8;
-        if (gameEngine.keys.w) this.targetY -= 8;
-        if (gameEngine.keys.s) this.targetY += 8;
+        const { w, a, s, d } = gameEngine.keys;
+        const space = gameEngine.keys[" "];
+        if (w || a || s || d) {
+            this.unfollow();
+            if (d) this.targetX += 8;
+            if (a) this.targetX -= 8;
+            if (w) this.targetY -= 8;
+            if (s) this.targetY += 8;
+        }
+
+        if (space) this.follow(this.following);
+
+        if (this.isFollowing && this.follow) {
+            this.targetX = this.following.x;
+            this.targetY = this.following.y;
+        }
 
         // Update Camera Position
         const newPosition = this.position.lerpTo(
@@ -57,6 +81,7 @@ class Camera {
         this.x = newPosition.x;
         this.y = newPosition.y;
 
+        // Zooming
         if (gameEngine.wheel) {
             if (gameEngine.wheel.deltaY < 0) {
                 this.zoom += 0.05;

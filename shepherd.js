@@ -39,7 +39,7 @@ const makeShepherdAnimator = () => {
 };
 
 class Shepherd extends Entity {
-    constructor(x, y, velocity, maxSpeed = 150) {
+    constructor(x, y, velocity, maxSpeed = 300) {
         super(x, y, 30, 30);
         this.facing = 0; // 0 = back, 1 = left, 2 = forward, 3 = right.
         this.state = 0; // 0 = static, 1 = walking, 2 = spell, 3 = poke, 4 = swipe, 5 = die.
@@ -52,19 +52,13 @@ class Shepherd extends Entity {
 
     update(gameEngine) {
         super.update(gameEngine);
-        const averageRepel = this.velocity.unit.scale(-1);
+
+        this.state = 0;
+        this.velocity.x = 0;
+        this.velocity.y = 0;
 
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
-            const distance = this.distanceTo(entity);
-            // Avoid Overlap
-            if (this.collidesWith(entity)) {
-                averageRepel.addInPlace(
-                    new Vector(entity.x - this.x, entity.y - this.y)
-                        .unit.scale(-50)
-                );
-                close++;
-            }
         });
 
         const {
@@ -100,13 +94,9 @@ class Shepherd extends Entity {
         this.x += this.velocity.x * gameEngine.deltaTime;
         this.y += this.velocity.y * gameEngine.deltaTime;
 
-        // Visual      
+        // Visual
         const animationList = Object.keys(this.animator.animationInfo);
         this.animator.setAnimation(animationList[this.facing + this.state*4]);
-
-        this.state = 0;
-        this.velocity.x = 0;
-        this.velocity.y = 0;
     }
 
     draw(ctx, gameEngine) {

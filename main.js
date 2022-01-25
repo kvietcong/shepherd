@@ -35,7 +35,8 @@ assetManager.downloadAll(() => {
 		}
 		entities.push(new Sheep(x, y));
 	}
-	entities.push(new Shepherd(50, 50));
+	const shepherd = new Shepherd(50, 50);
+	entities.push(shepherd);
 	gameEngine.addEntities(entities);
 
 	const volumeSlider = document.getElementById("volume-slider");
@@ -54,6 +55,7 @@ assetManager.downloadAll(() => {
 	}, 500);
 
 	const camera = new Camera(gameEngine.width / 2, gameEngine.height / 2);
+	camera.follow(shepherd);
 	gameEngine.setCamera(camera);
 	gameEngine.start();
 });
