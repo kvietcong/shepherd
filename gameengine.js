@@ -105,6 +105,7 @@ class GameEngine {
     };
 
     drawRelative(entity, func) {
+        this.ctx.save();
         if (this.camera && entity.isRelative) {
             this.ctx.translate(
                 (this.width / 2) - this.camera.x,
@@ -112,15 +113,16 @@ class GameEngine {
             );
         }
         func();
-        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+        this.ctx.restore();
     }
 
     drawZoom(entity, func) {
+        this.ctx.save();
         if (this.camera && entity.isZoomable) {
             this.ctx.scale(this.camera.zoom, this.camera.zoom);
         }
         func();
-        this.ctx.scale(1, 1);
+        this.ctx.restore();
     }
 
     drawEffects(entity, func) {

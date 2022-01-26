@@ -190,25 +190,31 @@ class Animator {
      */
     getDrawFunction() {
         return (ctx, x, y, rotation = 0) => {
-            const wasImageSmoothingEnabled = ctx.imageSmoothingEnabled;
-            ctx.imageSmoothingEnabled = this.isImageSmoothingEnabled;
-            ctx.save();
-            ctx.scale(this.willFlipX ? -1 : 1, this.willFlipY ? -1 : 1);
-            if (rotation) ctx.rotate(rotation * PI / 180);
             const pixelWidth = this.frameWidth * this.scale;
             const pixelHeight = this.frameHeight * this.scale;
+
+            ctx.save();
+            ctx.imageSmoothingEnabled = this.isImageSmoothingEnabled;
+            ctx.translate(
+                x - (pixelWidth / 4) - (pixelWidth * this.willFlipX),
+                y - (pixelHeight / 4) - (pixelHeight * this.willFlipY)
+            );
+            ctx.scale(this.willFlipX ? -1 : 1, this.willFlipY ? -1 : 1);
+
+            if (rotation) {
+                ctx.translate(pixelWidth / 2, pixelHeight / 2);
+                ctx.rotate(rotation * PI / 180);
+                ctx.translate(-pixelWidth / 2, -pixelHeight / 2);
+            }
+
             ctx.drawImage(
                 this.spriteSheet,
                 this.frameX, this.frameY,
                 this.frameWidth, this.frameHeight,
-                // Not sure why the factor to center sprite is 0.25 rather
-                // than 0.5.
-                x - (0.25 * pixelWidth) - (pixelWidth * this.willFlipX),
-                y - (0.25 * pixelHeight) - (pixelHeight * this.willFlipY),
+                0, 0,
                 pixelWidth, pixelHeight
             );
             ctx.restore();
-            ctx.imageSmoothingEnabled = wasImageSmoothingEnabled;
         };
     }
 
