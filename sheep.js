@@ -105,35 +105,7 @@ class Sheep extends Entity {
 
         this.velocity.setUnit().scaleInPlace(this.maxSpeed);
 
-        // This commented out part is attempting to do cardinal directions
-        // It kind of failed miserably though
-
-        // this.velocity = separation.scale(2)
-        //     .add(cohesion.scale(1))
-        //     .add(alignment.scale(3))
-        //     .scale(1/3).unit.scale(this.maxSpeed);
-
-        // const validDirections = [
-        //     new Vector(1, 0),
-        //     new Vector(0, 1),
-        //     new Vector(-1, 0),
-        //     new Vector(0, -1),
-
-        //     new Vector(1, 1),
-        //     new Vector(-1, 1),
-        //     new Vector(-1, -1),
-        //     new Vector(1, -1),
-        // ];
-
-        // validDirections.sort((a, b) => {
-        //     return this.velocity.angleTo(a) - this.velocity.angleTo(b);
-        // });
-
-        // this.velocity = validDirections[0].clone();
-        // this.velocity.scaleInPlace(this.maxSpeed);
-
-        // Another attempt to do cardinal directions
-
+        // Attempt to do cardinal directions
         const validDirections = [
             new Vector(1, 0),
             new Vector(0, 1),
@@ -141,30 +113,27 @@ class Sheep extends Entity {
             new Vector(0, -1)
         ];
 
+        // Sort to find the closest cardinal direction
         validDirections.sort((a, b) => {
             return this.velocity.angleTo(a)  - this.velocity.angleTo(b);
         });
 
-        console.log(this.velocity)
-        console.log(validDirections[0]);
-        console.log(validDirections[0].x);
-        console.log(validDirections[0].y);
-
-        this.x += this.velocity.x * validDirections[0].x * gameEngine.deltaTime;
-        this.y += this.velocity.y * validDirections[0].y * gameEngine.deltaTime;
+        // Scale with velocity x and y components
+        this.x += Math.abs(this.velocity.x) * validDirections[0].x * gameEngine.deltaTime;
+        this.y += Math.abs(this.velocity.y) * validDirections[0].y * gameEngine.deltaTime;
 
         // this.x += this.velocity.x * gameEngine.deltaTime;
         // this.y += this.velocity.y * gameEngine.deltaTime;
 
-        // Pick animation
-        if (validDirections[0].x === 1 && validDirections[0].y === 0) {
-            this.facing = 0; // up
-        } else if (validDirections[0].x === 0 && validDirections[0].y === 1) {
-            this.facing = 2; // right
-        } else if (validDirections[0].x === -1 && validDirections[0].y === 0) {
-            this.facing = 1; // left
-        } else if (validDirections[0].x === 0 && validDirections[0].y === -1) {
+        // Change animation direction based on cardinal direction
+        if (validDirections[0].equals(new Vector(1, 0))) {
+            this.facing = 0; // right
+        } else if (validDirections[0].equals(new Vector(0, 1))) {
             this.facing = 3; // down
+        } else if (validDirections[0].equals(new Vector(-1, 0))) {
+            this.facing = 1; // left
+        } else if (validDirections[0].equals(new Vector(0, -1))) {
+            this.facing = 2; // up
         }
 
         const animationList = Object.keys(this.animator.animationInfo);

@@ -28,11 +28,11 @@ assetManager.downloadAll(() => {
 	gameEngine.init(ctx);
 
 	const entities = [];
-	for (let i = 0; i < 25; i++) {
+	for (let i = 0; i < 100; i++) {
 		let x = randomInt(canvas.width * 2);
 		let y = randomInt(canvas.height * 2);
 		if (i % 4 === 0) {
-			//entities.push(new Wolf(x, y));
+			entities.push(new Wolf(x, y));
 		}
 		entities.push(new Sheep(x, y));
 	}

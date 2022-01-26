@@ -217,6 +217,10 @@ class Vector {
 
     setUnit() { return this.set(this.unit); }
 
+    equals(other) {
+        return this.x === other.x && this.y == other.y;
+    }
+
     get["magnitude"]() { return getDistance(0, 0, this.x, this.y); }
 
     get["unit"]() {
