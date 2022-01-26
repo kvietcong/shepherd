@@ -20,7 +20,6 @@ const makeSheepAnimator = () => {
 
 };
 
-
 class Sheep extends Entity {
 
     constructor(x, y, velocity, maxSpeed = 200) {
@@ -119,8 +118,8 @@ class Sheep extends Entity {
         });
 
         // Scale with velocity x and y components
-        this.x += Math.abs(this.velocity.x) * validDirections[0].x * gameEngine.deltaTime;
-        this.y += Math.abs(this.velocity.y) * validDirections[0].y * gameEngine.deltaTime;
+        this.x += this.velocity.magnitude * validDirections[0].x * gameEngine.deltaTime;
+        this.y += this.velocity.magnitude * validDirections[0].y * gameEngine.deltaTime;
 
         // this.x += this.velocity.x * gameEngine.deltaTime;
         // this.y += this.velocity.y * gameEngine.deltaTime;
