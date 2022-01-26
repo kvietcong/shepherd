@@ -23,6 +23,8 @@ assetManager.queueDownload("./resources/shepherd.png")
 assetManager.queueDownload("./resources/sheep.png")
 assetManager.queueDownload("./resources/No Worries.mp3")
 assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3")
+
+
 assetManager.downloadAll(() => {
 	const ctx = canvas.getContext("2d");
 	gameEngine.init(ctx);
@@ -38,6 +40,44 @@ assetManager.downloadAll(() => {
 	}
 	const shepherd = new Shepherd(50, 50);
 	entities.push(shepherd);
+
+	//new image object for tile set
+	let idk = new Image(96, 96);
+	idk.src = "./resources/Map_tiles.png";
+	//new tile object
+	let grassTile = {
+		x: 96,
+		y: 0,
+		width: 96,
+		height: 96,
+		image: idk
+	}
+	let waterTile = {
+		x: 0,
+		y: 0,
+		width: 96,
+		image: idk
+	}
+	let lavaTile = {
+		x: 0,
+		y: 256,
+		width: 96,
+		image: idk
+	}
+	//assemble tileData array
+	let tileData = [];
+	tileData["default"] = grassTile;
+	tileData["water"] = waterTile;
+	tileData["lava"] = lavaTile;
+
+	//find tile size
+	const tileWidth = 96;
+	//tiles needed to cover the play area with current tile width
+	let xTile = canvas.width*2 / tileWidth - 1;
+	let yTile = canvas.height*2 / tileWidth;
+
+	entities.push(new Environment(xTile, yTile, tileData));
+
 	gameEngine.addEntities(entities);
 
 	const volumeSlider = document.getElementById("volume-slider");
