@@ -20,6 +20,7 @@ const canvas = initializeCanvas();
 
 assetManager.queueDownload("./resources/wolf.png");
 assetManager.queueDownload("./resources/shepherd.png")
+assetManager.queueDownload("./resources/sheep.png")
 assetManager.queueDownload("./resources/No Worries.mp3")
 assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3")
 assetManager.downloadAll(() => {
@@ -27,11 +28,11 @@ assetManager.downloadAll(() => {
 	gameEngine.init(ctx);
 
 	const entities = [];
-	for (let i = 0; i < 100; i++) {
+	for (let i = 0; i < 25; i++) {
 		let x = randomInt(canvas.width * 2);
 		let y = randomInt(canvas.height * 2);
 		if (i % 4 === 0) {
-			entities.push(new Wolf(x, y));
+			//entities.push(new Wolf(x, y));
 		}
 		entities.push(new Sheep(x, y));
 	}
