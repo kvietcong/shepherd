@@ -20,6 +20,7 @@ const canvas = initializeCanvas();
 
 assetManager.queueDownload("./resources/wolf.png");
 assetManager.queueDownload("./resources/shepherd.png")
+assetManager.queueDownload("./resources/sheep.png")
 assetManager.queueDownload("./resources/No Worries.mp3")
 assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3")
 assetManager.downloadAll(() => {

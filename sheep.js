@@ -3,13 +3,36 @@ params.sheep = {
     cohesionFactor: 10,
     alignmentFactor: 300,
 };
+
+const makeSheepAnimator = () => {
+    const size = 64;
+    const sheepAnimations = {
+        walkRight: {frameAmount: 7, startX: 0, startY: 0},
+        walkLeft: {frameAmount: 7, startX: 0, startY: size},
+        walkUp: {frameAmount: 7, startX: 0, startY: 2 * size},
+        walkDown: {frameAmount: 7, startX: 0, startY: 3 * size}
+    };
+
+    const sheep = assetManager.getAsset("./resources/sheep.png");
+    return new Animator(
+        sheep, "walkDown", sheepAnimations, size, size, 1/15
+    );
+
+};
+
+
 class Sheep extends Entity {
+
     constructor(x, y, velocity, maxSpeed = 200) {
         super(x, y, 20, 20);
         this.velocity = velocity || Vector.randomUnitVector();
         this.detectionRadius = this.width * 4;
         this.flockingRadius = this.detectionRadius * 2;
         this.maxSpeed = maxSpeed;
+        this.facing = 3; // 0 = right, 1 = left, 2 = up, 3 = down.
+        this.setAnimator(makeSheepAnimator());
+        this.animator.setIsLooping();
+        this.animator.play();
     }
 
     update(gameEngine) {
@@ -24,7 +47,7 @@ class Sheep extends Entity {
 
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
-            if (entity instanceof Wolf) return;
+            //if (entity instanceof Wolf) return;
             if (!(entity instanceof Sheep)) return;
 
             // Cohesion and Alignment
@@ -82,35 +105,39 @@ class Sheep extends Entity {
 
         this.velocity.setUnit().scaleInPlace(this.maxSpeed);
 
-        // This commented out part is attempting to do cardinal directions
-        // It kind of failed miserably though
+        // Attempt to do cardinal directions
+        const validDirections = [
+            new Vector(1, 0),
+            new Vector(0, 1),
+            new Vector(-1, 0),
+            new Vector(0, -1)
+        ];
 
-        // this.velocity = separation.scale(2)
-        //     .add(cohesion.scale(1))
-        //     .add(alignment.scale(3))
-        //     .scale(1/3).unit.scale(this.maxSpeed);
+        // Sort to find the closest cardinal direction
+        validDirections.sort((a, b) => {
+            return this.velocity.angleTo(a)  - this.velocity.angleTo(b);
+        });
 
-        // const validDirections = [
-        //     new Vector(1, 0),
-        //     new Vector(0, 1),
-        //     new Vector(-1, 0),
-        //     new Vector(0, -1),
+        // Scale with velocity x and y components
+        this.x += Math.abs(this.velocity.x) * validDirections[0].x * gameEngine.deltaTime;
+        this.y += Math.abs(this.velocity.y) * validDirections[0].y * gameEngine.deltaTime;
 
-        //     new Vector(1, 1),
-        //     new Vector(-1, 1),
-        //     new Vector(-1, -1),
-        //     new Vector(1, -1),
-        // ];
+        // this.x += this.velocity.x * gameEngine.deltaTime;
+        // this.y += this.velocity.y * gameEngine.deltaTime;
 
-        // validDirections.sort((a, b) => {
-        //     return this.velocity.angleTo(a) - this.velocity.angleTo(b);
-        // });
+        // Change animation direction based on cardinal direction
+        if (validDirections[0].equals(new Vector(1, 0))) {
+            this.facing = 0; // right
+        } else if (validDirections[0].equals(new Vector(0, 1))) {
+            this.facing = 3; // down
+        } else if (validDirections[0].equals(new Vector(-1, 0))) {
+            this.facing = 1; // left
+        } else if (validDirections[0].equals(new Vector(0, -1))) {
+            this.facing = 2; // up
+        }
 
-        // this.velocity = validDirections[0].clone();
-        // this.velocity.scaleInPlace(this.maxSpeed);
-
-        this.x += this.velocity.x * gameEngine.deltaTime;
-        this.y += this.velocity.y * gameEngine.deltaTime;
+        const animationList = Object.keys(this.animator.animationInfo);
+        this.animator.setAnimation(animationList[this.facing]);
     }
 
     draw(ctx, gameEngine) {
