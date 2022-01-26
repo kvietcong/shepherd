@@ -1,7 +1,7 @@
 /** Global Parameters Object */
 const params = {
     isDebugging: true,
-    volume: 0.2,
+    volume: 0.05,
 };
 
 /** Easy access to math functions */
@@ -102,8 +102,8 @@ const getDistance = (x1, y1, x2, y2) => {
 
 const normalizeAngle = angle => {
     let normalizedAngle = angle;
-    while (normalizedAngle < 0) normalizedAngle = 360 + normalizedAngle;
-    while (normalizedAngle > 360) normalizedAngle = normalizedAngle - 360;
+    while (normalizedAngle < 0) normalizedAngle += 360;
+    if (normalizedAngle > 360) normalizedAngle = normalizedAngle % 360;
     return normalizedAngle;
 };
 
