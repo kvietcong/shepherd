@@ -132,6 +132,7 @@ class Wolf extends Entity {
         this.y += this.velocity.y * gameEngine.deltaTime;
 
         // Visual
+        if (!this.velocity.magnitude) return;
         const directionInfo = {
             walkForward: new Vector(0, 1), walkRight: new Vector(1, 0),
             walkBack: new Vector(0, -1), walkLeft: new Vector(-1, 0),
