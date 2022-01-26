@@ -108,7 +108,7 @@ class Entity {
     }
 
     draw(ctx, gameEngine) {
-        if (this.animator) this.animator.getDrawFunction()(ctx, this.x, this.y);
+        if (this.animator) this.animator.getDrawFunction()(ctx, this.xCenter, this.yCenter);
 
         // Collision Box
         if (params.isDebugging) {
