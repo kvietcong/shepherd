@@ -85,9 +85,13 @@ class Shepherd extends Entity {
             this.facing = 2;
         }
 
-        if (gameEngine.keys.z) this.state = 2;
-        if (gameEngine.keys.x) this.state = 3;
-        if (gameEngine.keys.c) this.state = 4;
+        const { z, x, c } = gameEngine.keys;
+        if (z || x || c) {
+            if (z) this.state = 2;
+            if (x) this.state = 3;
+            if (c) this.state = 4;
+            this.velocity = new Vector(0, 0);
+        }
 
         this.velocity.setUnit().scaleInPlace(this.maxSpeed);
 
