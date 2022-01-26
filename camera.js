@@ -1,5 +1,9 @@
 class Camera {
-    constructor(x = 0, y = 0, lerpRate = 5, isLerping = true, zoom = 1, zoomMax = 2, zoomMin = 0.5) {
+    constructor(
+        x = 0, y = 0,
+        lerpRate = 5, isLerping = true,
+        zoom = 1, zoomMax = 2, zoomMin = 0.5
+    ) {
         this.x = x;
         this.y = y;
         this.targetX = x;
@@ -69,8 +73,8 @@ class Camera {
         if (space) this.follow(this.following);
 
         if (this.isFollowing && this.follow) {
-            this.targetX = this.following.x;
-            this.targetY = this.following.y;
+            this.targetX = this.following.xCenter;
+            this.targetY = this.following.yCenter;
         }
 
         // Update Camera Position

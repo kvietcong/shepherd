@@ -196,8 +196,8 @@ class Animator {
             ctx.save();
             ctx.imageSmoothingEnabled = this.isImageSmoothingEnabled;
             ctx.translate(
-                x - (pixelWidth / 4) - (pixelWidth * this.willFlipX),
-                y - (pixelHeight / 4) - (pixelHeight * this.willFlipY)
+                x - (pixelWidth / 2) - (pixelWidth * this.willFlipX),
+                y - (pixelHeight / 2) - (pixelHeight * this.willFlipY)
             );
             ctx.scale(this.willFlipX ? -1 : 1, this.willFlipY ? -1 : 1);
 

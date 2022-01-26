@@ -1,5 +1,5 @@
 // TODO
-class Environment {
+class Environment{
     /**
      *
      * @param {Number} width Width of the environment in tiles
@@ -26,19 +26,34 @@ class Environment {
             }
         }
 
+        this.width = width;
+        this.height= height;
+        this.tileData = tileData;
+
+        this.isZoomable = true;
+        this.isRelative = true;
+
         this.entities = [];
         this.tileSize = tileSize;
 
-        this.tileTypes;
+        // Initialize tileTypes before it can be read as undefined
+        this.tileTypes = [];
         if (tileTypes) {
             this.tileTypes = tileTypes;
         } else {
+            // Default Map
             for (let i = 0; i < height; i++) {
                 this.tileTypes[i] = [];
                 for (let j = 0; j < width; j++) {
-                    this.tileTypes[i][j] = "default";
+                    if (i < 2 || j < 2) this.tileTypes[i][j] = "water";
+                    else this.tileTypes[i][j] = "default";
                 }
             }
+            //lava for spawn area
+            this.tileTypes[0][0] = "lava";
+            this.tileTypes[0][1] = "lava";
+            this.tileTypes[1][0] = "lava";
+            this.tileTypes[1][1] = "lava";
         }
     }
 
@@ -75,8 +90,11 @@ class Environment {
     }
 
     draw(ctx) {
+
         for (let i = 0; i < this.height; i++) {
+
             for (let j = 0; j < this.width; j++) {
+
                 const tileType = this.tileTypes[i][j];
                 const { x, y, width, image } = this.tileData[tileType];
                 const scaleFactor = this.tileSize / width;
@@ -84,11 +102,12 @@ class Environment {
                 const worldY = i * this.tileSize;
 
                 const wasImageSmoothingEnabled = ctx.imageSmoothingEnabled;
-                ctx.imageSmoothingEnabled = false;
+                ctx.imageSmoothingEnabled = true;
+                //console.log(image, x, y, this.width, this.height, worldX, worldY, scaleFactor);
                 ctx.drawImage(
                     image,
                     x, y,
-                    this.width, this.width,
+                    width, width,
                     worldX, worldY,
                     scaleFactor * width, scaleFactor * width
                 );

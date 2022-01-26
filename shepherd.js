@@ -40,7 +40,7 @@ const makeShepherdAnimator = () => {
 
 class Shepherd extends Entity {
     constructor(x, y, velocity, maxSpeed = 300) {
-        super(x, y, 30, 30);
+        super(x, y, 30, 60);
         this.facing = 0; // 0 = back, 1 = left, 2 = forward, 3 = right.
         this.state = 0; // 0 = static, 1 = walking, 2 = spell, 3 = poke, 4 = swipe, 5 = die.
         this.velocity = new Vector(0, 0);
@@ -65,35 +65,36 @@ class Shepherd extends Entity {
         } = params.shepherd;
 
         if (gameEngine.keys.ArrowRight) {
-            this.velocity.x += 20;
+            this.velocity.x += 1;
             this.state = 1;
             this.facing = 3;
         }
         if (gameEngine.keys.ArrowLeft) {
-            this.velocity.x -= 20;
+            this.velocity.x -= 1;
             this.state = 1;
             this.facing = 1;
         }
         if (gameEngine.keys.ArrowUp) {
-            this.velocity.y -= 20;
+            this.velocity.y -= 1;
             this.state = 1;
             this.facing = 0;
         }
         if (gameEngine.keys.ArrowDown) {
-            this.velocity.y += 20;
+            this.velocity.y += 1;
             this.state = 1;
             this.facing = 2;
         }
 
         const { z, x, c } = gameEngine.keys;
+        let isAttacking = false;
         if (z || x || c) {
             if (z) this.state = 2;
             if (x) this.state = 3;
             if (c) this.state = 4;
-            this.velocity = new Vector(0, 0);
+            isAttacking = true;
         }
 
-        this.velocity.setUnit().scaleInPlace(this.maxSpeed);
+        this.velocity.setUnit().scaleInPlace(this.maxSpeed * (isAttacking ? 0.6 : 1));
 
         this.x += this.velocity.x * gameEngine.deltaTime;
         this.y += this.velocity.y * gameEngine.deltaTime;
