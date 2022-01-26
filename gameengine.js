@@ -108,8 +108,8 @@ class GameEngine {
         this.ctx.save();
         if (this.camera && entity.isRelative) {
             this.ctx.translate(
-                (this.width / 2) - this.camera.x,
-                (this.height / 2) - this.camera.y
+                (this.width / 2 / this.camera.zoom) - this.camera.x,
+                (this.height / 2 / this.camera.zoom) - this.camera.y
             );
         }
         func();
