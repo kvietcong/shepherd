@@ -1,7 +1,7 @@
 /** Global Parameters Object */
 const params = {
     isDebugging: true,
-    volume: 0.05,
+    volume: 0.1,
 };
 
 /** Easy access to math functions */

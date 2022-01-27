@@ -189,35 +189,61 @@ class Animator {
      *      This returns a function that you must call!
      */
     getDrawFunction() {
-        return (ctx, x, y, rotation = 0) => {
+        return (ctx, x, y, rotation = 0, tintInfo = null) => {
             const pixelWidth = this.frameWidth * this.scale;
             const pixelHeight = this.frameHeight * this.scale;
 
-            ctx.save();
-            ctx.imageSmoothingEnabled = this.isImageSmoothingEnabled;
-            ctx.translate(
-                x - (pixelWidth / 2) - (pixelWidth * this.willFlipX),
-                y - (pixelHeight / 2) - (pixelHeight * this.willFlipY)
+            const offscreenContext = Animator.offscreenContext;
+
+            offscreenContext.width = pixelWidth;
+            offscreenContext.height = pixelHeight;
+
+            offscreenContext.save();
+            offscreenContext.imageSmoothingEnabled = this.isImagesmoothingenabled;
+            offscreenContext.translate(
+                (pixelWidth * this.willFlipX),
+                (pixelHeight * this.willFlipY)
             );
-            ctx.scale(this.willFlipX ? -1 : 1, this.willFlipY ? -1 : 1);
+            offscreenContext.scale(this.willFlipX ? -1 : 1, this.willFlipY ? -1 : 1);
 
             if (rotation) {
-                ctx.translate(pixelWidth / 2, pixelHeight / 2);
-                ctx.rotate(rotation * PI / 180);
-                ctx.translate(-pixelWidth / 2, -pixelHeight / 2);
+                offscreenContext.translate(pixelWidth / 2, pixelHeight / 2);
+                offscreenContext.rotate(rotation * PI / 180);
+                offscreenContext.translate(-pixelWidth / 2, -pixelHeight / 2);
             }
 
-            ctx.drawImage(
+            if (tintInfo) {
+                const { color, strength } = tintInfo;
+                offscreenContext.fillStyle = color;
+                offscreenContext.globalAlpha = strength;
+                offscreenContext.fillRect(0, 0, pixelWidth, pixelHeight);
+                offscreenContext.globalCompositeOperation = "destination-atop";
+                offscreenContext.globalAlpha = 1;
+            }
+
+            offscreenContext.drawImage(
                 this.spriteSheet,
                 this.frameX, this.frameY,
                 this.frameWidth, this.frameHeight,
                 0, 0,
                 pixelWidth, pixelHeight
             );
-            ctx.restore();
+            offscreenContext.restore();
+
+            ctx.drawImage(
+                offscreenContext.canvas,
+                x - (pixelWidth / 2),
+                y - (pixelHeight / 2)
+            );
+
+            offscreenContext.clearRect(0, 0, pixelWidth, pixelHeight);
         };
     }
 
     // Not recommended to use this function. Use getDrawFunction instead
     draw(ctx) { this.getDrawFunction()(ctx, this.x, this.y); }
 }
+
+// Shared Offscreen Canvas to manipulate images with.
+Animator.offscreenCanvas = document.createElement("canvas");
+Animator.offscreenContext = Animator.offscreenCanvas.getContext("2d");
