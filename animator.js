@@ -184,7 +184,7 @@ class Animator {
 
     /**
      * Get a function that can draw the animation to the canvas
-     * @returns {(CanvasRenderingContext2D, Number, Number, Number) => void}
+     * @returns {(CanvasRenderingContext2D, Number, Number, Number, Object) => void}
      *      Function to actually draw the animation frame to the canvas.
      *      This returns a function that you must call!
      */
@@ -199,7 +199,7 @@ class Animator {
             offscreenContext.height = pixelHeight;
 
             offscreenContext.save();
-            offscreenContext.imageSmoothingEnabled = this.isImagesmoothingenabled;
+            offscreenContext.imageSmoothingEnabled = this.isImageSmoothingEnabled;
             offscreenContext.translate(
                 (pixelWidth * this.willFlipX),
                 (pixelHeight * this.willFlipY)
