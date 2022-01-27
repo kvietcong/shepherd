@@ -65,28 +65,28 @@ class Shepherd extends Entity {
         } = params.shepherd;
 
         const {
-            w, a, s, d, q, e,
+            w, a, s, d, W, A, S, D, q, e,
             ArrowRight: right, ArrowLeft: left, ArrowUp: up, ArrowDown: down,
-            Shift, Control,
+            Shift, Control, Z
         } = gameEngine.keys;
         const space = gameEngine.keys[" "];
 
-        if (w) {
+        if (w || W) {
             this.velocity.y -= 1;
             this.state = 1;
             this.facing = 0;
         }
-        if (a) {
+        if (a || A) {
             this.velocity.x -= 1;
             this.state = 1;
             this.facing = 1;
         }
-        if (s) {
+        if (s || S) {
             this.velocity.y += 1;
             this.state = 1;
             this.facing = 2;
         }
-        if (d) {
+        if (d || D) {
             this.velocity.x += 1;
             this.state = 1;
             this.facing = 3;
@@ -94,11 +94,17 @@ class Shepherd extends Entity {
 
         let isAttacking = false;
         if (space || q || e) {
-            if (q) this.state = 2;
+            if (q) {
+                this.state = 2;
+                this.animator.tint("cyan")
+            }
             if (space) this.state = 3;
             if (e) this.state = 4;
             isAttacking = true;
         }
+
+        // Beyblade moment
+        if (Z) this.animator.rotation += 30;
 
         this.velocity
             .setUnit()

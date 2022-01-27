@@ -26,7 +26,7 @@ class GameEngine {
                 contextMenu: true,
                 scrolling: true,
             },
-            debugging: false,
+            debugging: true,
             hasWorldBorder: true,
         };
     };
@@ -92,8 +92,39 @@ class GameEngine {
             this.rightclick = getXandY(e);
         });
 
-        window.addEventListener("keydown", event => this.keys[event.key] = true);
-        window.addEventListener("keyup", event => this.keys[event.key] = false);
+        window.addEventListener("keydown",  event => {
+            const { key } = event;
+            if (this.options.debugging) console.log("KEY_DOWN", key);
+
+            // Enable all valid capital letters when pressing Shift
+            if (key === "Shift") {
+                for (let i = 0; i < 26; i++) {
+                    const lower = String.fromCharCode(i + 97);
+                    const capital = lower.toUpperCase();
+                    this.keys[capital] = this.keys[lower];
+                }
+            }
+
+            this.keys[event.key] = true;
+        });
+        window.addEventListener("keyup", event => {
+            const { key } = event;
+            if (this.options.debugging) console.log("KEY_UP", key);
+
+            // Disable all capital letters when letting go of Shift
+            if (key === "Shift")
+                for (let i = 0; i < 26; i++)
+                    this.keys[String.fromCharCode(i + 97).toUpperCase()] = false;
+
+            // Ensure that single character keys are disabled when either the
+            // capital or non-capital is let go.
+            if (key.length === 1 && isLetters(key)) {
+                this.keys[key.toLowerCase()] = false;
+                this.keys[key.toUpperCase()] = false;
+            }
+
+            this.keys[key] = false;
+        });
     };
 
     addEntity(entity) {

@@ -46,6 +46,17 @@ const rgba = (r, g, b, a) => `rgba(${r}, ${g}, ${b}, ${a})`;
  */
 const hsl = (h, s, l) => `hsl(${h}, ${s}, ${l})`;
 
+/**
+ * Check character's cases
+ * @param {Character} character Character to check case
+ * @returns Boolean if the character is a case or not
+ */
+const isUpperCase = character => character.toUpperCase() === character;
+const isLowerCase = character => character.toLowerCase() === character;
+
+const isLetters = character =>
+    character.toLowerCase() !== character.toUpperCase();
+
 /** Creates an alias for requestAnimationFrame for backwards compatibility */
 window.requestAnimFrame = (() => {
     return window.requestAnimationFrame ||
