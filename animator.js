@@ -66,9 +66,12 @@ class Animator {
         this.frameDuration = frameDuration;
         this.timeSinceLastFrameChange = 0;
 
+        this.timeTintHasEndured = 0; this.tintInfo = null;
+
+        this.rotation = 0;
+        this.isLooping = true;
         this.isPlaying = false;
         this.isReverse = false;
-        this.isLooping = true;
         this.willFlipX = false;
         this.willFlipY = false;
 
@@ -99,6 +102,7 @@ class Animator {
         if (!this.isPlaying) return;
 
         this.timeSinceLastFrameChange += gameEngine.deltaTime;
+        this.timeTintHasEndured += gameEngine.deltaTime;
 
         // Frame Change Logic
         if (this.timeSinceLastFrameChange >= this.frameDuration) {
@@ -131,6 +135,11 @@ class Animator {
             }
             this.timeSinceLastFrameChange = 0;
         }
+
+        // Tint Logic
+        if (this.tintInfo && (this.timeTintHasEndured >= this.tintInfo.duration))
+            this.tintInfo = null;
+
     }
 
     /**
@@ -156,6 +165,22 @@ class Animator {
     flipY() { this.willFlipY = !this.willFlipY; }
     setWillFlipX(willFlipX = false) { this.willFlipX = willFlipX; }
     setWillFlipY(willFlipY = false) { this.willFlipY = willFlipY; }
+
+    untint() { this.tintInfo = null; }
+
+    /**
+     * Tint the animation's sprite
+     * @param {Style String|Object} color Tint Color in CSS format or Tint Info
+     *  Object (Contains color, duration, and strength)
+     * @param {Number} duration Tint duration in seconds
+     * @param {Number} strength Tint Opacity (0-1)
+     */
+    tint(color, duration = 1, strength = 0.3) {
+        this.timeTintHasEndured = 0;
+
+        if (typeof color === "object") this.tintInfo = color;
+        this.tintInfo = { color, duration, strength };
+    }
 
     play() { this.isPlaying = true; }
     pause() { this.isPlaying = false; }
@@ -189,7 +214,7 @@ class Animator {
      *      This returns a function that you must call!
      */
     getDrawFunction() {
-        return (ctx, x, y, rotation = 0, tintInfo = null) => {
+        return (ctx, x, y) => {
             const pixelWidth = this.frameWidth * this.scale;
             const pixelHeight = this.frameHeight * this.scale;
 
@@ -206,14 +231,14 @@ class Animator {
             );
             offscreenContext.scale(this.willFlipX ? -1 : 1, this.willFlipY ? -1 : 1);
 
-            if (rotation) {
+            if (this.rotation) {
                 offscreenContext.translate(pixelWidth / 2, pixelHeight / 2);
-                offscreenContext.rotate(rotation * PI / 180);
+                offscreenContext.rotate(this.rotation * PI / 180);
                 offscreenContext.translate(-pixelWidth / 2, -pixelHeight / 2);
             }
 
-            if (tintInfo) {
-                const { color, strength } = tintInfo;
+            if (this.tintInfo) {
+                const { color, strength } = this.tintInfo;
                 offscreenContext.fillStyle = color;
                 offscreenContext.globalAlpha = strength;
                 offscreenContext.fillRect(0, 0, pixelWidth, pixelHeight);
