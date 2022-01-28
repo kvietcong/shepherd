@@ -261,7 +261,8 @@ class Animator {
                 y - (pixelHeight / 2)
             );
 
-            offscreenContext.clearRect(0, 0, pixelWidth, pixelHeight);
+            const pixelSize = max(pixelWidth, pixelHeight);
+            offscreenContext.clearRect(0, 0, pixelSize, pixelSize);
         };
     }
 
