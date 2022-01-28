@@ -1,7 +1,8 @@
 params.sheep = {
-    separationFactor: 18,
+    separationFactor: 30,
     cohesionFactor: 10,
     alignmentFactor: 300,
+    shepherdFactor: 25,
 };
 
 const makeSheepAnimator = () => {
@@ -27,9 +28,10 @@ const makeSheepAnimator = () => {
 
 class Sheep extends Entity {
 
-    constructor(x, y, velocity, maxSpeed = 200) {
+    constructor(x, y, shepherd, velocity, maxSpeed = 200) {
         super(x, y, 30, 30);
         this.velocity = velocity || Vector.randomUnitVector();
+        this.shepherd = shepherd;
         this.detectionRadius = this.width * 4;
         this.flockingRadius = this.detectionRadius * 2;
         this.maxSpeed = maxSpeed;
@@ -44,6 +46,7 @@ class Sheep extends Entity {
         const averagePosition = new Vector(this.x, this.y);
         const averageDirection = this.velocity.clone();
         const averageRepel = this.velocity.unit.scale(-1);
+        const averageToShep = new Vector(this.shepherd.x - this.x, this.shepherd.y - this.y);
 
         let flock = 1;
         let close = 1;
@@ -59,6 +62,8 @@ class Sheep extends Entity {
                 averagePosition.addInPlace(entity.x, entity.y);
                 averageDirection.addInPlace(entity.velocity.unit);
             }
+            // Build average vector to the shepherd
+            averageToShep.addInPlace(new Vector(this.shepherd.x - entity.x, this.shepherd.y - entity.y).unit);
 
             // Separation
             if (this.distanceTo(entity) < this.detectionRadius) {
@@ -83,9 +88,10 @@ class Sheep extends Entity {
         const cohesion = averagePosition.scale(1/flock)
             .subtract(this.x, this.y).unit;
         const alignment = averageDirection.scale(1/flock).unit;
+        const shepAlignment = averageToShep.scale(1/flock).unit;
 
         const {
-            separationFactor, cohesionFactor, alignmentFactor
+            separationFactor, cohesionFactor, alignmentFactor, shepherdFactor
         } = params.sheep;
 
         // Separation
@@ -103,6 +109,12 @@ class Sheep extends Entity {
         // Alignment
         this.velocity.lerpToInPlace(
             alignment.scale(this.maxSpeed * alignmentFactor),
+            1 * gameEngine.deltaTime
+        );
+
+        // Align to shepherd
+        this.velocity.lerpToInPlace(
+            shepAlignment.scale(this.maxSpeed * shepherdFactor),
             1 * gameEngine.deltaTime
         );
 

@@ -30,16 +30,16 @@ assetManager.downloadAll(() => {
 	gameEngine.init(ctx);
 
 	const entities = [];
-	for (let i = 0; i < 100; i++) {
+	const shepherd = new Shepherd(50, 50);
+	entities.push(shepherd);
+	for (let i = 0; i < 25; i++) {
 		let x = randomInt(canvas.width * 2);
 		let y = randomInt(canvas.height * 2);
 		if (i % 4 === 0) {
 			entities.push(new Wolf(x, y));
 		}
-		entities.push(new Sheep(x, y));
+		entities.push(new Sheep(x, y, shepherd));
 	}
-	const shepherd = new Shepherd(50, 50);
-	entities.push(shepherd);
 
 	//new image object for tile set
 	let idk = new Image(96, 96);
