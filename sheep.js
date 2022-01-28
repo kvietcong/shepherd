@@ -7,15 +7,20 @@ params.sheep = {
 const makeSheepAnimator = () => {
     const size = 64;
     const sheepAnimations = {
-        walkRight: {frameAmount: 7, startX: 0, startY: 0},
-        walkLeft: {frameAmount: 7, startX: 0, startY: size},
-        walkUp: {frameAmount: 7, startX: 0, startY: 2 * size},
-        walkDown: {frameAmount: 7, startX: 0, startY: 3 * size}
+        walkE: {frameAmount: 7, startX: 0, startY: 0},
+        walkW: {frameAmount: 7, startX: 0, startY: size},
+        walkN: {frameAmount: 7, startX: 0, startY: 2 * size},
+        walkS: {frameAmount: 7, startX: 0, startY: 3 * size},
+
+        walkNW: {frameAmount: 7, startX: 0, startY: 2 * size},
+        walkNE: {frameAmount: 7, startX: 0, startY: 2 * size},
+        walkSW: {frameAmount: 7, startX: 0, startY: 3 * size},
+        walkSE: {frameAmount: 7, startX: 0, startY: 3 * size}
     };
 
     const sheep = assetManager.getAsset("./resources/sheep.png");
     return new Animator(
-        sheep, "walkDown", sheepAnimations, size, size, 1/15
+        sheep, "walkS", sheepAnimations, size, size, 1/15
     );
 
 };
@@ -28,7 +33,6 @@ class Sheep extends Entity {
         this.detectionRadius = this.width * 4;
         this.flockingRadius = this.detectionRadius * 2;
         this.maxSpeed = maxSpeed;
-        this.facing = 3; // 0 = right, 1 = left, 2 = up, 3 = down.
         this.setAnimator(makeSheepAnimator());
         this.animator.setIsLooping();
         this.animator.play();
@@ -104,39 +108,35 @@ class Sheep extends Entity {
 
         this.velocity.setUnit().scaleInPlace(this.maxSpeed);
 
-        // Attempt to do cardinal directions
-        const validDirections = [
-            new Vector(1, 0),
-            new Vector(0, 1),
-            new Vector(-1, 0),
-            new Vector(0, -1)
-        ];
+        // Attempt to do cardinal and ordinal directions
+        // Note: In the game engine canvas, +y is down, -y is up
+        const directionInfo = {
+            // cardinal
+            walkN: new Vector(0, -1),
+            walkE: new Vector(1, 0),
+            walkS: new Vector(0, 1),
+            walkW: new Vector(-1, 0),
 
-        // Sort to find the closest cardinal direction
-        validDirections.sort((a, b) => {
-            return this.velocity.angleTo(a)  - this.velocity.angleTo(b);
+            // ordinal
+            walkNE: new Vector(1, -1),
+            walkNW: new Vector(-1, -1),
+            walkSE: new Vector(1, 1),
+            walkSW: new Vector(-1, 1)
+        };
+
+        const directions = Object.keys(directionInfo);
+        // Sort to find the closest cardinal/ordinal direction
+        directions.sort((a, b) => {
+            return this.velocity.angleTo(directionInfo[a])  - this.velocity.angleTo(directionInfo[b]);
         });
+        let direction = directions[0];
 
         // Scale with velocity x and y components
-        this.x += this.velocity.magnitude * validDirections[0].x * gameEngine.deltaTime;
-        this.y += this.velocity.magnitude * validDirections[0].y * gameEngine.deltaTime;
+        this.x += Math.abs(this.velocity.x) * directionInfo[direction].x * gameEngine.deltaTime;
+        this.y += Math.abs(this.velocity.y) * directionInfo[direction].y * gameEngine.deltaTime;
 
-        // this.x += this.velocity.x * gameEngine.deltaTime;
-        // this.y += this.velocity.y * gameEngine.deltaTime;
-
-        // Change animation direction based on cardinal direction
-        if (validDirections[0].equals(new Vector(1, 0))) {
-            this.facing = 0; // right
-        } else if (validDirections[0].equals(new Vector(0, 1))) {
-            this.facing = 3; // down
-        } else if (validDirections[0].equals(new Vector(-1, 0))) {
-            this.facing = 1; // left
-        } else if (validDirections[0].equals(new Vector(0, -1))) {
-            this.facing = 2; // up
-        }
-
-        const animationList = Object.keys(this.animator.animationInfo);
-        this.animator.setAnimation(animationList[this.facing]);
+        //const animationList = Object.keys(this.animator.animationInfo);
+        this.animator.setAnimation(direction);
     }
 
     draw(ctx, gameEngine) {
