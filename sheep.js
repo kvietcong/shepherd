@@ -46,7 +46,7 @@ class Sheep extends Entity {
         const averagePosition = new Vector(this.x, this.y);
         const averageDirection = this.velocity.clone();
         const averageRepel = this.velocity.unit.scale(-1);
-        const averageToShep = new Vector(this.shepherd.x - this.x, this.shepherd.y - this.y);
+        //const averageToShep = new Vector(this.shepherd.x - this.x, this.shepherd.y - this.y);
 
         let flock = 1;
         let close = 1;
@@ -55,6 +55,7 @@ class Sheep extends Entity {
             if (entity === this) return;
             //if (entity instanceof Wolf) return;
             if (!(entity instanceof Sheep)) return;
+            // TODO: adjust logic so it includes shepherd
 
             // Cohesion and Alignment
             if (this.distanceTo(entity) < this.flockingRadius) {
@@ -63,7 +64,7 @@ class Sheep extends Entity {
                 averageDirection.addInPlace(entity.velocity.unit);
             }
             // Build average vector to the shepherd
-            averageToShep.addInPlace(new Vector(this.shepherd.x - entity.x, this.shepherd.y - entity.y).unit);
+            //averageToShep.addInPlace(new Vector(this.shepherd.x - entity.x, this.shepherd.y - entity.y).unit);
 
             // Separation
             if (this.distanceTo(entity) < this.detectionRadius) {
@@ -88,7 +89,7 @@ class Sheep extends Entity {
         const cohesion = averagePosition.scale(1/flock)
             .subtract(this.x, this.y).unit;
         const alignment = averageDirection.scale(1/flock).unit;
-        const shepAlignment = averageToShep.scale(1/flock).unit;
+        const shepAlignment = new Vector(this.shepherd.x - this.x, this.shepherd.y - this.y).scale(1/flock).unit;
 
         const {
             separationFactor, cohesionFactor, alignmentFactor, shepherdFactor

@@ -30,7 +30,7 @@ assetManager.downloadAll(() => {
 	gameEngine.init(ctx);
 
 	const entities = [];
-	const shepherd = new Shepherd(50, 50);
+	const shepherd = new Shepherd(canvas.width / 2, canvas.height / 2);
 	entities.push(shepherd);
 	for (let i = 0; i < 25; i++) {
 		let x = randomInt(canvas.width * 2);
@@ -115,10 +115,13 @@ const resetCamera = () => { resetTarget(); resetZoom(); };
 window.addEventListener("resize", () => { resizeCanvas(canvas) });
 
 const alignmentInput = document.getElementById("alignment");
+const shepAlignmentInput = document.getElementById("shep-alignment");
 const cohesionInput = document.getElementById("cohesion");
 const separationInput = document.getElementById("separation");
 
+
 alignmentInput.value = params.sheep.alignmentFactor;
+//alignmentInput.value = params.sheep.shepAlignmentInput
 cohesionInput.value = params.sheep.cohesionFactor;
 separationInput.value = params.sheep.separationFactor;
 
