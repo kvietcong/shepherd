@@ -1,7 +1,7 @@
 /** Global Parameters Object */
 const params = {
     isDebugging: true,
-    volume: 0.05,
+    volume: 0.1,
 };
 
 /** Easy access to math functions */
@@ -45,6 +45,17 @@ const rgba = (r, g, b, a) => `rgba(${r}, ${g}, ${b}, ${a})`;
  * @returns String that can be used as a hsl web color
  */
 const hsl = (h, s, l) => `hsl(${h}, ${s}, ${l})`;
+
+/**
+ * Check character's cases
+ * @param {Character} character Character to check case
+ * @returns Boolean if the character is a case or not
+ */
+const isUpperCase = character => character.toUpperCase() === character;
+const isLowerCase = character => character.toLowerCase() === character;
+
+const isLetters = character =>
+    character.toLowerCase() !== character.toUpperCase();
 
 /** Creates an alias for requestAnimationFrame for backwards compatibility */
 window.requestAnimFrame = (() => {

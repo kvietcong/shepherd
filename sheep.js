@@ -1,3 +1,4 @@
+// Keep This Comment: 18 se, 10 co, 300 al are good base factors for non-cardinal
 params.sheep = {
     separationFactor: 30,
     cohesionFactor: 10,

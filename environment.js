@@ -1,5 +1,5 @@
 // TODO
-class Environment{
+class Environment {
     /**
      *
      * @param {Number} width Width of the environment in tiles

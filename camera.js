@@ -2,7 +2,7 @@ class Camera {
     constructor(
         x = 0, y = 0,
         lerpRate = 5, isLerping = true,
-        zoom = 1, zoomMax = 2, zoomMin = 0.5
+        zoom = 1, zoomMax = 3, zoomMin = 0.25
     ) {
         this.x = x;
         this.y = y;
@@ -56,21 +56,22 @@ class Camera {
 
     update(gameEngine) {
         // Update Camera Target
-        if (gameEngine.rightclick) {
-            this.targetX += gameEngine.rightclick.x - gameEngine.width / 2;
-            this.targetY += gameEngine.rightclick.y - gameEngine.height / 2;
-        }
-        const { w, a, s, d } = gameEngine.keys;
+        const {
+            w, a, s, d, q, e,
+            ArrowRight: right, ArrowLeft: left, ArrowUp: up, ArrowDown: down,
+            Shift, Control,
+        } = gameEngine.keys;
         const space = gameEngine.keys[" "];
-        if (w || a || s || d) {
+
+        if ((right || left || up || down) && !Control) {
             this.unfollow();
-            if (d) this.targetX += 8;
-            if (a) this.targetX -= 8;
-            if (w) this.targetY -= 8;
-            if (s) this.targetY += 8;
+            if (right) this.targetX += 8;
+            if (left) this.targetX -= 8;
+            if (up) this.targetY -= 8;
+            if (down) this.targetY += 8;
         }
 
-        if (space) this.follow(this.following);
+        if (w || a || s || d || space) this.follow(this.following);
 
         if (this.isFollowing && this.follow) {
             this.targetX = this.following.xCenter;
@@ -86,6 +87,11 @@ class Camera {
         this.y = newPosition.y;
 
         // Zooming
+        if (Control) {
+            if (up) this.zoom += 0.05;
+            if (down) this.zoom -= 0.05;
+        }
+
         if (gameEngine.wheel) {
             if (gameEngine.wheel.deltaY < 0) {
                 this.zoom += 0.05;

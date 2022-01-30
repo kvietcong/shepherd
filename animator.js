@@ -66,9 +66,12 @@ class Animator {
         this.frameDuration = frameDuration;
         this.timeSinceLastFrameChange = 0;
 
+        this.timeTintHasEndured = 0; this.tintInfo = null;
+
+        this.rotation = 0;
+        this.isLooping = true;
         this.isPlaying = false;
         this.isReverse = false;
-        this.isLooping = true;
         this.willFlipX = false;
         this.willFlipY = false;
 
@@ -99,6 +102,7 @@ class Animator {
         if (!this.isPlaying) return;
 
         this.timeSinceLastFrameChange += gameEngine.deltaTime;
+        this.timeTintHasEndured += gameEngine.deltaTime;
 
         // Frame Change Logic
         if (this.timeSinceLastFrameChange >= this.frameDuration) {
@@ -131,6 +135,11 @@ class Animator {
             }
             this.timeSinceLastFrameChange = 0;
         }
+
+        // Tint Logic
+        if (this.tintInfo && (this.timeTintHasEndured >= this.tintInfo.duration))
+            this.tintInfo = null;
+
     }
 
     /**
@@ -156,6 +165,22 @@ class Animator {
     flipY() { this.willFlipY = !this.willFlipY; }
     setWillFlipX(willFlipX = false) { this.willFlipX = willFlipX; }
     setWillFlipY(willFlipY = false) { this.willFlipY = willFlipY; }
+
+    untint() { this.tintInfo = null; }
+
+    /**
+     * Tint the animation's sprite
+     * @param {Style String|Object} color Tint Color in CSS format or Tint Info
+     *  Object (Contains color, duration, and strength)
+     * @param {Number} duration Tint duration in seconds
+     * @param {Number} strength Tint Opacity (0-1)
+     */
+    tint(color, duration = 1, strength = 0.3) {
+        this.timeTintHasEndured = 0;
+
+        if (typeof color === "object") this.tintInfo = color;
+        this.tintInfo = { color, duration, strength };
+    }
 
     play() { this.isPlaying = true; }
     pause() { this.isPlaying = false; }
@@ -184,40 +209,67 @@ class Animator {
 
     /**
      * Get a function that can draw the animation to the canvas
-     * @returns {(CanvasRenderingContext2D, Number, Number, Number) => void}
+     * @returns {(CanvasRenderingContext2D, Number, Number, Number, Object) => void}
      *      Function to actually draw the animation frame to the canvas.
      *      This returns a function that you must call!
      */
     getDrawFunction() {
-        return (ctx, x, y, rotation = 0) => {
+        return (ctx, x, y) => {
             const pixelWidth = this.frameWidth * this.scale;
             const pixelHeight = this.frameHeight * this.scale;
 
-            ctx.save();
-            ctx.imageSmoothingEnabled = this.isImageSmoothingEnabled;
-            ctx.translate(
-                x - (pixelWidth / 2) - (pixelWidth * this.willFlipX),
-                y - (pixelHeight / 2) - (pixelHeight * this.willFlipY)
-            );
-            ctx.scale(this.willFlipX ? -1 : 1, this.willFlipY ? -1 : 1);
+            const offscreenContext = Animator.offscreenContext;
 
-            if (rotation) {
-                ctx.translate(pixelWidth / 2, pixelHeight / 2);
-                ctx.rotate(rotation * PI / 180);
-                ctx.translate(-pixelWidth / 2, -pixelHeight / 2);
+            offscreenContext.width = pixelWidth;
+            offscreenContext.height = pixelHeight;
+
+            offscreenContext.save();
+            offscreenContext.imageSmoothingEnabled = this.isImageSmoothingEnabled;
+            offscreenContext.translate(
+                (pixelWidth * this.willFlipX),
+                (pixelHeight * this.willFlipY)
+            );
+            offscreenContext.scale(this.willFlipX ? -1 : 1, this.willFlipY ? -1 : 1);
+
+            if (this.rotation) {
+                offscreenContext.translate(pixelWidth / 2, pixelHeight / 2);
+                offscreenContext.rotate(this.rotation * PI / 180);
+                offscreenContext.translate(-pixelWidth / 2, -pixelHeight / 2);
             }
 
-            ctx.drawImage(
+            if (this.tintInfo) {
+                const { color, strength } = this.tintInfo;
+                offscreenContext.fillStyle = color;
+                offscreenContext.globalAlpha = strength;
+                offscreenContext.fillRect(0, 0, pixelWidth, pixelHeight);
+                offscreenContext.globalCompositeOperation = "destination-atop";
+                offscreenContext.globalAlpha = 1;
+            }
+
+            offscreenContext.drawImage(
                 this.spriteSheet,
                 this.frameX, this.frameY,
                 this.frameWidth, this.frameHeight,
                 0, 0,
                 pixelWidth, pixelHeight
             );
-            ctx.restore();
+            offscreenContext.restore();
+
+            ctx.drawImage(
+                offscreenContext.canvas,
+                x - (pixelWidth / 2),
+                y - (pixelHeight / 2)
+            );
+
+            const pixelSize = max(pixelWidth, pixelHeight);
+            offscreenContext.clearRect(0, 0, pixelSize, pixelSize);
         };
     }
 
     // Not recommended to use this function. Use getDrawFunction instead
     draw(ctx) { this.getDrawFunction()(ctx, this.x, this.y); }
 }
+
+// Shared Offscreen Canvas to manipulate images with.
+Animator.offscreenCanvas = document.createElement("canvas");
+Animator.offscreenContext = Animator.offscreenCanvas.getContext("2d");

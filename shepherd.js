@@ -64,37 +64,51 @@ class Shepherd extends Entity {
         const {
         } = params.shepherd;
 
-        if (gameEngine.keys.ArrowRight) {
-            this.velocity.x += 1;
-            this.state = 1;
-            this.facing = 3;
-        }
-        if (gameEngine.keys.ArrowLeft) {
-            this.velocity.x -= 1;
-            this.state = 1;
-            this.facing = 1;
-        }
-        if (gameEngine.keys.ArrowUp) {
+        const {
+            w, a, s, d, W, A, S, D, q, e,
+            ArrowRight: right, ArrowLeft: left, ArrowUp: up, ArrowDown: down,
+            Shift, Control, Z
+        } = gameEngine.keys;
+        const space = gameEngine.keys[" "];
+
+        if (w || W) {
             this.velocity.y -= 1;
             this.state = 1;
             this.facing = 0;
         }
-        if (gameEngine.keys.ArrowDown) {
+        if (a || A) {
+            this.velocity.x -= 1;
+            this.state = 1;
+            this.facing = 1;
+        }
+        if (s || S) {
             this.velocity.y += 1;
             this.state = 1;
             this.facing = 2;
         }
+        if (d || D) {
+            this.velocity.x += 1;
+            this.state = 1;
+            this.facing = 3;
+        }
 
-        const { z, x, c } = gameEngine.keys;
         let isAttacking = false;
-        if (z || x || c) {
-            if (z) this.state = 2;
-            if (x) this.state = 3;
-            if (c) this.state = 4;
+        if (space || q || e) {
+            if (q) {
+                this.state = 2;
+                this.animator.tint("cyan")
+            }
+            if (space) this.state = 3;
+            if (e) this.state = 4;
             isAttacking = true;
         }
 
-        this.velocity.setUnit().scaleInPlace(this.maxSpeed * (isAttacking ? 0.6 : 1));
+        // Beyblade moment
+        if (Z) this.animator.rotation += 30;
+
+        this.velocity
+            .setUnit()
+            .scaleInPlace(this.maxSpeed * (isAttacking ? 0.5 : 1));
 
         this.x += this.velocity.x * gameEngine.deltaTime;
         this.y += this.velocity.y * gameEngine.deltaTime;

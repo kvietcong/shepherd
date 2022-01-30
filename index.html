@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
@@ -34,17 +33,17 @@
     <body>
         <section id="canvas-container"></section>
         <section id="gui">
-            <h2>GUI Testing</h2>
-            <ul>
-                <li>1</li>
-                <li>2</li>
-                <li>3</li>
-            </ul>
-            <hr>
             <div>
-                <h3>Camera</h3>
-                <p>Arrow keys to move Shepherd. Space to relock.</p>
-                <p>WASD or right click to move camera freely. Scroll to zoom.</p>
+                <h2>Camera</h2>
+                <p>
+                    WASD keys to move Shepherd.
+                    Space to Attack, E to Swipe, and Q to Pray.
+                    Space relocks the camera to the shepherd.
+                </p>
+                <p>
+                    Arrow Keys to move camera freely.
+                    Ctrl+(Up Arrow or Down Arrow) or Scroll to zoom.
+                </p>
                 <button onclick="resetCamera()">Reset Camera</button>
                 <button onclick="resetZoom()">Reset Camera Zoom</button>
                 <button onclick="resetTarget()">Reset Camera Position</button>
@@ -52,17 +51,19 @@
             </div>
             <hr>
             <div class="slider">
-                <h3><label for="volume-slider">Volume</label></h3>
-                <input type="range" min="0" max="1" step="0.01" value="0.2" id="volume-slider">
+                <h2><label for="volume-slider">Volume</label></h2>
+                <input type="range" min="0" max="1" step="0.01" value="0.1" id="volume-slider">
             </div>
             <hr>
             <div>
-                <label for="debug">Debug Enabled</label>
-                <input type="checkbox" name="debug" id="debug">
+                <h3>
+                    <label for="debug">Debug Enabled</label>
+                    <input type="checkbox" name="debug" id="debug">
+                </h3>
             </div>
             <hr>
             <div>
-                <h3>Sheep Factors</h3>
+                <h2>Sheep Factors</h2>
                 <button onclick="resetFactors()">Reset Factors</button>
                 <div class="input">
                     <label for="separation">Separation</label>

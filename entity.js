@@ -16,10 +16,8 @@ class Entity {
         }
         if (width && !height) height = width;
 
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        this.x = x; this.y = y;
+        this.width = width; this.height = height;
 
         this.isZoomable = true;
         this.isRelative = true;
@@ -108,7 +106,8 @@ class Entity {
     }
 
     draw(ctx, gameEngine) {
-        if (this.animator) this.animator.getDrawFunction()(ctx, this.xCenter, this.yCenter);
+        if (this.animator)
+            this.animator.getDrawFunction()(ctx, this.xCenter, this.yCenter);
 
         // Collision Box
         if (params.isDebugging) {

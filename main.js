@@ -81,6 +81,7 @@ assetManager.downloadAll(() => {
 	gameEngine.addEntities(entities);
 
 	const volumeSlider = document.getElementById("volume-slider");
+	volumeSlider.value = params.volume;
 	const backgroundMusic = assetManager.getAsset("./resources/No Worries.mp3");
 	backgroundMusic.loop = true;
 	volumeSlider.addEventListener("change", event => {
