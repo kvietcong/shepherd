@@ -53,6 +53,7 @@ class Shepherd extends Entity {
     update(gameEngine) {
         super.update(gameEngine);
 
+        this.z = 0;
         this.state = 0;
         this.velocity.x = 0;
         this.velocity.y = 0;

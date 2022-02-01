@@ -26,6 +26,7 @@ class Environment {
             }
         }
 
+        this.z = -1;
         this.width = width;
         this.height= height;
         this.tileData = tileData;

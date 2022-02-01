@@ -197,12 +197,31 @@ class GameEngine {
         });
         if (this.camera) this.camera.update(this);
 
+        // Maybe use this in the future. To discuss.
+        const comparator = (a, b) => {
+            if (b.z === undefined && a.z === undefined) return 0;
+            if (b.z === undefined) return 1;
+            if (a.z === undefined) return -1;
+            if (   a.z !== 0
+                || b.z !== 0
+                || (!a instanceof Entity)
+                || (!b instanceof Entity)
+            ) return a.z - b.z;
+            return (a.y + a.height) - (b.y + b.height);
+        };
+
         // Remove dead things
+        const lengthBeforeRemovingDead = this.entities.length;
         this.entities = this.entities.filter(entity => !entity.removeFromWorld);
+        if (lengthBeforeRemovingDead !== this.entities.length)
+            insertionSort(this.entities, (a, b) => a.z - b.z);
 
         // Add new things
+        const lengthBeforeAddingEntities = this.entities.length;
         this.entities = this.entities.concat(this.entitiesToAdd);
         this.entitiesToAdd = [];
+        if (lengthBeforeAddingEntities !== this.entities.length)
+            insertionSort(this.entities, (a, b) => a.z - b.z);
 
         // Reset the inputs
         this.rightclick = null;

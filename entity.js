@@ -19,6 +19,7 @@ class Entity {
         this.x = x; this.y = y;
         this.width = width; this.height = height;
 
+        this.z = 0;
         this.isZoomable = true;
         this.isRelative = true;
         this.isCollidable = true;

@@ -111,6 +111,24 @@ const getDistance = (x1, y1, x2, y2) => {
     return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
 };
 
+const insertionSort = (input, comparator) => {
+    for (let i = 1; i < input.length; i++) {
+        let current = input[i];
+        let j = i - 1;
+        while (
+            (j > -1)
+            && (comparator
+                ? comparator(input[j], current) < 0
+                : current < input[j])
+        ) input[j + 1] = input[j--];
+        input[j + 1] = current;
+    }
+    return input;
+}
+
+const insertionSortOnCopy = (input, comparator) =>
+    insertionSort([...input], comparator);
+
 const normalizeAngle = angle => {
     let normalizedAngle = angle;
     while (normalizedAngle < 0) normalizedAngle += 360;
