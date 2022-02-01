@@ -71,22 +71,22 @@ class Shepherd extends Entity {
         } = gameEngine.keys;
         const space = gameEngine.keys[" "];
 
-        if (w || W) {
+        if (w) {
             this.velocity.y -= 1;
             this.state = 1;
             this.facing = 0;
         }
-        if (a || A) {
+        if (a) {
             this.velocity.x -= 1;
             this.state = 1;
             this.facing = 1;
         }
-        if (s || S) {
+        if (s) {
             this.velocity.y += 1;
             this.state = 1;
             this.facing = 2;
         }
-        if (d || D) {
+        if (d) {
             this.velocity.x += 1;
             this.state = 1;
             this.facing = 3;
@@ -109,6 +109,13 @@ class Shepherd extends Entity {
         this.velocity
             .setUnit()
             .scaleInPlace(this.maxSpeed * (isAttacking ? 0.5 : 1));
+
+        // Sprinting
+        if (W || A || S || D) {
+            this.velocity.scaleInPlace(1.5);
+            this.animator.setFPS(60);
+        } else this.animator.setFPS(30);
+
 
         this.x += this.velocity.x * gameEngine.deltaTime;
         this.y += this.velocity.y * gameEngine.deltaTime;

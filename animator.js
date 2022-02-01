@@ -160,6 +160,7 @@ class Animator {
     reverse() { this.isReverse = !this.isReverse; }
     setIsReverse(isReverse = true) { this.isReverse = isReverse; }
     setFrameDuration(frameDuration) { this.frameDuration = frameDuration; }
+    setFPS(fps) { this.frameDuration = 1/fps; }
 
     flipX() { this.willFlipX = !this.willFlipX; }
     flipY() { this.willFlipY = !this.willFlipY; }
