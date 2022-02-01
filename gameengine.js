@@ -1,5 +1,4 @@
 // This game shell was happily modified from Googler Seth Ladd's "Bad Aliens" game and his Google IO talk in 2011
-
 class GameEngine {
     constructor(options) {
         // What you will use to draw
@@ -92,24 +91,29 @@ class GameEngine {
             this.rightclick = getXandY(e);
         });
 
-        window.addEventListener("keydown",  event => {
+        this.ctx.canvas.addEventListener("keydown",  event => {
             const { key } = event;
             if (this.options.debugging) console.log("KEY_DOWN", key);
-
-            // Enable all valid capital letters when pressing Shift
-            if (key === "Shift") {
-                for (let i = 0; i < 26; i++) {
-                    const lower = String.fromCharCode(i + 97);
-                    const capital = lower.toUpperCase();
-                    this.keys[capital] = this.keys[lower];
-                }
-            }
+            console.log(event)
 
             this.keys[event.key] = true;
+
+            // Enable all valid letters when pressing Shift or capital letters
+            if (key === "Shift" || (key.length === 1 && isUpperCase(key))) {
+                for (let i = 0; i < 26; i++) {
+                    const lower = String.fromCharCode(i + 97);
+                    const upper = lower.toUpperCase();
+                    const activation = this.keys[upper] || this.keys[lower];
+                    this.keys[upper] = this.keys[lower] = activation;
+                }
+            }
         });
-        window.addEventListener("keyup", event => {
+
+        this.ctx.canvas.addEventListener("keyup", event => {
             const { key } = event;
             if (this.options.debugging) console.log("KEY_UP", key);
+
+            this.keys[key] = false;
 
             // Disable all capital letters when letting go of Shift
             if (key === "Shift")
@@ -122,8 +126,6 @@ class GameEngine {
                 this.keys[key.toLowerCase()] = false;
                 this.keys[key.toUpperCase()] = false;
             }
-
-            this.keys[key] = false;
         });
     };
 

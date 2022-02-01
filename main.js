@@ -12,6 +12,8 @@ const initializeCanvas = () => {
 	document.getElementById("canvas-container").appendChild(canvas);
 	canvas.style.border = "1px solid black";
 	canvas.style.background = "white";
+	canvas.autofocus = true;
+	canvas.tabIndex = 0;
 	resizeCanvas(canvas);
 	return canvas;
 };
