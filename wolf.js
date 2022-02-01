@@ -14,14 +14,19 @@ const makeWolfAnimator = (color = "brown") => {
         staticRight: { frameAmount: 1, startX: 1 * size, startY: 2 * size  },
         staticBack: { frameAmount: 1, startX: 1 * size, startY: 3 * size  },
 
-        walkForward: { frameAmount, startX: 0 * size, startY: 0 * size  },
-        walkLeft: { frameAmount, startX: 0 * size, startY: 1 * size  },
-        walkRight: { frameAmount, startX: 0 * size, startY: 2 * size  },
-        walkBack: { frameAmount, startX: 0 * size, startY: 3 * size  },
+        walkS: { frameAmount, startX: 6 * size, startY: 0 * size  },
+        walkW: { frameAmount, startX: 6 * size, startY: 1 * size  },
+        walkE: { frameAmount, startX: 6 * size, startY: 2 * size  },
+        walkN: { frameAmount, startX: 6 * size, startY: 3 * size  },
+
+        walkNE: { frameAmount, startX: 6 * size, startY: 3 * size  },
+        walkNW: { frameAmount, startX: 6 * size, startY: 3 * size  },
+        walkSE: { frameAmount, startX: 6 * size, startY: 0 * size  },
+        walkSW: { frameAmount, startX: 6 * size, startY: 0 * size  },
     };
     const wolf = assetManager.getAsset("./resources/wolf.png");
     return new Animator(
-        wolf, "walkForward", wolfAnimations, size, size, 1/12
+        wolf, "walkS", wolfAnimations, size, size, 1/12
     );
 };
 
@@ -128,23 +133,32 @@ class Wolf extends Entity {
 
         this.velocity.setUnit().scaleInPlace(this.maxSpeed);
 
-        this.x += this.velocity.x * gameEngine.deltaTime;
-        this.y += this.velocity.y * gameEngine.deltaTime;
-
         // Visual
         if (!this.velocity.magnitude) return;
         const directionInfo = {
-            walkForward: new Vector(0, 1), walkRight: new Vector(1, 0),
-            walkBack: new Vector(0, -1), walkLeft: new Vector(-1, 0),
+            walkS: new Vector(0, 1),
+            walkE: new Vector(1, 0),
+            walkN: new Vector(0, -1),
+            walkW: new Vector(-1, 0),
+
+            walkNE: new Vector(1, -1),
+            walkNW: new Vector(-1, -1),
+            walkSE: new Vector(1, 1),
+            walkSW: new Vector(-1, 1)
         };
+
         const directions = Object.keys(directionInfo);
-        directions.forEach(direction => {
-            // Convert to degrees
-            directionInfo[direction] = normalizeAngle(
-                this.velocity.angleTo(directionInfo[direction]) * 180 / PI);
+        // Sort to find the closest cardinal/ordinal direction
+        directions.sort((a, b) => {
+            return this.velocity.angleTo(directionInfo[a])  - this.velocity.angleTo(directionInfo[b]);
         });
-        this.animator.setAnimation(directions
-            .sort((a, b) => directionInfo[a] - directionInfo[b])[0]);
+        let direction = directions[0];
+
+        this.animator.setAnimation(direction);
+
+        // Movement
+        this.x += Math.abs(this.velocity.x) * directionInfo[direction].x * gameEngine.deltaTime;
+        this.y += Math.abs(this.velocity.y) * directionInfo[direction].y * gameEngine.deltaTime;
     }
 
     draw(ctx, gameEngine) {
