@@ -15,7 +15,7 @@ class Environment {
      * }
      * @param {Array<Array<String>>} tileTypes 2D array of tile types
      */
-    constructor(width, height, tileData, tileTypes, tileSize = 50) {
+    constructor(width, height, tileData, tileTypes, tileSize = 96.5) {
         if (!("default" in tileData)) throw new Error("No default tile defined");
         for (const tileType in tileData) {
             const tile = tileData[tileType];
@@ -29,6 +29,7 @@ class Environment {
         this.z = -1;
         this.width = width;
         this.height= height;
+        //console.log("height: " + height);
         this.tileData = tileData;
 
         this.isZoomable = true;
@@ -42,19 +43,35 @@ class Environment {
         if (tileTypes) {
             this.tileTypes = tileTypes;
         } else {
-            // Default Map
+            //constucting map
+            // initialize every tile as default
             for (let i = 0; i < height; i++) {
                 this.tileTypes[i] = [];
                 for (let j = 0; j < width; j++) {
-                    if (i < 2 || j < 2) this.tileTypes[i][j] = "water";
-                    else this.tileTypes[i][j] = "default";
+                    this.tileTypes[i][j] = "default";
                 }
             }
-            //lava for spawn area
-            this.tileTypes[0][0] = "lava";
-            this.tileTypes[0][1] = "lava";
-            this.tileTypes[1][0] = "lava";
-            this.tileTypes[1][1] = "lava";
+            //building onto map
+            for (let i = 0; i < height; i++) {
+                for (let j = 0; j < width; j++) {
+                    //place light grass tiles
+                    if(i > floor(height/2)){
+                        this.tileTypes[i][j] = "lightGrass";
+                    }
+                    //place water tiles
+                    if (i < 1 || j < 1 || i > height-1 || j > width-1 || i == floor(height/2)){
+                        this.tileTypes[i][j] = "water";
+                    } 
+                    //place edge tiles
+                    if(i == floor(height/2)-1 && j > 0 && j < width-1){
+                        this.tileTypes[i][j] = "grassEdge";
+                    }
+                    if(i == floor(height)-1 && j > 0 && j < width-1){
+                        this.tileTypes[i][j] = "lightGrassEdge";
+                    }
+                }
+            }
+            
         }
     }
 

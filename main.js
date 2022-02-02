@@ -23,6 +23,7 @@ const canvas = initializeCanvas();
 assetManager.queueDownload("./resources/wolf.png");
 assetManager.queueDownload("./resources/shepherd.png")
 assetManager.queueDownload("./resources/sheep.png")
+assetManager.queueDownload("./resources/3.png");
 assetManager.queueDownload("./resources/No Worries.mp3")
 assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3")
 
@@ -38,20 +39,31 @@ assetManager.downloadAll(() => {
 		let x = randomInt(canvas.width * 2);
 		let y = randomInt(canvas.height * 2);
 		if (i % 4 === 0) {
-			entities.push(new Wolf(x, y));
+			//entities.push(new Wolf(x, y));
 		}
-		entities.push(new Sheep(x, y, shepherd));
+		//entities.push(new Sheep(x, y, shepherd));
 	}
+
+	//testing obstacle objects
+	let ob = new Obstacle(195, 99);
+	entities.push(ob);
+	let house2 = new Obstacle(387, 380);
+	entities.push(house2);
 
 	//new image object for tile set
 	let idk = new Image(96, 96);
 	idk.src = "./resources/Map_tiles.png";
 	//new tile object
 	let grassTile = {
-		x: 96,
-		y: 0,
-		width: 96,
-		height: 96,
+		x: 97,
+		y: 1,
+		width: 79,
+		image: idk
+	}
+	let grassTileEdge = {
+		x: 97,
+		y: 1,
+		width: 90,
 		image: idk
 	}
 	let waterTile = {
@@ -60,17 +72,25 @@ assetManager.downloadAll(() => {
 		width: 96,
 		image: idk
 	}
-	let lavaTile = {
-		x: 0,
-		y: 256,
-		width: 96,
+	let lightGrassTile = {
+		x: 289,
+		y: 1,
+		width: 79,
+		image: idk
+	}
+	let lightGrassTileEdge = {
+		x: 289,
+		y: 1,
+		width: 90,
 		image: idk
 	}
 	//assemble tileData array
 	let tileData = [];
 	tileData["default"] = grassTile;
+	tileData["grassEdge"] = grassTileEdge;
+	tileData["lightGrass"] = lightGrassTile;
+	tileData["lightGrassEdge"] = lightGrassTileEdge;
 	tileData["water"] = waterTile;
-	tileData["lava"] = lavaTile;
 
 	//find tile size
 	const tileWidth = 96;
