@@ -39,9 +39,9 @@ assetManager.downloadAll(() => {
 		let x = randomInt(canvas.width * 2);
 		let y = randomInt(canvas.height * 2);
 		if (i % 4 === 0) {
-			//entities.push(new Wolf(x, y));
+			entities.push(new Wolf(x, y));
 		}
-		//entities.push(new Sheep(x, y, shepherd));
+		entities.push(new Sheep(x, y, shepherd));
 	}
 
 	//testing obstacle objects
