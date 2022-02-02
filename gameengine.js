@@ -59,7 +59,7 @@ class GameEngine {
 
         this.ctx.canvas.addEventListener("mousemove", e => {
             if (this.options.debugging) {
-                console.log("MOUSE_MOVE", getXandY(e));
+                //console.log("MOUSE_MOVE", getXandY(e));
             }
             this.mouse = getXandY(e);
         });
@@ -73,7 +73,7 @@ class GameEngine {
 
         this.ctx.canvas.addEventListener("wheel", e => {
             if (this.options.debugging) {
-                console.log("WHEEL", getXandY(e), e.wheelDelta);
+                //console.log("WHEEL", getXandY(e), e.wheelDelta);
             }
             if (this.options.prevent.scrolling) {
                 e.preventDefault(); // Prevent Scrolling
@@ -93,8 +93,8 @@ class GameEngine {
 
         this.ctx.canvas.addEventListener("keydown",  event => {
             const { key } = event;
-            if (this.options.debugging) console.log("KEY_DOWN", key);
-            console.log(event)
+            //if (this.options.debugging) console.log("KEY_DOWN", key);
+            //console.log(event)
 
             this.keys[event.key] = true;
 
@@ -111,7 +111,7 @@ class GameEngine {
 
         this.ctx.canvas.addEventListener("keyup", event => {
             const { key } = event;
-            if (this.options.debugging) console.log("KEY_UP", key);
+            //if (this.options.debugging) console.log("KEY_UP", key);
 
             this.keys[key] = false;
 
