@@ -26,7 +26,7 @@ class GameEngine {
                 scrolling: true,
             },
             debugging: true,
-            hasWorldBorder: true,
+            hasWorldBorder: false,
         };
     };
 
@@ -198,17 +198,18 @@ class GameEngine {
         if (this.camera) this.camera.update(this);
 
         // Maybe use this in the future. To discuss.
-        const comparator = (a, b) => {
-            if (b.z === undefined && a.z === undefined) return 0;
-            if (b.z === undefined) return 1;
-            if (a.z === undefined) return -1;
-            if (   a.z !== 0
-                || b.z !== 0
-                || (!a instanceof Entity)
-                || (!b instanceof Entity)
-            ) return a.z - b.z;
-            return (a.y + a.height) - (b.y + b.height);
-        };
+        // const comparator = (a, b) => {
+        //     if (b.z === undefined && a.z === undefined) return 0;
+        //     if (b.z === undefined) return 1;
+        //     if (a.z === undefined) return -1;
+        //     if (   (a.z !== 0)
+        //         || (b.z !== 0)
+        //         || (!a instanceof Entity)
+        //         || (!b instanceof Entity)
+        //     ) return b.z - a.z;
+        //     return (b.y + b.height) - (a.y + a.height);
+        // };
+        // this.entities.sort(comparator);
 
         // Remove dead things
         const lengthBeforeRemovingDead = this.entities.length;
