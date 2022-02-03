@@ -256,11 +256,9 @@ class Animator {
             );
             offscreenContext.restore();
 
-            ctx.drawImage(
-                offscreenContext.canvas,
-                x - (pixelWidth / 2),
-                y - (pixelHeight / 2)
-            );
+            const drawX = x - (pixelWidth / 2);
+            const drawY = y - pixelHeight;
+            ctx.drawImage(offscreenContext.canvas, drawX, drawY);
 
             const pixelSize = max(pixelWidth, pixelHeight);
             offscreenContext.clearRect(0, 0, pixelSize, pixelSize);

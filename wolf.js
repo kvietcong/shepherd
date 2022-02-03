@@ -32,7 +32,7 @@ const makeWolfAnimator = (color = "brown") => {
 
 class Wolf extends Entity {
     constructor(x, y, velocity, maxSpeed = 150) {
-        super(x, y, 30, 30);
+        super(x, y, 40, 20);
         this.velocity = velocity || Vector.randomUnitVector();
         this.detectionRadius = this.width * 4;
         this.flockingRadius = this.detectionRadius * 2;

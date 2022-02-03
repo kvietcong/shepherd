@@ -40,7 +40,7 @@ const makeShepherdAnimator = () => {
 
 class Shepherd extends Entity {
     constructor(x, y, velocity, maxSpeed = 300) {
-        super(x, y, 30, 60);
+        super(x, y, 30, 20);
         this.facing = 0; // 0 = back, 1 = left, 2 = forward, 3 = right.
         this.state = 0; // 0 = static, 1 = walking, 2 = spell, 3 = poke, 4 = swipe, 5 = die.
         this.velocity = new Vector(0, 0);
