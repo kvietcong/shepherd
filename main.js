@@ -35,7 +35,7 @@ assetManager.downloadAll(() => {
 	gameEngine.init(ctx);
 
 	const entities = [];
-	const shepherd = new Shepherd(1050, 1500);
+	const shepherd = new Shepherd(canvas.width / 2, canvas.height / 2);
 	entities.push(shepherd);
 	for (let i = 0; i < 25; i++) {
 		let x = randomInt(canvas.width * 2);

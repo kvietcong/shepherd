@@ -112,7 +112,7 @@ class Shepherd extends Entity {
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
             if (this.collidesWith(entity)) {
-                if (entity instanceof Obstacle) {
+                if (entity.isCollidable) {
                     //this.animator.tint("red");
                     this.x += -10*this.velocity.x;
                     this.y += -10*this.velocity.y;
@@ -152,12 +152,8 @@ class Shepherd extends Entity {
                 if (this.facing == 3) gameEngine.addEntity(new Attack(this.x + 10, this.y - 30, 0, new Vector(100, 0)));
                 //gameEngine.addEntity(new Attack(this.x - 10, this.y - 60, 3 - this.facing));
                 this.actionTimeElapsed = 0;
-            }
-            
-        }else if (!e && !space) {
-            this.actionTimeElapsed = 0;
+            }         
         }
-
         // Beyblade moment
         if (Z) this.animator.rotation += 30;
 
@@ -209,7 +205,7 @@ class Fence extends Obstacle {
         if (direction) {
             super(x, y, 20, 60) //vertical
         } else {
-            super(x, y, 60, 30) //horizontal
+            super(x, y, 60, -10) //horizontal
         }
         this.setAnimator(makeFenceAnimator());
         const animationList = Object.keys(this.animator.animationInfo);
@@ -233,7 +229,7 @@ const makeAttackAnimator = () => {
 }
 
 class Attack extends Entity {
-    constructor(x, y, direction, velocity, maxSpeed = 200) {
+    constructor(x, y, direction, velocity, maxSpeed = 100) {
         super(x, y, 60, 60);
         this.velocity = velocity;
         this.maxSpeed = maxSpeed;
@@ -246,13 +242,12 @@ class Attack extends Entity {
     }
 
     update(gameEngine) {
-        this.animator.tint("black");
+        this.time += gameEngine.deltaTime;
+
         super.update(gameEngine);
-        if (this.time < 15) {
-            this.time ++;
-        } else {
-            gameEngine.entities.pop(this);
-        }
+        if (this.time > .3) this.removeFromWorld = true;
+        
+        this.animator.tint("black");
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
             if (this.collidesWith(entity) && entity instanceof Wolf) {

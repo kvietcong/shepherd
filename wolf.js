@@ -101,6 +101,7 @@ class Wolf extends Entity {
                 }
                 if (this.collidesWith(entity)) {
                     entity.animator.tint("red");
+                    //entity.attacked();
                     if (entity.health > 0) {
                         entity.health--;
                     } else {
