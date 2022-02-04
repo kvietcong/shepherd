@@ -51,6 +51,7 @@ class Wolf extends Entity {
         // Check for collision with sheep
         gameEngine.entities.forEach(entity => {
             if (entity instanceof Sheep && this.collidesWith(entity) && !this.resting) {
+                this.animator.tint("cyan", 3, 0.2);
                 this.resting = true;
                 setTimeout(() => {
                     this.resting = false;

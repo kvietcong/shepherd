@@ -53,9 +53,12 @@ class Sheep extends Entity {
         // Check for collision with wolves
         gameEngine.entities.forEach(entity => {
             if (entity instanceof Wolf && this.collidesWith(entity)) {
+                // TODO: make attack function so we don't get misordered updates
                 this.animator.setAnimation("staticE");
-                this.animator.tint("#911c1c", 1, 0.5);
+                this.animator.tint("red", 1, 0.5);
                 this.dead = true;
+                // Keep track of deltatime since it's been killed, and remove it from world after
+                // reaching minimum
                 setTimeout(() => {
                     this.removeFromWorld = true;
                 }, 1000);
@@ -79,6 +82,7 @@ class Sheep extends Entity {
             if (entity === this) return;
             //if (entity instanceof Wolf) return;
             if (entity instanceof Shepherd) {
+                // add distance check and check if shepherd is detected later
                 shepherd = entity;
                 return;
             }
