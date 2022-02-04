@@ -45,6 +45,10 @@ class Shepherd extends Entity {
         this.state = 0; // 0 = static, 1 = walking, 2 = spell, 3 = poke, 4 = swipe, 5 = die.
         this.velocity = new Vector(0, 0);
         this.maxSpeed = maxSpeed;
+
+        // shepherds's fire state variables
+        this.actionTimeElapsed = 0;
+        this.time = 0;
         this.setAnimator(makeShepherdAnimator());
         this.animator.setIsLooping();
         this.animator.play();
@@ -54,13 +58,15 @@ class Shepherd extends Entity {
         super.update(gameEngine);
 
         this.z = 0;
-        this.state = 0;
+        if (this.time < 25) {
+            this.time++;
+        } else {
+            this.time = 0;
+            this.state = 0
+        }
         this.velocity.x = 0;
         this.velocity.y = 0;
 
-        gameEngine.entities.forEach(entity => {
-            if (entity === this) return;
-        });
 
         const {
         } = params.shepherd;
@@ -103,7 +109,51 @@ class Shepherd extends Entity {
             if (e) this.state = 4;
             isAttacking = true;
         }
+        gameEngine.entities.forEach(entity => {
+            if (entity === this) return;
+            if (this.collidesWith(entity)) {
+                if (entity.isCollidable) {
+                    //this.animator.tint("red");
+                    this.x += -10*this.velocity.x;
+                    this.y += -10*this.velocity.y;
+                }
+                else if (isAttacking && entity instanceof Wolf) {
+                    entity.animator.tint("red");
+                    if (entity.health > 0) {
+                        entity.health--;
+                    } else {
+                        entity.dead = 1;
+                    }
+                    entity.x += 20*this.velocity.x;
+                    entity.y += 20*this.velocity.y;
+                    entity.velocity.x = 0;
+                    entity.velocity.y = 0;
+                }
+            }
 
+        });
+        // shepherd takes actions.
+        this.actionTimeElapsed += gameEngine.deltaTime;
+        if (space) {
+            if (this.actionTimeElapsed >= 0.2) {
+                if (this.facing == 0) gameEngine.addEntity(new Fence(this.x - 10, this.y - 60, 1));
+                if (this.facing == 1) gameEngine.addEntity(new Fence(this.x - 40, this.y - 30, 0));
+                if (this.facing == 2) gameEngine.addEntity(new Fence(this.x - 10, this.y + 10, 1));
+                if (this.facing == 3) gameEngine.addEntity(new Fence(this.x + 10, this.y - 30, 0));
+                this.actionTimeElapsed = 0;
+            }
+        }
+        if (e) {
+            if (this.actionTimeElapsed >= 0.2) {
+                //x - 40, y - 30, left; x + 10, y - 30, right; x - 10, y + 10, down; x - 10, y - 60, up.
+                if (this.facing == 0) gameEngine.addEntity(new Attack(this.x - 10, this.y - 60, 3, new Vector(0, -100)));
+                if (this.facing == 1) gameEngine.addEntity(new Attack(this.x - 40, this.y - 30, 2, new Vector(-100, 0)));
+                if (this.facing == 2) gameEngine.addEntity(new Attack(this.x - 10, this.y + 10, 1, new Vector(0, 100)));
+                if (this.facing == 3) gameEngine.addEntity(new Attack(this.x + 10, this.y - 30, 0, new Vector(100, 0)));
+                //gameEngine.addEntity(new Attack(this.x - 10, this.y - 60, 3 - this.facing));
+                this.actionTimeElapsed = 0;
+            }
+        }
         // Beyblade moment
         if (Z) this.animator.rotation += 30;
 
@@ -129,6 +179,99 @@ class Shepherd extends Entity {
     draw(ctx, gameEngine) {
         super.draw(ctx, gameEngine);
 
+        // Directional Line
+        if (params.isDebugging) {
+            const debugLine = this.velocity.unit.scale(30);
+            ctx.beginPath();
+            ctx.moveTo(this.xCenter + debugLine.x, this.yCenter + debugLine.y);
+            ctx.lineTo(this.xCenter, this.yCenter);
+            ctx.stroke();
+        }
+    }
+}
+const makeFenceAnimator = () => {
+    const size = 140;
+    const fenceAnimations = {
+        horizontal: {frameAmount: 1, startX: 8, startY: 16},
+        vertical: {frameAmount: 1, startX: 34, startY: 0}
+    }
+    const fence = assetManager.getAsset("./resources/fence_00.png");
+    return new Animator(
+        fence, "horizontal", fenceAnimations, 26, 33, 1, 2
+    )
+}
+class Fence extends Obstacle {
+    constructor(x, y, direction) {
+        if (direction) {
+            super(x, y, null, 20, 60); //vertical
+        } else {
+            super(x, y, null, 60, -10); //horizontal
+        }
+        this.setAnimator(makeFenceAnimator());
+        const animationList = Object.keys(this.animator.animationInfo);
+        this.animator.setAnimation(animationList[direction]);
+
+        this.animator.setIsLooping();
+        this.animator.play();
+    }
+}
+
+const makeAttackAnimator = () => {
+    const size = 140;
+    const frameAmount = 4;
+    const attackAnimations = {
+        right: {frameAmount, startX: 0, startY: 0}
+    }
+    const attack = assetManager.getAsset("./resources/slash.png");
+    return new Animator(
+        attack, "right", attackAnimations, 110, 130, 1/15, 1/2
+    )
+}
+
+class Attack extends Entity {
+    constructor(x, y, direction, velocity, maxSpeed = 100) {
+        super(x, y, 60, 60);
+        this.velocity = velocity;
+        this.maxSpeed = maxSpeed;
+        this.time = 0;
+        this.setAnimator(makeAttackAnimator());
+        this.animator.setIsLooping();
+        this.animator.play();
+        this.animator.rotation += 90*direction;
+        this.time = 0;
+    }
+
+    update(gameEngine) {
+        this.time += gameEngine.deltaTime;
+
+        super.update(gameEngine);
+        if (this.time > .3) this.removeFromWorld = true;
+
+        this.animator.tint("black");
+        gameEngine.entities.forEach(entity => {
+            if (entity === this) return;
+            if (this.collidesWith(entity) && entity instanceof Wolf) {
+                entity.animator.tint("red");
+                if (entity.health > 0) {
+                    entity.health--;
+                } else {
+                    entity.dead = 1;
+                }
+                entity.x += 1;
+                entity.y += 1;
+                entity.velocity.x = 0;
+                entity.velocity.y = 0;
+            }
+        });
+        this.x += this.velocity.x * gameEngine.deltaTime;
+        this.y += this.velocity.y * gameEngine.deltaTime;
+
+        const animationList = Object.keys(this.animator.animationInfo);
+        this.animator.setAnimation(animationList[0]);
+    }
+
+    draw(ctx, gameEngine) {
+        super.draw(ctx, gameEngine);
         // Directional Line
         if (params.isDebugging) {
             const debugLine = this.velocity.unit.scale(30);
