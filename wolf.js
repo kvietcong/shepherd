@@ -34,9 +34,11 @@ class Wolf extends Entity {
     constructor(x, y, velocity, maxSpeed = 150) {
         super(x, y, 40, 20);
         this.velocity = velocity || Vector.randomUnitVector();
-        this.detectionRadius = this.width * 4;
+        this.detectionRadius = this.width * 8;
         this.flockingRadius = this.detectionRadius * 2;
         this.maxSpeed = maxSpeed;
+        this.restTime = 3000;
+        this.resting = false;
 
         this.setAnimator(makeWolfAnimator());
         this.animator.setIsLooping();
@@ -45,6 +47,18 @@ class Wolf extends Entity {
 
     update(gameEngine) {
         super.update(gameEngine);
+
+        // Check for collision with sheep
+        gameEngine.entities.forEach(entity => {
+            if (entity instanceof Sheep && this.collidesWith(entity) && !this.resting) {
+                this.resting = true;
+                setTimeout(() => {
+                    this.resting = false;
+                }, this.restTime);
+            }
+        });
+
+        if (this.resting) return;
 
         const averagePosition = this.position;
         const averageDirection = this.velocity.clone();
@@ -57,6 +71,7 @@ class Wolf extends Entity {
 
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
+            if (this.resting || entity.resting) return;
             const distance = this.distanceTo(entity);
 
             if (entity instanceof Wolf) {

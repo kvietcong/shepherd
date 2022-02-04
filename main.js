@@ -41,7 +41,7 @@ assetManager.downloadAll(() => {
 		if (i % 4 === 0) {
 			entities.push(new Wolf(x, y));
 		}
-		entities.push(new Sheep(x, y, shepherd));
+		entities.push(new Sheep(x, y));
 	}
 
 	//testing obstacle objects
@@ -139,6 +139,7 @@ window.addEventListener("resize", () => { resizeCanvas(canvas) });
 
 const alignmentInput = document.getElementById("alignment");
 const shepAlignmentInput = document.getElementById("shep-alignment");
+const wolfRepelInput = document.getElementById("wolf-repel");
 const cohesionInput = document.getElementById("cohesion");
 const separationInput = document.getElementById("separation");
 

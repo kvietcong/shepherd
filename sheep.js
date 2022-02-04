@@ -4,11 +4,17 @@ params.sheep = {
     cohesionFactor: 10,
     alignmentFactor: 300,
     shepherdFactor: 25,
+    wolfFactor: 100
 };
 
 const makeSheepAnimator = () => {
     const size = 64;
     const sheepAnimations = {
+        staticE: {frameAmount: 1, startX: 0, startY: 0},
+        staticW: {frameAmount: 1, startX: 0, startY: size},
+        staticN: {frameAmount: 1, startX: 0, startY: 2 * size},
+        staticS: {frameAmount: 1, startX: 0, startY: 3 * size},
+
         walkE: {frameAmount: 7, startX: 0, startY: 0},
         walkW: {frameAmount: 7, startX: 0, startY: size},
         walkN: {frameAmount: 7, startX: 0, startY: 2 * size},
@@ -29,25 +35,42 @@ const makeSheepAnimator = () => {
 
 class Sheep extends Entity {
 
-    constructor(x, y, shepherd, velocity, maxSpeed = 200) {
+    constructor(x, y, velocity, maxSpeed = 200) {
         super(x, y, 50, 20);
         this.velocity = velocity || Vector.randomUnitVector();
-        this.shepherd = shepherd;
         this.detectionRadius = this.width * 4;
         this.flockingRadius = this.detectionRadius * 2;
         this.maxSpeed = maxSpeed;
         this.setAnimator(makeSheepAnimator());
         this.animator.setIsLooping();
         this.animator.play();
+        this.dead = false;
     }
 
     update(gameEngine) {
         super.update(gameEngine);
 
+        // Check for collision with wolves
+        gameEngine.entities.forEach(entity => {
+            if (entity instanceof Wolf && this.collidesWith(entity)) {
+                this.animator.setAnimation("staticE");
+                this.animator.tint("#911c1c", 1, 0.5);
+                this.dead = true;
+                setTimeout(() => {
+                    this.removeFromWorld = true;
+                }, 1000);
+            }
+        });
+
+        if (this.dead) return;
+
         const averagePosition = new Vector(this.x, this.y);
         const averageDirection = this.velocity.clone();
         const averageRepel = this.velocity.unit.scale(-1);
-        //const averageToShep = new Vector(this.shepherd.x - this.x, this.shepherd.y - this.y);
+        //const averageToShep = new Vector(shepherd.x - this.x, shepherd.y - this.y);
+        const averageWolfRepel = this.velocity.unit.scale(-1);
+
+        let shepherd;
 
         let flock = 1;
         let close = 1;
@@ -55,8 +78,21 @@ class Sheep extends Entity {
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
             //if (entity instanceof Wolf) return;
-            if (!(entity instanceof Sheep)) return;
-            // TODO: adjust logic so it includes shepherd
+            if (entity instanceof Shepherd) {
+                shepherd = entity;
+                return;
+            }
+            if (entity instanceof Wolf) {
+                if (this.distanceTo(entity) < this.detectionRadius) {
+                    averageWolfRepel.addInPlace(
+                        new Vector(entity.x - this.x, entity.y - this.y)
+                            .unit.scale(-1)
+                    );
+                    close++;
+                }
+                return;
+            }
+            if (!(entity instanceof Sheep || entity instanceof Wolf)) return;
 
             // Cohesion and Alignment
             if (this.distanceTo(entity) < this.flockingRadius) {
@@ -87,40 +123,51 @@ class Sheep extends Entity {
         });
 
         const separation = averageRepel.scale(1/close).unit;
+        const wolfRepel = averageWolfRepel.scale(1/close).unit;
         const cohesion = averagePosition.scale(1/flock)
             .subtract(this.x, this.y).unit;
         const alignment = averageDirection.scale(1/flock).unit;
-        const shepAlignment = new Vector(this.shepherd.x - this.x, this.shepherd.y - this.y).scale(1/flock).unit;
+        const distToShep = new Vector(shepherd.x - this.x, shepherd.y - this.y);
+        const shepAlignment = distToShep.magnitude < 75 ? distToShep.scale(-75).unit : distToShep.scale(50 /* 1/50 * distToShep.magnitude */).unit;
 
         const {
-            separationFactor, cohesionFactor, alignmentFactor, shepherdFactor
+            separationFactor, cohesionFactor, alignmentFactor, shepherdFactor, wolfFactor
         } = params.sheep;
+
+        //const speed = this.maxSpeed * distToShep / 100
+        const speed = this.maxSpeed;
 
         // Separation
         this.velocity.lerpToInPlace(
-            separation.scale(this.maxSpeed * separationFactor),
+            separation.scale(speed * separationFactor),
             1 * gameEngine.deltaTime
         );
 
         // Cohesion
         this.velocity.lerpToInPlace(
-            cohesion.scale(this.maxSpeed * cohesionFactor),
+            cohesion.scale(speed * cohesionFactor),
             1 * gameEngine.deltaTime
         );
 
         // Alignment
         this.velocity.lerpToInPlace(
-            alignment.scale(this.maxSpeed * alignmentFactor),
+            alignment.scale(speed * alignmentFactor),
             1 * gameEngine.deltaTime
         );
 
         // Align to shepherd
         this.velocity.lerpToInPlace(
-            shepAlignment.scale(this.maxSpeed * shepherdFactor),
+            shepAlignment.scale(speed * shepherdFactor),
             1 * gameEngine.deltaTime
         );
 
-        this.velocity.setUnit().scaleInPlace(this.maxSpeed);
+        // Repel from Wolf
+        this.velocity.lerpToInPlace(
+            wolfRepel.scale(speed * wolfFactor),
+            1 * gameEngine.deltaTime
+        );
+
+        this.velocity.setUnit().scaleInPlace(speed);
 
         // Attempt to do cardinal and ordinal directions
         // Note: In the game engine canvas, +y is down, -y is up
