@@ -15,7 +15,7 @@ class Environment {
      * }
      * @param {Array<Array<String>>} tileTypes 2D array of tile types
      */
-    constructor(width, height, tileData, tileTypes, tileSize = 96.5) {
+    constructor(width, height, tileData, z, tileTypes, tileSize = 96.5) {
         if (!("default" in tileData)) throw new Error("No default tile defined");
         for (const tileType in tileData) {
             const tile = tileData[tileType];
@@ -26,7 +26,7 @@ class Environment {
             }
         }
 
-        this.z = -1;
+        this.z = z;
         this.width = width;
         this.height= height;
         //console.log("height: " + height);
@@ -43,7 +43,9 @@ class Environment {
         if (tileTypes) {
             this.tileTypes = tileTypes;
         } else {
-            //constucting map
+            
+            if(this.z == -1){
+                //constucting map
             // initialize every tile as default
             for (let i = 0; i < height; i++) {
                 this.tileTypes[i] = [];
@@ -63,11 +65,23 @@ class Environment {
                         this.tileTypes[i][j] = "water";
                     } 
                     //place edge tiles
-                    if(i == floor(height/2)-1 && j > 0 && j < width-1){
+                    if(i == floor(height/2)-1 && j > 0 && j < width){
                         this.tileTypes[i][j] = "grassEdge";
                     }
-                    if(i == floor(height)-1 && j > 0 && j < width-1){
+                    if(i == floor(height)-1 && j > 0 && j < width){
                         this.tileTypes[i][j] = "lightGrassEdge";
+                    }
+                }
+            }
+            //fills background layer with one tile
+            } else {
+                //this.isZoomable = false;
+                //this.isRelative = false;
+                this.tileSize = 192;
+                for (let i = 0; i < height; i++) {
+                    this.tileTypes[i] = [];
+                    for (let j = 0; j < width; j++) {
+                        this.tileTypes[i][j] = "default";
                     }
                 }
             }
@@ -116,8 +130,13 @@ class Environment {
                 const tileType = this.tileTypes[i][j];
                 const { x, y, width, image } = this.tileData[tileType];
                 const scaleFactor = this.tileSize / width;
-                const worldX = j * this.tileSize;
-                const worldY = i * this.tileSize;
+                let worldX = j * this.tileSize;
+                let worldY = i * this.tileSize;
+                if(this.z == -2){
+                    worldX = (0 - this.height*this.tileSize)/2.5 + j * this.tileSize;
+                    worldY = (0 - this.width*this.tileSize)/6 + i * this.tileSize;
+                } 
+                
 
                 const wasImageSmoothingEnabled = ctx.imageSmoothingEnabled;
                 ctx.imageSmoothingEnabled = true;
