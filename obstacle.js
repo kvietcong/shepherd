@@ -9,9 +9,9 @@ const makeObAnim = () => {
 };
 
 class Obstacle extends Entity {
-    constructor(x, y){
+    constructor(x, y, boxX = 96, boxY = 96){
         //Object.assign(this, {x, y});
-        super(x, y, 96, 96);
+        super(x, y, boxX, boxY);
         this.setAnimator(makeObAnim());
     }
 

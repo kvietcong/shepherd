@@ -23,6 +23,8 @@ const canvas = initializeCanvas();
 assetManager.queueDownload("./resources/wolf.png");
 assetManager.queueDownload("./resources/shepherd.png")
 assetManager.queueDownload("./resources/sheep.png")
+assetManager.queueDownload("./resources/slash.png")
+assetManager.queueDownload("./resources/fence_00.png")
 assetManager.queueDownload("./resources/3.png");
 assetManager.queueDownload("./resources/No Worries.mp3")
 assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3")
@@ -33,7 +35,7 @@ assetManager.downloadAll(() => {
 	gameEngine.init(ctx);
 
 	const entities = [];
-	const shepherd = new Shepherd(canvas.width / 2, canvas.height / 2);
+	const shepherd = new Shepherd(1050, 1500);
 	entities.push(shepherd);
 	for (let i = 0; i < 25; i++) {
 		let x = randomInt(canvas.width * 2);
