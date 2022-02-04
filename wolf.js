@@ -31,14 +31,16 @@ const makeWolfAnimator = (color = "brown") => {
 };
 
 class Wolf extends Entity {
-    constructor(x, y, velocity, maxSpeed = 150) {
+    constructor(x, y, velocity, maxSpeed = 210) {
         super(x, y, 40, 20);
         this.velocity = velocity || Vector.randomUnitVector();
-        this.detectionRadius = this.width * 4;
+        this.detectionRadius = this.width * 8;
         this.flockingRadius = this.detectionRadius * 2;
         this.maxSpeed = maxSpeed;
         this.health = 3;
         this.dead = 0;
+        this.restTime = 3000;
+        this.resting = false;
 
         this.setAnimator(makeWolfAnimator());
         this.animator.setIsLooping();
@@ -47,6 +49,19 @@ class Wolf extends Entity {
 
     update(gameEngine) {
         super.update(gameEngine);
+
+        // Check for collision with sheep
+        gameEngine.entities.forEach(entity => {
+            if (entity instanceof Sheep && this.collidesWith(entity) && !this.resting) {
+                this.animator.tint("cyan", 3, 0.2);
+                this.resting = true;
+                setTimeout(() => {
+                    this.resting = false;
+                }, this.restTime);
+            }
+        });
+
+        if (this.resting) return;
 
         const averagePosition = this.position;
         const averageDirection = this.velocity.clone();
@@ -58,6 +73,7 @@ class Wolf extends Entity {
         let close = 1;
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
+            if (this.resting || entity.resting) return;
             const distance = this.distanceTo(entity);
             if (entity instanceof Obstacle) {
                 if (this.collidesWith(entity)) {
@@ -110,7 +126,7 @@ class Wolf extends Entity {
                     entity.x += .2*this.velocity.x;
                     entity.y += .2*this.velocity.y;
                     //entity.removeFromWorld = true;
-                } 
+                }
             }
             if (entity instanceof Attack) {
                 if (this.collidesWith(entity)) {

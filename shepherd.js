@@ -113,11 +113,11 @@ class Shepherd extends Entity {
             if (entity === this) return;
             if (this.collidesWith(entity)) {
                 if (entity.isCollidable) {
+                    if (entity instanceof Sheep) return;
                     //this.animator.tint("red");
                     this.x += -10*this.velocity.x;
                     this.y += -10*this.velocity.y;
-                }
-                else if (isAttacking && entity instanceof Wolf) {
+                } else if (isAttacking && entity instanceof Wolf) {
                     entity.animator.tint("red");
                     if (entity.health > 0) {
                         entity.health--;
@@ -239,6 +239,7 @@ class Attack extends Entity {
         this.animator.play();
         this.animator.rotation += 90*direction;
         this.time = 0;
+        this.isCollidable = false;
     }
 
     update(gameEngine) {
