@@ -114,7 +114,7 @@ class Shepherd extends Entity {
         // Sprinting
         if (W || A || S || D) {
             this.velocity.scaleInPlace(1.5);
-            this.animator.setFPS(60);
+            this.animator.setFPS(75);
         } else this.animator.setFPS(30);
 
 
