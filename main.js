@@ -38,6 +38,8 @@ assetManager.downloadAll(() => {
 
 	const entities = [];
 	const shepherd = new Shepherd(canvas.width / 2, canvas.height / 2);
+	params.debugEntities.shepherd = shepherd;
+
 	entities.push(shepherd);
 	for (let i = 0; i < 25; i++) {
 		let x = randomInt(canvas.width * 2);
