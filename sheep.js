@@ -47,6 +47,10 @@ class Sheep extends Entity {
         this.dead = false;
     }
 
+    attacked() {
+
+    }
+
     update(gameEngine) {
         super.update(gameEngine);
 
