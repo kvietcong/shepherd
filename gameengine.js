@@ -25,7 +25,6 @@ class GameEngine {
                 contextMenu: true,
                 scrolling: true,
             },
-            debugging: true,
             hasWorldBorder: false,
         };
     };
@@ -58,43 +57,34 @@ class GameEngine {
         });
 
         this.ctx.canvas.addEventListener("mousemove", e => {
-            if (this.options.debugging) {
-                //console.log("MOUSE_MOVE", getXandY(e));
-            }
+            if (params.isDebugging) console.log("MOUSE_MOVE", getXandY(e));
             this.mouse = getXandY(e);
         });
 
         this.ctx.canvas.addEventListener("click", e => {
-            if (this.options.debugging) {
-                console.log("CLICK", getXandY(e));
-            }
+            if (params.isDebugging) console.log("CLICK", getXandY(e));
+
             this.click = getXandY(e);
         });
 
         this.ctx.canvas.addEventListener("wheel", e => {
-            if (this.options.debugging) {
-                //console.log("WHEEL", getXandY(e), e.wheelDelta);
-            }
-            if (this.options.prevent.scrolling) {
-                e.preventDefault(); // Prevent Scrolling
-            }
+            if (params.isDebugging)
+                console.log("WHEEL", getXandY(e), e.wheelDelta);
+
+            if (this.options.prevent.scrolling) e.preventDefault(); // Prevent Scrolling
             this.wheel = e;
         });
 
         this.ctx.canvas.addEventListener("contextmenu", e => {
-            if (this.options.debugging) {
-                console.log("RIGHT_CLICK", getXandY(e));
-            }
-            if (this.options.prevent.contextMenu) {
-                e.preventDefault(); // Prevent Context Menu
-            }
+            if (params.isDebugging) console.log("RIGHT_CLICK", getXandY(e));
+
+            if (this.options.prevent.contextMenu) e.preventDefault(); // Prevent Context Menu
             this.rightclick = getXandY(e);
         });
 
         this.ctx.canvas.addEventListener("keydown",  event => {
             const { key } = event;
-            //if (this.options.debugging) console.log("KEY_DOWN", key);
-            //console.log(event)
+            if (params.isDebugging) console.log(event);
 
             this.keys[event.key] = true;
 
@@ -111,7 +101,7 @@ class GameEngine {
 
         this.ctx.canvas.addEventListener("keyup", event => {
             const { key } = event;
-            //if (this.options.debugging) console.log("KEY_UP", key);
+            if (params.isDebugging) console.log(event);
 
             this.keys[key] = false;
 

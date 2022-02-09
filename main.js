@@ -106,12 +106,18 @@ assetManager.downloadAll(() => {
 	let xTile = canvas.width*2 / tileWidth - 1;
 	let yTile = canvas.height*2 / tileWidth;
 
-	entities.push(new Environment(xTile, yTile, tileData, -1));
+	const mainEnvironment = new Environment(xTile, yTile, tileData, -1);
+	entities.push(mainEnvironment);
 
 	//new background tileData
-	let backgourndTileData = [];
-	backgourndTileData["default"] = waterTile;
-	entities.push(new Environment(xTile, yTile, backgourndTileData, -2));
+	let backgroundTileData = [];
+	backgroundTileData["default"] = waterTile;
+	const backgroundEnvironment = new Environment(xTile, yTile, backgroundTileData, -2)
+	entities.push(backgroundEnvironment);
+
+	const miniMap = new MiniMap([backgroundEnvironment, mainEnvironment], shepherd);
+	entities.push(miniMap);
+
 
 	gameEngine.addEntities(entities);
 

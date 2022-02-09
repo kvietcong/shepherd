@@ -30,7 +30,6 @@ const makeSheepAnimator = () => {
     return new Animator(
         sheep, "walkS", sheepAnimations, size, size, 1/15
     );
-
 };
 
 class Sheep extends Entity {

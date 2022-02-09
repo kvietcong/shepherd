@@ -43,7 +43,7 @@ class Environment {
         if (tileTypes) {
             this.tileTypes = tileTypes;
         } else {
-            
+
             if(this.z == -1){
                 //constucting map
             // initialize every tile as default
@@ -63,7 +63,7 @@ class Environment {
                     //place water tiles
                     if (i < 1 || j < 1 || i > height-1 || j > width-1 || i == floor(height/2)){
                         this.tileTypes[i][j] = "water";
-                    } 
+                    }
                     //place edge tiles
                     if(i == floor(height/2)-1 && j > 0 && j < width){
                         this.tileTypes[i][j] = "grassEdge";
@@ -85,7 +85,7 @@ class Environment {
                     }
                 }
             }
-            
+
         }
     }
 
@@ -135,8 +135,7 @@ class Environment {
                 if(this.z == -2){
                     worldX = (0 - this.height*this.tileSize)/2.5 + j * this.tileSize;
                     worldY = (0 - this.width*this.tileSize)/6 + i * this.tileSize;
-                } 
-                
+                }
 
                 const wasImageSmoothingEnabled = ctx.imageSmoothingEnabled;
                 ctx.imageSmoothingEnabled = true;

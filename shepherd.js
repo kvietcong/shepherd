@@ -52,10 +52,15 @@ class Shepherd extends Entity {
         this.setAnimator(makeShepherdAnimator());
         this.animator.setIsLooping();
         this.animator.play();
+
+        this.healthAPI = new HealthAPI(
+            100, 100, 1.5, true, true
+        ).attachShortcutsTo(this);
     }
 
     update(gameEngine) {
         super.update(gameEngine);
+        this.healthAPI.update(gameEngine);
 
         this.z = 0;
         if (this.time < 25) {
@@ -176,8 +181,15 @@ class Shepherd extends Entity {
         this.animator.setAnimation(animationList[this.facing + this.state*4]);
     }
 
+    heal(amount, time) { this.healthAPI.heal(amount, time); }
+    damage(amount, time) { this.healthAPI.damage(amount, time); }
+
     draw(ctx, gameEngine) {
         super.draw(ctx, gameEngine);
+        this.healthAPI.draw(
+            this.xCenter, this.y - 35,
+            75, 15,
+            ctx, gameEngine);
 
         // Directional Line
         if (params.isDebugging) {
