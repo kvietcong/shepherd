@@ -115,12 +115,6 @@ assetManager.downloadAll(() => {
 	const backgroundEnvironment = new Environment(xTile, yTile, backgroundTileData, -2)
 	entities.push(backgroundEnvironment);
 
-	const miniMap = new MiniMap([backgroundEnvironment, mainEnvironment], shepherd);
-	entities.push(miniMap);
-
-
-	gameEngine.addEntities(entities);
-
 	const volumeSlider = document.getElementById("volume-slider");
 	volumeSlider.value = params.volume;
 	const backgroundMusic = assetManager.getAsset("./resources/No Worries.mp3");
@@ -140,6 +134,11 @@ assetManager.downloadAll(() => {
 	const camera = new Camera(gameEngine.width / 2, gameEngine.height / 2);
 	camera.follow(shepherd);
 	gameEngine.setCamera(camera);
+
+	const miniMap = new MiniMap([backgroundEnvironment, mainEnvironment], camera);
+	entities.push(miniMap);
+
+	gameEngine.addEntities(entities);
 	gameEngine.start();
 });
 

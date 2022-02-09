@@ -37,31 +37,30 @@ class MiniMap extends GUIElement {
     draw(ctx, gameEngine) {
         const { width, height } = gameEngine;
         const radius = min(width, height) / 6;
-        const { xCenter, yCenter } = this.centeredOn;
+        const x = this.centeredOn.xCenter ?? this.centeredOn.x;
+        const y = this.centeredOn.yCenter ?? this.centeredOn.y;
 
         const { offscreenCanvas, offscreenContext } = GUIElement;
         offscreenContext.save();
         offscreenCanvas.width = width;
         offscreenCanvas.height = height;
-        offscreenContext.translate(-xCenter * this.zoom + radius, -yCenter * this.zoom + radius);
+        offscreenContext.translate(-x * this.zoom + radius, -y * this.zoom + radius);
         offscreenContext.scale(this.zoom, this.zoom);
 
         this.mapElements.forEach(element => element.draw(offscreenContext));
         gameEngine.entities.forEach(entity => {
             if (!(entity instanceof Entity)) return;
 
-            const { x, y } = entity;
+            const { x, y, width, height } = entity;
             offscreenContext.beginPath();
-            offscreenContext.arc(
-                x, y, entity instanceof Shepherd ? 20 : 10, 0, 2 * PI);
             offscreenContext.fillStyle = entity instanceof Wolf
                 ? "red"
                 : entity instanceof Sheep
                     ? "cyan"
                     : entity instanceof Shepherd
                         ? "salmon"
-                        : "black";
-            offscreenContext.fill();
+                        : "gray";
+            offscreenContext.fillRect(x, y, width, height);
         });
 
         ctx.beginPath();
