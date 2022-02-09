@@ -31,12 +31,14 @@ const makeWolfAnimator = (color = "brown") => {
 };
 
 class Wolf extends Entity {
-    constructor(x, y, velocity, maxSpeed = 150) {
+    constructor(x, y, velocity, maxSpeed = 210) {
         super(x, y, 40, 20);
         this.velocity = velocity || Vector.randomUnitVector();
         this.detectionRadius = this.width * 8;
         this.flockingRadius = this.detectionRadius * 2;
         this.maxSpeed = maxSpeed;
+        this.health = 3;
+        this.dead = 0;
         this.restTime = 3000;
         this.resting = false;
 
@@ -69,12 +71,16 @@ class Wolf extends Entity {
 
         let flock = 1;
         let close = 1;
-
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
             if (this.resting || entity.resting) return;
             const distance = this.distanceTo(entity);
-
+            if (entity instanceof Obstacle) {
+                if (this.collidesWith(entity)) {
+                    this.x -= .1*this.velocity.x;
+                    this.y -= .1*this.velocity.y;
+                }
+            }
             if (entity instanceof Wolf) {
                 // Cohesion and Alignment
                 if (distance < this.flockingRadius) {
@@ -108,6 +114,25 @@ class Wolf extends Entity {
                     || (distance < closestSheep.distanceTo(this)))
                 ) {
                     closestSheep = entity;
+                }
+                if (this.collidesWith(entity)) {
+                    entity.animator.tint("red");
+                    //entity.attacked();
+                    if (entity.health > 0) {
+                        entity.health--;
+                    } else {
+                        entity.dead = 1;
+                    }
+                    entity.x += .2*this.velocity.x;
+                    entity.y += .2*this.velocity.y;
+                    //entity.removeFromWorld = true;
+                }
+            }
+            if (entity instanceof Attack) {
+                if (this.collidesWith(entity)) {
+                    this.animator.tint("red");
+                    this.x -= .2*this.velocity.x;
+                    this.y -= .2*this.velocity.y;
                 }
             }
         });

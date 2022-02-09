@@ -30,7 +30,6 @@ const makeSheepAnimator = () => {
     return new Animator(
         sheep, "walkS", sheepAnimations, size, size, 1/15
     );
-
 };
 
 class Sheep extends Entity {
@@ -41,6 +40,8 @@ class Sheep extends Entity {
         this.detectionRadius = this.width * 4;
         this.flockingRadius = this.detectionRadius * 2;
         this.maxSpeed = maxSpeed;
+        this.health = 3;
+        this.dead = 0;
         this.setAnimator(makeSheepAnimator());
         this.animator.setIsLooping();
         this.animator.play();

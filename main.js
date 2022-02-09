@@ -11,7 +11,7 @@ const initializeCanvas = () => {
 	const canvas = document.createElement("canvas");
 	document.getElementById("canvas-container").appendChild(canvas);
 	canvas.style.border = "1px solid black";
-	canvas.style.background = "white";
+	canvas.style.background = "black";
 	canvas.autofocus = true;
 	canvas.tabIndex = 0;
 	resizeCanvas(canvas);
@@ -23,7 +23,11 @@ const canvas = initializeCanvas();
 assetManager.queueDownload("./resources/wolf.png");
 assetManager.queueDownload("./resources/shepherd.png")
 assetManager.queueDownload("./resources/sheep.png")
+assetManager.queueDownload("./resources/1.png");
+assetManager.queueDownload("./resources/2.png");
 assetManager.queueDownload("./resources/3.png");
+assetManager.queueDownload("./resources/slash.png")
+assetManager.queueDownload("./resources/fence_00.png")
 assetManager.queueDownload("./resources/No Worries.mp3")
 assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3")
 
@@ -34,6 +38,8 @@ assetManager.downloadAll(() => {
 
 	const entities = [];
 	const shepherd = new Shepherd(canvas.width / 2, canvas.height / 2);
+	params.debugEntities.shepherd = shepherd;
+
 	entities.push(shepherd);
 	for (let i = 0; i < 25; i++) {
 		let x = randomInt(canvas.width * 2);
@@ -44,11 +50,13 @@ assetManager.downloadAll(() => {
 		entities.push(new Sheep(x, y));
 	}
 
-	//testing obstacle objects
-	let ob = new Obstacle(195, 99);
-	entities.push(ob);
-	let house2 = new Obstacle(387, 380);
+	//sample obstacles
+	let house = new Obstacle(195, 99, "./resources/3.png");
+	entities.push(house);
+	let house2 = new Obstacle(387, 380, "./resources/3.png");
 	entities.push(house2);
+	entities.push(new Obstacle(290, 860, "./resources/2.png"));
+	entities.push(new Obstacle(773, 577, "./resources/1.png"));
 
 	//new image object for tile set
 	let idk = new Image(96, 96);
@@ -98,7 +106,18 @@ assetManager.downloadAll(() => {
 	let xTile = canvas.width*2 / tileWidth - 1;
 	let yTile = canvas.height*2 / tileWidth;
 
-	entities.push(new Environment(xTile, yTile, tileData));
+	const mainEnvironment = new Environment(xTile, yTile, tileData, -1);
+	entities.push(mainEnvironment);
+
+	//new background tileData
+	let backgroundTileData = [];
+	backgroundTileData["default"] = waterTile;
+	const backgroundEnvironment = new Environment(xTile, yTile, backgroundTileData, -2)
+	entities.push(backgroundEnvironment);
+
+	const miniMap = new MiniMap([backgroundEnvironment, mainEnvironment], shepherd);
+	entities.push(miniMap);
+
 
 	gameEngine.addEntities(entities);
 
