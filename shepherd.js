@@ -125,9 +125,14 @@ class Shepherd extends Entity {
             if (this.collidesWith(entity)) {
                 if (entity.isCollidable) {
                     if (entity instanceof Sheep) return;
-                    //this.animator.tint("red");
-                    this.x += -10*this.velocity.x;
-                    this.y += -10*this.velocity.y;
+                    if (this.y - 10 > entity.y - this.height && this.y + 10 < entity.y + entity.height) {
+                        if (this.x < entity.x) this.x = entity.x - this.width;
+                        if(this.x > entity.x) this.x = entity.x + entity.width;
+                    } if (this.x > entity.x - this.width && this.x < entity.x + entity.width) {
+                        if (this.y < entity.y) this.y = entity.y - this.height;
+                        if (this.y > entity.y) this.y = entity.y + entity.width;
+                    }
+                    
                 } else if (isAttacking && entity instanceof Wolf) {
                     entity.animator.tint("red");
                     if (entity.health > 0) {
