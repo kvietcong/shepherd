@@ -46,31 +46,43 @@ class Sheep extends Entity {
         this.animator.setIsLooping();
         this.animator.play();
         this.dead = false;
+        this.timeSinceDeath = 0;
+        this.deathLength = 3;
+        this.healthAPI = new HealthAPI(
+            100, 100, 1.5, true, true
+        ).attachShortcutsTo(this);
+        this.sheepBaa = assetManager.getAsset("./resources/sheep_baa.mp3").cloneNode();
+        this.sheepBaa.volume = 0.3; // TODO: make adjustable
     }
 
-    attacked() {
-
+    attacked(damage) {
+        this.healthAPI.damage(100);
+        this.animator.untint();
+        this.animator.tint("red", this.deathLength, 0.5);
+        this.sheepBaa.play();
+        if (this.healthAPI.health <= 0) {
+            this.dead = true;
+            this.animator.setAnimation("staticE");
+        }
     }
 
     update(gameEngine) {
         super.update(gameEngine);
+        this.healthAPI.update(gameEngine);
 
-        // Check for collision with wolves
         gameEngine.entities.forEach(entity => {
-            if (entity instanceof Wolf && this.collidesWith(entity)) {
-                // TODO: make attack function so we don't get misordered updates
-                this.animator.setAnimation("staticE");
-                this.animator.tint("red", 1, 0.5);
-                this.dead = true;
-                // Keep track of deltatime since it's been killed, and remove it from world after
-                // reaching minimum
-                setTimeout(() => {
-                    this.removeFromWorld = true;
-                }, 1000);
+            if (entity instanceof Obstacle && this.collidesWith(entity)) {
+                // Set this position to ouside the collider box
             }
         });
 
-        if (this.dead) return;
+        if (this.dead) {
+            this.timeSinceDeath += gameEngine.deltaTime;
+            if (this.timeSinceDeath >= this.deathLength) {
+                this.removeFromWorld = true;
+            }
+            return;
+        };
 
         const averagePosition = new Vector(this.x, this.y);
         const averageDirection = this.velocity.clone();

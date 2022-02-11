@@ -26,10 +26,11 @@ assetManager.queueDownload("./resources/sheep.png")
 assetManager.queueDownload("./resources/1.png");
 assetManager.queueDownload("./resources/2.png");
 assetManager.queueDownload("./resources/3.png");
-assetManager.queueDownload("./resources/slash.png")
-assetManager.queueDownload("./resources/fence_00.png")
-assetManager.queueDownload("./resources/No Worries.mp3")
-assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3")
+assetManager.queueDownload("./resources/slash.png");
+assetManager.queueDownload("./resources/fence_00.png");
+assetManager.queueDownload("./resources/No Worries.mp3");
+assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3");
+assetManager.queueDownload("./resources/sheep_baa.mp3");
 
 
 assetManager.downloadAll(() => {
@@ -46,8 +47,9 @@ assetManager.downloadAll(() => {
 		let y = randomInt(canvas.height * 2);
 		if (i % 4 === 0) {
 			entities.push(new Wolf(x, y));
+		} else {
+			entities.push(new Sheep(x, y));
 		}
-		entities.push(new Sheep(x, y));
 	}
 
 	//sample obstacles

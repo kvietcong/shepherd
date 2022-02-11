@@ -252,6 +252,7 @@ class Attack extends Entity {
         this.animator.rotation += 90*direction;
         this.time = 0;
         this.isCollidable = false;
+        this.damage = 25;
     }
 
     update(gameEngine) {
@@ -264,12 +265,7 @@ class Attack extends Entity {
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
             if (this.collidesWith(entity) && entity instanceof Wolf) {
-                entity.animator.tint("red");
-                if (entity.health > 0) {
-                    entity.health--;
-                } else {
-                    entity.dead = 1;
-                }
+                entity.attacked(this.damage);
                 entity.x += 1;
                 entity.y += 1;
                 entity.velocity.x = 0;
