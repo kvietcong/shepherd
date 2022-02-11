@@ -130,7 +130,7 @@ class Shepherd extends Entity {
                         if(this.x > entity.x) this.x = entity.x + entity.width;
                     } if (this.x > entity.x - this.width && this.x < entity.x + entity.width) {
                         if (this.y < entity.y) this.y = entity.y - this.height;
-                        if (this.y > entity.y) this.y = entity.y + entity.width;
+                        if (this.y > entity.y) this.y = entity.y + entity.height;
                     }
                     
                 } else if (isAttacking && entity instanceof Wolf) {
@@ -151,11 +151,11 @@ class Shepherd extends Entity {
         // shepherd takes actions.
         this.actionTimeElapsed += gameEngine.deltaTime;
         if (space) {
-            if (this.actionTimeElapsed >= 0.2) {
-                if (this.facing == 0) gameEngine.addEntity(new Fence(this.x - 10, this.y - 60, 1));
-                if (this.facing == 1) gameEngine.addEntity(new Fence(this.x - 40, this.y - 30, 0));
-                if (this.facing == 2) gameEngine.addEntity(new Fence(this.x - 10, this.y + 10, 1));
-                if (this.facing == 3) gameEngine.addEntity(new Fence(this.x + 10, this.y - 30, 0));
+            if (this.actionTimeElapsed >= 0.4) {
+                if (this.facing == 0) gameEngine.addEntity(new Obstacle(this.x - 20, this.y - 60, "./resources/fence_vertical.png", 20, 60, 20, 63, 1));
+                if (this.facing == 1) gameEngine.addEntity(new Obstacle(this.x - 40, this.y - 30, "./resources/fence_horizontal.png", 60, 20, 46, 32, 1));
+                if (this.facing == 2) gameEngine.addEntity(new Obstacle(this.x - 20, this.y + 10, "./resources/fence_vertical.png", 20, 60, 20, 63, 1));
+                if (this.facing == 3) gameEngine.addEntity(new Obstacle(this.x + 10, this.y - 30, "./resources/fence_horizontal.png", 60, 20, 46, 32, 1));
                 this.actionTimeElapsed = 0;
             }
         }
@@ -234,6 +234,7 @@ const makeFenceAnimator = () => {
         fence, "horizontal", fenceAnimations, 26, 33, 1, 2
     )
 }
+
 class Fence extends Obstacle {
     constructor(x, y, direction) {
         if (direction) {

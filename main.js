@@ -27,7 +27,8 @@ assetManager.queueDownload("./resources/1.png");
 assetManager.queueDownload("./resources/2.png");
 assetManager.queueDownload("./resources/3.png");
 assetManager.queueDownload("./resources/slash.png")
-assetManager.queueDownload("./resources/fence_00.png")
+assetManager.queueDownload("./resources/fence_vertical.png")
+assetManager.queueDownload("./resources/fence_horizontal.png")
 assetManager.queueDownload("./resources/No Worries.mp3")
 assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3")
 
