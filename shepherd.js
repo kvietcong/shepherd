@@ -1,4 +1,6 @@
 params.shepherd = {
+    energyLossRate: 20,
+    energyRegenRate: 10,
 };
 
 const makeShepherdAnimator = () => {
@@ -52,6 +54,10 @@ class Shepherd extends Entity {
         this.setAnimator(makeShepherdAnimator());
         this.animator.setIsLooping();
         this.animator.play();
+
+        this.timeSinceLostEnergy = 0;
+        this.maxEnergy = 100;
+        this.energy = 100;
 
         this.healthAPI = new HealthAPI(
             100, 100, 1.5, true, true
@@ -167,10 +173,21 @@ class Shepherd extends Entity {
             .scaleInPlace(this.maxSpeed * (isAttacking ? 0.5 : 1));
 
         // Sprinting
-        if (W || A || S || D) {
-            this.velocity.scaleInPlace(1.5);
-            this.animator.setFPS(75);
-        } else this.animator.setFPS(30);
+        this.timeSinceLostEnergy += gameEngine.deltaTime;
+        if ((W || A || S || D) && this.timeSinceLostEnergy >= 2) {
+            if (this.energy > 0) {
+                this.velocity.scaleInPlace(1.75);
+                this.animator.setFPS(75);
+                this.energy -= params.shepherd.energyLossRate * gameEngine.deltaTime;
+                this.energy = max(0, this.energy);
+            } else {
+                this.timeSinceLostEnergy = 0;
+            }
+        } else {
+            this.energy += params.shepherd.energyRegenRate * gameEngine.deltaTime;
+            this.energy = min(this.maxEnergy, this.energy);
+            this.animator.setFPS(30);
+        }
 
 
         this.x += this.velocity.x * gameEngine.deltaTime;
