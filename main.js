@@ -29,6 +29,9 @@ assetManager.queueDownload("./resources/3.png");
 assetManager.queueDownload("./resources/slash.png")
 assetManager.queueDownload("./resources/fence_vertical.png")
 assetManager.queueDownload("./resources/fence_horizontal.png")
+assetManager.queueDownload("./resources/fireicon.png")
+assetManager.queueDownload("./resources/campfire.png")
+assetManager.queueDownload("./resources/pinetree.png")
 assetManager.queueDownload("./resources/No Worries.mp3")
 assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3")
 
@@ -138,7 +141,14 @@ assetManager.downloadAll(() => {
 
 	const miniMap = new MiniMap([backgroundEnvironment, mainEnvironment], camera);
 	entities.push(miniMap);
-
+	//const cooldown = new CooldownTimer(50, 50, 100, 100);
+	//entities.push(cooldown);
+	const fenceIcon = new Icon(assetManager.getAsset("./resources/fence_horizontal.png"), 50, 50, 50, 50, "1");
+	const fireIcon = new Icon(assetManager.getAsset("./resources/fireicon.png"), 100, 50, 50, 50, "2");
+	const treeIcon = new Icon(assetManager.getAsset("./resources/pinetree.png"), 150, 50, 50, 50, "3");
+	entities.push(fenceIcon);
+	entities.push(fireIcon);
+	entities.push(treeIcon);
 	gameEngine.addEntities(entities);
 	gameEngine.start();
 });

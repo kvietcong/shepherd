@@ -97,6 +97,9 @@ class GameEngine {
                     this.keys[upper] = this.keys[lower] = activation;
                 }
             }
+            if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(event.code) > -1) {
+                event.preventDefault();
+            }
         });
 
         this.ctx.canvas.addEventListener("keyup", event => {
