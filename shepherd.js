@@ -250,7 +250,7 @@ class CooldownTimer extends GUIElement {
         this.height = height;
         this.actionTimeElapsed = 0;
         this.time = time;
-        this.z = 6;
+        this.z = 0;
     }
     update(gameEngine) {
         this.actionTimeElapsed += gameEngine.deltaTime;
@@ -301,13 +301,18 @@ class Attack extends Entity {
         this.animator.tint("black");
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
-            if (this.collidesWith(entity) && entity instanceof Wolf) {
-                entity.animator.tint("red");
+            if (this.collidesWith(entity)) {
+                if(entity instanceof Wolf) {
+                    entity.animator.tint("red");
+                    entity.x += 1;
+                    entity.y += 1;
+                    entity.velocity.x = 0;
+                    entity.velocity.y = 0;
                     //entity.removeFromWorld = true;
-                entity.x += 1;
-                entity.y += 1;
-                entity.velocity.x = 0;
-                entity.velocity.y = 0;
+                }
+                if(entity instanceof Obstacle) {
+                    entity.removeFromWorld = true;
+                }
             }
         });
         this.x += this.velocity.x * gameEngine.deltaTime;
