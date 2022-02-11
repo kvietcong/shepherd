@@ -89,7 +89,7 @@ class GameEngine {
             this.keys[event.key] = true;
 
             // Enable all valid letters when pressing Shift or capital letters
-            if (key === "Shift" || (key.length === 1 && isUpperCase(key))) {
+            if (key === "Shift" || (key.length === 1 && isLetters(key) && isUpperCase(key))) {
                 for (let i = 0; i < 26; i++) {
                     const lower = String.fromCharCode(i + 97);
                     const upper = lower.toUpperCase();
