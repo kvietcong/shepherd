@@ -34,6 +34,7 @@ class HealthAPI {
     get maxHealth() { return this._maxHealth; }
     set maxHealth(maxHealth) {
         this._maxHealth = maxHealth < 0 ? 100 : maxHealth;
+        this.health = min(this.health, this.maxHealth);
     }
 
     get isMaxed() { return this.health === this.maxHealth; }
@@ -84,9 +85,9 @@ class HealthAPI {
         const yDraw = y - height;
 
         ctx.save();
-        ctx.fillStyle = "red";
+        ctx.fillStyle = rgba(0, 0, 0, 0);
         ctx.fillRect(xDraw, yDraw, width, height);
-        ctx.fillStyle = "green";
+        ctx.fillStyle = "red";
         ctx.fillRect(xDraw, yDraw, width * ratio, height);
         ctx.strokeStyle = "black";
         ctx.lineWidth = 2;
