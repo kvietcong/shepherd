@@ -203,3 +203,10 @@ debugInput.checked = params.isDebugging;
 debugInput.addEventListener("change", event => {
 	params.isDebugging = event.target.checked;
 });
+
+const pausePlay = () => gameEngine.isPaused = !gameEngine.isPaused;
+const pausePlayButton = document.getElementById("pause-play");
+setInterval(() => {
+	const { isPaused } = gameEngine;
+	pausePlayButton.innerText = `${isPaused ? "Play" : "Pause"} Game`;
+}, 1000);
