@@ -11,7 +11,9 @@ const initializeCanvas = () => {
 	const canvas = document.createElement("canvas");
 	document.getElementById("canvas-container").appendChild(canvas);
 	canvas.style.border = "1px solid black";
-	canvas.style.background = "black";
+	//let idk2 = new Image(96, 96);
+	//idk2.src = "./resources/Map_tiles.png";
+	canvas.style.background = "url('./resources/forest.jpg')";
 	canvas.autofocus = true;
 	canvas.tabIndex = 0;
 	resizeCanvas(canvas);
@@ -26,6 +28,8 @@ assetManager.queueDownload("./resources/sheep.png")
 assetManager.queueDownload("./resources/1.png");
 assetManager.queueDownload("./resources/2.png");
 assetManager.queueDownload("./resources/3.png");
+assetManager.queueDownload("./resources/starDewBuildings.png");
+assetManager.queueDownload("./resources/Map_tiles.png");
 assetManager.queueDownload("./resources/slash.png")
 assetManager.queueDownload("./resources/fence_00.png")
 assetManager.queueDownload("./resources/No Worries.mp3")
@@ -37,7 +41,8 @@ assetManager.downloadAll(() => {
 	gameEngine.init(ctx);
 
 	const entities = [];
-	const shepherd = new Shepherd(canvas.width / 2, canvas.height / 2);
+	const shepherd = new Shepherd(1700, 900);
+	//const shepherd = new Shepherd(canvas.width / 2, canvas.height / 2);
 	params.debugEntities.shepherd = shepherd;
 
 	entities.push(shepherd);
@@ -49,7 +54,7 @@ assetManager.downloadAll(() => {
 		}
 		entities.push(new Sheep(x, y));
 	}
-
+	/*
 	//sample obstacles
 	let house = new Obstacle(195, 99, "./resources/3.png");
 	entities.push(house);
@@ -57,10 +62,25 @@ assetManager.downloadAll(() => {
 	entities.push(house2);
 	entities.push(new Obstacle(290, 860, "./resources/2.png"));
 	entities.push(new Obstacle(773, 577, "./resources/1.png"));
-
+	//barn
+	entities.push(new Obstacle(570, 1100, "./resources/starDewBuildings.png", 130, 0, 111, 105, 2));
+	//silo
+	entities.push(new Obstacle(540, 1077, "./resources/starDewBuildings.png", 390, 0, 47, 127, 1));
+	//well
+	entities.push(new Obstacle(600, 1000, "./resources/starDewBuildings.png", 453, 33, 47, 74, 1));
+	//bridge posts
+	entities.push(new Obstacle(670, 775, "./resources/Map_tiles.png", 289, 252, 4, 40, 2.5));
+	entities.push(new Obstacle(958, 775, "./resources/Map_tiles.png", 289, 252, 4, 40, 2.5));
+	*/
 	//new image object for tile set
 	let idk = new Image(96, 96);
 	idk.src = "./resources/Map_tiles.png";
+
+	let forestSourceImage = new Image(629, 679);
+	forestSourceImage.src = "./resources/forestground.png";
+
+	let forestWaterImage = new Image(410, 331);
+	forestWaterImage.src = "./resources/forestwater.png";
 	//new tile object
 	let grassTile = {
 		x: 97,
@@ -92,6 +112,30 @@ assetManager.downloadAll(() => {
 		width: 90,
 		image: idk
 	}
+	let woodTile = {
+		x: 294,
+		y: 335,
+		width: 14,
+		image: idk
+	}
+	let forestMudTile = {
+		x: 286,
+		y: 512,
+		width: 31,
+		image: forestSourceImage
+	}
+	let forestFlowerTile = {
+		x: 96,
+		y: 480,
+		width: 31,
+		image: forestSourceImage
+	}
+	let forestTile = {
+		x: 64,
+		y: 0,
+		width: 32,
+		image: forestWaterImage
+	}
 	//assemble tileData array
 	let tileData = [];
 	tileData["default"] = grassTile;
@@ -99,21 +143,27 @@ assetManager.downloadAll(() => {
 	tileData["lightGrass"] = lightGrassTile;
 	tileData["lightGrassEdge"] = lightGrassTileEdge;
 	tileData["water"] = waterTile;
+	tileData["wood"] = woodTile;
+	tileData["forest"] = forestTile;
+	tileData["forestFlower"] = forestFlowerTile;
+	tileData["forestMud"] = forestMudTile;
 
 	//find tile size
 	const tileWidth = 96;
 	//tiles needed to cover the play area with current tile width
-	let xTile = canvas.width*2 / tileWidth - 1;
-	let yTile = canvas.height*2 / tileWidth;
+	let xTile = 25; //canvas.width*2 / tileWidth - 1;
+	let yTile = 25; //canvas.height*2 / tileWidth;
 
-	const mainEnvironment = new Environment(xTile, yTile, tileData, -1);
+	//current availble map types: "Test"-original map, "Forest"-currently under construction
+	let importedMap = new Map("Forest");
+	const mainEnvironment = new Environment(xTile, yTile, tileData, -1, importedMap);
 	entities.push(mainEnvironment);
 
 	//new background tileData
-	let backgroundTileData = [];
-	backgroundTileData["default"] = waterTile;
-	const backgroundEnvironment = new Environment(xTile, yTile, backgroundTileData, -2)
-	entities.push(backgroundEnvironment);
+	//let backgroundTileData = [];
+	//backgroundTileData["default"] = waterTile;
+	//const backgroundEnvironment = new Environment(xTile, yTile, backgroundTileData, -2)
+	//entities.push(backgroundEnvironment);
 
 	const volumeSlider = document.getElementById("volume-slider");
 	volumeSlider.value = params.volume;
@@ -135,7 +185,7 @@ assetManager.downloadAll(() => {
 	camera.follow(shepherd);
 	gameEngine.setCamera(camera);
 
-	const miniMap = new MiniMap([backgroundEnvironment, mainEnvironment], camera);
+	const miniMap = new MiniMap([mainEnvironment], camera);
 	entities.push(miniMap);
 
 	gameEngine.addEntities(entities);
