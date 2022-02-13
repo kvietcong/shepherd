@@ -33,42 +33,41 @@ const makeWolfAnimator = (color = "brown") => {
 class Wolf extends Entity {
     constructor(x, y, velocity, maxSpeed = 220) {
         super(x, y, 40, 20);
+        // movement
         this.velocity = velocity || Vector.randomUnitVector();
         this.detectionRadius = this.width * 12;
         this.flockingRadius = this.detectionRadius * 2;
         this.maxSpeed = maxSpeed;
-        this.health = 3;
-        this.dead = 0;
-        this.restTime = 3;
-        this.resting = false;
-        this.timeSinceRest = 0;
-        this.damage = 50;
-        this.timeSinceAttacked = 0;
-        this.attackable = true;
-        this.setAnimator(makeWolfAnimator());
-        this.animator.setIsLooping();
-        this.animator.play();
+
+        // interactions
         this.healthAPI = new HealthAPI(
             100, 100, 1.5, true, true
         ).attachShortcutsTo(this);
+        this.health = 3;
+        this.dead = false;
+        this.resting = false;
+        this.timeSinceRest = 0;
+        this.restTime = 3;
+        this.damage = 50;
+
+        // media
+        this.setAnimator(makeWolfAnimator());
+        this.animator.setIsLooping();
+        this.animator.play();
     }
 
     attacked(damage) {
-        if (this.attackable) {
-            this.attackable = false;
-            this.timeSinceAttacked = 0;
-            console.log("wolf is dealt damage");
-            this.healthAPI.damage(damage);
-            this.animator.untint();
-            this.animator.tint("red", this.restTime, 0.6);
-            this.resting = true;
-            this.timeSinceRest = 0;
-            if (this.healthAPI.health <= 0) {
-                inventory.addGold(params.inventory.wolfReward);
-                console.log("gold: " + inventory.gold);
-                this.dead = true;
-                this.animator.setAnimation("staticRight");
-            }
+        console.log("wolf is dealt damage");
+        this.healthAPI.damage(damage);
+        this.animator.untint();
+        this.animator.tint("red", this.restTime, 0.6);
+        this.resting = true;
+        this.timeSinceRest = 0;
+        if (this.healthAPI.health <= 0) {
+            inventory.addGold(params.inventory.wolfReward);
+            console.log("gold: " + inventory.gold);
+            this.dead = true;
+            this.animator.setAnimation("staticRight");
         }
     }
 
@@ -99,14 +98,6 @@ class Wolf extends Entity {
                 }
             }
         });
-
-        if (!this.attackable) {
-            if (this.timeSinceAttacked < params.shepherd.attackCooldown) {
-                this.timeSinceAttacked += gameEngine.deltaTime;
-            } else {
-                this.attackable = true;
-            }
-        }
 
         if (this.resting || this.dead) {
             this.timeSinceRest += gameEngine.deltaTime;

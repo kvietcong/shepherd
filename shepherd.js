@@ -279,6 +279,7 @@ class Attack extends Entity {
         this.time = 0;
         this.isCollidable = false;
         this.damage = 25;
+        this.entitiesToIgnore = new Set();
     }
 
     update(gameEngine) {
@@ -291,12 +292,13 @@ class Attack extends Entity {
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
             if (this.collidesWith(entity)) {
-                if (entity instanceof Wolf) {
+                if (entity instanceof Wolf && !this.entitiesToIgnore.has(entity)) {
                     entity.attacked(this.damage);
                     entity.x += 1;
                     entity.y += 1;
                     entity.velocity.x = 0;
                     entity.velocity.y = 0;
+                    this.entitiesToIgnore.add(entity);
                 }
                 if (entity instanceof Obstacle) {
                     entity.removeFromWorld = true;

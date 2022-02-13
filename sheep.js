@@ -36,21 +36,25 @@ class Sheep extends Entity {
 
     constructor(x, y, velocity, maxSpeed = 200) {
         super(x, y, 50, 20);
+        // movement
         this.velocity = velocity || Vector.randomUnitVector();
         this.detectionRadius = this.width * 4;
         this.flockingRadius = this.detectionRadius * 2;
         this.maxSpeed = maxSpeed;
-        this.health = 3;
-        this.dead = 0;
-        this.setAnimator(makeSheepAnimator());
-        this.animator.setIsLooping();
-        this.animator.play();
-        this.dead = false;
-        this.timeSinceDeath = 0;
-        this.deathLength = 3;
+
+        // interactions
         this.healthAPI = new HealthAPI(
             100, 100, 1.5, true, true
         ).attachShortcutsTo(this);
+        this.health = 3;
+        this.dead = false;
+        this.timeSinceDeath = 0;
+        this.deathLength = 3;
+
+        // media
+        this.setAnimator(makeSheepAnimator());
+        this.animator.setIsLooping();
+        this.animator.play();
         this.sheepBaa = assetManager.getAsset("./resources/sheep_baa.mp3").cloneNode();
         this.sheepBaa.volume = 0.3; // TODO: make adjustable
     }
