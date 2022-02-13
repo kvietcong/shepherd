@@ -59,6 +59,8 @@ class Wolf extends Entity {
         this.resting = true;
         this.timeSinceRest = 0;
         if (this.healthAPI.health <= 0) {
+            inventory.addGold(params.inventory.wolfReward);
+            console.log("gold: " + inventory.gold);
             this.dead = true;
             this.animator.setAnimation("staticRight");
         }
@@ -66,6 +68,7 @@ class Wolf extends Entity {
 
     update(gameEngine) {
         super.update(gameEngine);
+        this.healthAPI.update(gameEngine);
 
         // Check for collision with sheep
         gameEngine.entities.forEach(entity => {
@@ -225,6 +228,10 @@ class Wolf extends Entity {
 
     draw(ctx, gameEngine) {
         super.draw(ctx, gameEngine);
+        this.healthAPI.draw(
+            this.xCenter, this.y - 35,
+            75, 10,
+            ctx, gameEngine);
 
         // Directional Line
         if (params.isDebugging) {

@@ -223,6 +223,10 @@ class Sheep extends Entity {
 
     draw(ctx, gameEngine) {
         super.draw(ctx, gameEngine);
+        this.healthAPI.draw(
+            this.xCenter, this.y - 35,
+            75, 10,
+            ctx, gameEngine);
 
         // Directional Line
         if (params.isDebugging) {

@@ -19,6 +19,8 @@ const initializeCanvas = () => {
 };
 
 const canvas = initializeCanvas();
+const inventory = new Inventory(100, 5, 5, 1);
+console.log("gold: " + inventory.gold);
 
 assetManager.queueDownload("./resources/wolf.png");
 assetManager.queueDownload("./resources/shepherd.png")
