@@ -1,6 +1,8 @@
 params.shepherd = {
     energyLossRate: 20,
     energyRegenRate: 10,
+    fenceCooldown: 2,
+    attackCooldown: 0.7
 };
 
 const makeShepherdAnimator = () => {
@@ -149,12 +151,12 @@ class Shepherd extends Entity {
             this.actionTimeElapsed[key] += gameEngine.deltaTime;
         });
         if (one) {
-            if (this.actionTimeElapsed.fence1 >= 2) {
+            if (this.actionTimeElapsed.fence1 >= params.shepherd.fenceCooldown) {
                 if (this.facing == 0) gameEngine.addEntity(new Obstacle(this.x - 25, this.y - 60, "./resources/fence_vertical.png", 15, 50, 20, 63, 1));
                 if (this.facing == 1) gameEngine.addEntity(new Obstacle(this.x - 40, this.y - 30, "./resources/fence_horizontal.png", 50, 15, 46, 32, 1));
                 if (this.facing == 2) gameEngine.addEntity(new Obstacle(this.x - 25, this.y + 10, "./resources/fence_vertical.png", 15, 50, 20, 63, 1));
                 if (this.facing == 3) gameEngine.addEntity(new Obstacle(this.x + 10, this.y - 30, "./resources/fence_horizontal.png", 50, 15, 46, 32, 1));
-                gameEngine.addEntity(new CooldownTimer(50, 50, 50, 50, 2));
+                gameEngine.addEntity(new CooldownTimer(50, 50, 50, 50, params.shepherd.fenceCooldown));
                 this.actionTimeElapsed.fence1 = 0;
             }
         }
@@ -173,7 +175,7 @@ class Shepherd extends Entity {
             }
         }
         if (space) {
-            if (this.actionTimeElapsed.attack >= 0.4) {
+            if (this.actionTimeElapsed.attack >= params.shepherd.attackCooldown) {
                 //x - 40, y - 30, left; x + 10, y - 30, right; x - 10, y + 10, down; x - 10, y - 60, up.
                 if (this.facing == 0) gameEngine.addEntity(new Attack(this.x - 10, this.y - 60, 3, new Vector(0, -100)));
                 if (this.facing == 1) gameEngine.addEntity(new Attack(this.x - 40, this.y - 30, 2, new Vector(-100, 0)));
@@ -260,7 +262,7 @@ const makeAttackAnimator = () => {
     }
     const attack = assetManager.getAsset("./resources/slash.png");
     return new Animator(
-        attack, "right", attackAnimations, 110, 130, 1/15, 1/2
+        attack, "right", attackAnimations, 110, 130, 1/20, 1/2
     )
 }
 

@@ -43,6 +43,8 @@ class Wolf extends Entity {
         this.resting = false;
         this.timeSinceRest = 0;
         this.damage = 50;
+        this.timeSinceAttacked = 0;
+        this.attackable = true;
         this.setAnimator(makeWolfAnimator());
         this.animator.setIsLooping();
         this.animator.play();
@@ -52,17 +54,21 @@ class Wolf extends Entity {
     }
 
     attacked(damage) {
-        console.log("wolf is dealt damage");
-        this.healthAPI.damage(damage);
-        this.animator.untint();
-        this.animator.tint("red", this.restTime, 0.6);
-        this.resting = true;
-        this.timeSinceRest = 0;
-        if (this.healthAPI.health <= 0) {
-            inventory.addGold(params.inventory.wolfReward);
-            console.log("gold: " + inventory.gold);
-            this.dead = true;
-            this.animator.setAnimation("staticRight");
+        if (this.attackable) {
+            this.attackable = false;
+            this.timeSinceAttacked = 0;
+            console.log("wolf is dealt damage");
+            this.healthAPI.damage(damage);
+            this.animator.untint();
+            this.animator.tint("red", this.restTime, 0.6);
+            this.resting = true;
+            this.timeSinceRest = 0;
+            if (this.healthAPI.health <= 0) {
+                inventory.addGold(params.inventory.wolfReward);
+                console.log("gold: " + inventory.gold);
+                this.dead = true;
+                this.animator.setAnimation("staticRight");
+            }
         }
     }
 
@@ -72,21 +78,43 @@ class Wolf extends Entity {
 
         // Check for collision with sheep
         gameEngine.entities.forEach(entity => {
-            if (entity instanceof Sheep && this.collidesWith(entity) && !this.resting && !entity.dead) {
-                this.timeSinceRest = 0;
-                entity.attacked(this.damage);
-                this.animator.untint();
-                this.animator.tint("cyan", this.restTime, 0.2);
-                this.resting = true;
+            if (this.collidesWith(entity)) {
+                if (entity instanceof Sheep) {
+                    if (!this.resting && !entity.dead) {
+                        this.timeSinceRest = 0;
+                        entity.attacked(this.damage);
+                        this.animator.untint();
+                        this.animator.tint("cyan", this.restTime, 0.2);
+                        this.resting = true;
+                    }
+                } else if (entity instanceof Obstacle && entity.isCollidable) {
+                    //if (entity instanceof Sheep) return;
+                    if (this.y - 10 > entity.y - this.height && this.y + 10 < entity.y + entity.height) {
+                        if (this.x < entity.x) this.x = entity.x - this.width;
+                        if(this.x > entity.x) this.x = entity.x + entity.width;
+                    } if (this.x > entity.x - this.width && this.x < entity.x + entity.width) {
+                        if (this.y < entity.y) this.y = entity.y - this.height;
+                        if (this.y > entity.y) this.y = entity.y + entity.height;
+                    }
+                }
             }
         });
 
-        if (this.resting) {
+        if (!this.attackable) {
+            if (this.timeSinceAttacked < params.shepherd.attackCooldown) {
+                this.timeSinceAttacked += gameEngine.deltaTime;
+            } else {
+                this.attackable = true;
+            }
+        }
+
+        if (this.resting || this.dead) {
             this.timeSinceRest += gameEngine.deltaTime;
             if (this.timeSinceRest >= this.restTime) {
                 this.resting = false;
+                if (this.dead) this.removeFromWorld = true;
             }
-            if (this.resting) return;
+            if (this.resting || this.dead) return;
         };
 
         const averagePosition = this.position;

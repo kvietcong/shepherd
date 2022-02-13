@@ -71,8 +71,17 @@ class Sheep extends Entity {
         this.healthAPI.update(gameEngine);
 
         gameEngine.entities.forEach(entity => {
-            if (entity instanceof Obstacle && this.collidesWith(entity)) {
-                // Set this position to ouside the collider box
+            if (this.collidesWith(entity)) {
+                if (entity instanceof Obstacle && entity.isCollidable) {
+                    //if (entity instanceof Sheep) return;
+                    if (this.y - 10 > entity.y - this.height && this.y + 10 < entity.y + entity.height) {
+                        if (this.x < entity.x) this.x = entity.x - this.width;
+                        if(this.x > entity.x) this.x = entity.x + entity.width;
+                    } if (this.x > entity.x - this.width && this.x < entity.x + entity.width) {
+                        if (this.y < entity.y) this.y = entity.y - this.height;
+                        if (this.y > entity.y) this.y = entity.y + entity.height;
+                    }
+                }
             }
         });
 
