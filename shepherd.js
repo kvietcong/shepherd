@@ -49,7 +49,7 @@ class Shepherd extends Entity {
         this.maxSpeed = maxSpeed;
 
         // shepherds's fire state variables
-        this.actionTimeElapsed = 0;
+        this.actionTimeElapsed = {fence1: 2, action2: 1, action3: 4, attack: 0.4};
         this.time = 0;
         this.setAnimator(makeShepherdAnimator());
         this.animator.setIsLooping();
@@ -83,7 +83,9 @@ class Shepherd extends Entity {
             Shift, Control, Z
         } = gameEngine.keys;
         const space = gameEngine.keys[" "];
-
+        const one = gameEngine.keys["1"];
+        const two = gameEngine.keys["2"];
+        const three = gameEngine.keys["3"];
         if (w) {
             this.velocity.y -= 1;
             this.state = 1;
@@ -106,13 +108,13 @@ class Shepherd extends Entity {
         }
 
         let isAttacking = false;
-        if (space || q || e) {
-            if (q) {
+        if (space || one || q || e) {
+            if (one) {
                 this.state = 2;
                 this.animator.tint("cyan")
             }
-            if (space) this.state = 3;
-            if (e) this.state = 4;
+            if (space) this.state = 4;
+            if (q) this.state = 3;
             isAttacking = true;
         }
         gameEngine.entities.forEach(entity => {
@@ -120,15 +122,18 @@ class Shepherd extends Entity {
             if (this.collidesWith(entity)) {
                 if (entity.isCollidable) {
                     if (entity instanceof Sheep) return;
-                    //this.animator.tint("red");
-                    this.x += -10*this.velocity.x;
-                    this.y += -10*this.velocity.y;
+                    if (this.y - 10 > entity.y - this.height && this.y + 10 < entity.y + entity.height) {
+                        if (this.x < entity.x) this.x = entity.x - this.width;
+                        if(this.x > entity.x) this.x = entity.x + entity.width;
+                    } if (this.x > entity.x - this.width && this.x < entity.x + entity.width) {
+                        if (this.y < entity.y) this.y = entity.y - this.height;
+                        if (this.y > entity.y) this.y = entity.y + entity.height;
+                    }
                 } else if (isAttacking && entity instanceof Wolf) {
-                    entity.animator.tint("red");
                     if (entity.health > 0) {
                         entity.health--;
                     } else {
-                        entity.dead = 1;
+                        entity.removeFromWorld = true;
                     }
                     entity.x += 20*this.velocity.x;
                     entity.y += 20*this.velocity.y;
@@ -139,25 +144,42 @@ class Shepherd extends Entity {
 
         });
         // shepherd takes actions.
-        this.actionTimeElapsed += gameEngine.deltaTime;
-        if (space) {
-            if (this.actionTimeElapsed >= 0.2) {
-                if (this.facing == 0) gameEngine.addEntity(new Fence(this.x - 10, this.y - 60, 1));
-                if (this.facing == 1) gameEngine.addEntity(new Fence(this.x - 40, this.y - 30, 0));
-                if (this.facing == 2) gameEngine.addEntity(new Fence(this.x - 10, this.y + 10, 1));
-                if (this.facing == 3) gameEngine.addEntity(new Fence(this.x + 10, this.y - 30, 0));
-                this.actionTimeElapsed = 0;
+        //this.actionTimeElapsed += gameEngine.deltaTime;
+        Object.keys(this.actionTimeElapsed).forEach(key => {
+            this.actionTimeElapsed[key] += gameEngine.deltaTime;
+        });
+        if (one) {
+            if (this.actionTimeElapsed.fence1 >= 2) {
+                if (this.facing == 0) gameEngine.addEntity(new Obstacle(this.x - 25, this.y - 60, "./resources/fence_vertical.png", 15, 50, 20, 63, 1));
+                if (this.facing == 1) gameEngine.addEntity(new Obstacle(this.x - 40, this.y - 30, "./resources/fence_horizontal.png", 50, 15, 46, 32, 1));
+                if (this.facing == 2) gameEngine.addEntity(new Obstacle(this.x - 25, this.y + 10, "./resources/fence_vertical.png", 15, 50, 20, 63, 1));
+                if (this.facing == 3) gameEngine.addEntity(new Obstacle(this.x + 10, this.y - 30, "./resources/fence_horizontal.png", 50, 15, 46, 32, 1));
+                gameEngine.addEntity(new CooldownTimer(50, 50, 50, 50, 2));
+                this.actionTimeElapsed.fence1 = 0;
             }
         }
-        if (e) {
-            if (this.actionTimeElapsed >= 0.2) {
+        if (two) {
+            if (this.actionTimeElapsed.action2 >= 1) {
+                gameEngine.addEntity(new Obstacle(this.x, this.y, "./resources/fireicon.png", 50, 50, 33, 38, 2));
+                gameEngine.addEntity(new CooldownTimer(100, 50, 50, 50, 1));
+                this.actionTimeElapsed.action2 = 0;
+            }
+        }
+        if (three) {
+            if (this.actionTimeElapsed.action3 >= 4) {
+                gameEngine.addEntity(new Obstacle(this.x, this.y, "./resources/pinetree.png", 40, 50, 50, 82, 1.8));
+                gameEngine.addEntity(new CooldownTimer(150, 50, 50, 50, 4));
+                this.actionTimeElapsed.action3 = 0;
+            }
+        }
+        if (space) {
+            if (this.actionTimeElapsed.attack >= 0.4) {
                 //x - 40, y - 30, left; x + 10, y - 30, right; x - 10, y + 10, down; x - 10, y - 60, up.
                 if (this.facing == 0) gameEngine.addEntity(new Attack(this.x - 10, this.y - 60, 3, new Vector(0, -100)));
                 if (this.facing == 1) gameEngine.addEntity(new Attack(this.x - 40, this.y - 30, 2, new Vector(-100, 0)));
                 if (this.facing == 2) gameEngine.addEntity(new Attack(this.x - 10, this.y + 10, 1, new Vector(0, 100)));
                 if (this.facing == 3) gameEngine.addEntity(new Attack(this.x + 10, this.y - 30, 0, new Vector(100, 0)));
-                //gameEngine.addEntity(new Attack(this.x - 10, this.y - 60, 3 - this.facing));
-                this.actionTimeElapsed = 0;
+                this.actionTimeElapsed.attack = 0;
             }
         }
         // Beyblade moment
@@ -206,31 +228,28 @@ class Shepherd extends Entity {
         }
     }
 }
-const makeFenceAnimator = () => {
-    const size = 140;
-    const fenceAnimations = {
-        horizontal: {frameAmount: 1, startX: 8, startY: 16},
-        vertical: {frameAmount: 1, startX: 34, startY: 0}
-    }
-    const fence = assetManager.getAsset("./resources/fence_00.png");
-    return new Animator(
-        fence, "horizontal", fenceAnimations, 26, 33, 1, 2
-    )
-}
-class Fence extends Obstacle {
-    constructor(x, y, direction) {
-        if (direction) {
-            super(x, y, null, 20, 60); //vertical
-        } else {
-            super(x, y, null, 60, -10); //horizontal
-        }
-        this.setAnimator(makeFenceAnimator());
-        const animationList = Object.keys(this.animator.animationInfo);
-        this.animator.setAnimation(animationList[direction]);
 
-        this.animator.setIsLooping();
-        this.animator.play();
+class CooldownTimer extends GUIElement {
+    constructor(x, y, width, height, time) {
+        super(x, y, width, height);
+        this.width = width;
+        this.height = height;
+        this.actionTimeElapsed = 0;
+        this.time = time;
+        this.z = 0;
     }
+    update(gameEngine) {
+        this.actionTimeElapsed += gameEngine.deltaTime;
+        if (this.actionTimeElapsed > this.time) this.removeFromWorld = true;
+    }
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.globalAlpha = .8;
+        ctx.fillStyle = "black";
+        ctx.moveTo(this.x + .5*this.width, this.y + .5*this.height);
+        ctx.arc(this.x + .5*this.width, this.y + .5*this.height, .5*this.width, 0,2*this.actionTimeElapsed * PI/this.time, true);
+        ctx.fill();
+     }
 }
 
 const makeAttackAnimator = () => {
@@ -269,12 +288,17 @@ class Attack extends Entity {
         this.animator.tint("black");
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
-            if (this.collidesWith(entity) && entity instanceof Wolf) {
-                entity.attacked(this.damage);
-                entity.x += 1;
-                entity.y += 1;
-                entity.velocity.x = 0;
-                entity.velocity.y = 0;
+            if (this.collidesWith(entity)) {
+                if (entity instanceof Wolf) {
+                    entity.attacked(this.damage);
+                    entity.x += 1;
+                    entity.y += 1;
+                    entity.velocity.x = 0;
+                    entity.velocity.y = 0;
+                }
+                if (entity instanceof Obstacle) {
+                    entity.removeFromWorld = true;
+                }
             }
         });
         this.x += this.velocity.x * gameEngine.deltaTime;
