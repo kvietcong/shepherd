@@ -36,37 +36,66 @@ class Sheep extends Entity {
 
     constructor(x, y, velocity, maxSpeed = 200) {
         super(x, y, 50, 20);
+        // movement
         this.velocity = velocity || Vector.randomUnitVector();
         this.detectionRadius = this.width * 4;
         this.flockingRadius = this.detectionRadius * 2;
         this.maxSpeed = maxSpeed;
+
+        // interactions
+        this.healthAPI = new HealthAPI(
+            100, 100, 1.5, true, true
+        ).attachShortcutsTo(this);
         this.health = 3;
-        this.dead = 0;
+        this.dead = false;
+        this.timeSinceDeath = 0;
+        this.deathLength = 3;
+
+        // media
         this.setAnimator(makeSheepAnimator());
         this.animator.setIsLooping();
         this.animator.play();
-        this.dead = false;
+        this.sheepBaa = assetManager.getAsset("./resources/sheep_baa.mp3").cloneNode();
+        this.sheepBaa.volume = 0.3; // TODO: make adjustable
+    }
+
+    attacked(damage) {
+        this.healthAPI.damage(100);
+        this.animator.untint();
+        this.animator.tint("red", this.deathLength, 0.5);
+        this.sheepBaa.play();
+        if (this.healthAPI.health <= 0) {
+            this.dead = true;
+            this.animator.setAnimation("staticE");
+        }
     }
 
     update(gameEngine) {
         super.update(gameEngine);
+        this.healthAPI.update(gameEngine);
 
-        // Check for collision with wolves
         gameEngine.entities.forEach(entity => {
-            if (entity instanceof Wolf && this.collidesWith(entity)) {
-                // TODO: make attack function so we don't get misordered updates
-                this.animator.setAnimation("staticE");
-                this.animator.tint("red", 1, 0.5);
-                this.dead = true;
-                // Keep track of deltatime since it's been killed, and remove it from world after
-                // reaching minimum
-                setTimeout(() => {
-                    this.removeFromWorld = true;
-                }, 1000);
+            if (this.collidesWith(entity)) {
+                if (entity instanceof Obstacle && entity.isCollidable) {
+                    //if (entity instanceof Sheep) return;
+                    if (this.y - 10 > entity.y - this.height && this.y + 10 < entity.y + entity.height) {
+                        if (this.x < entity.x) this.x = entity.x - this.width;
+                        if(this.x > entity.x) this.x = entity.x + entity.width;
+                    } if (this.x > entity.x - this.width && this.x < entity.x + entity.width) {
+                        if (this.y < entity.y) this.y = entity.y - this.height;
+                        if (this.y > entity.y) this.y = entity.y + entity.height;
+                    }
+                }
             }
         });
 
-        if (this.dead) return;
+        if (this.dead) {
+            this.timeSinceDeath += gameEngine.deltaTime;
+            if (this.timeSinceDeath >= this.deathLength) {
+                this.removeFromWorld = true;
+            }
+            return;
+        };
 
         const averagePosition = new Vector(this.x, this.y);
         const averageDirection = this.velocity.clone();
@@ -207,6 +236,10 @@ class Sheep extends Entity {
 
     draw(ctx, gameEngine) {
         super.draw(ctx, gameEngine);
+        this.healthAPI.draw(
+            this.xCenter, this.y - 35,
+            75, 10,
+            ctx, gameEngine);
 
         // Directional Line
         if (params.isDebugging) {

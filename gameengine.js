@@ -100,6 +100,9 @@ class GameEngine {
                     this.keys[upper] = this.keys[lower] = activation;
                 }
             }
+            if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(event.code) > -1) {
+                event.preventDefault();
+            }
         });
 
         this.ctx.canvas.addEventListener("keyup", event => {
@@ -195,32 +198,37 @@ class GameEngine {
         });
         if (this.camera) this.camera.update(this);
 
-        // Maybe use this in the future. To discuss.
-        // const comparator = (a, b) => {
-        //     if (b.z === undefined && a.z === undefined) return 0;
-        //     if (b.z === undefined) return 1;
-        //     if (a.z === undefined) return -1;
-        //     if (   (a.z !== 0)
-        //         || (b.z !== 0)
-        //         || (!a instanceof Entity)
-        //         || (!b instanceof Entity)
-        //     ) return b.z - a.z;
-        //     return (b.y + b.height) - (a.y + a.height);
-        // };
-        // this.entities.sort(comparator);
+        //Maybe use this in the future. To discuss.
+        const comparator = (a, b) => {
+            if (b.z === undefined && a.z === undefined) return 0;
+            if (b.z === undefined) return 1;
+            if (a.z === undefined) return -1;
+            if (   (a.z !== 0)
+                || (b.z !== 0)
+                || (!a instanceof Entity)
+                || (!b instanceof Entity)
+            ) return b.z - a.z;
+            return (b.y + b.height) - (a.y + a.height);
+        };
+        this.entities.sort(comparator);
 
         // Remove dead things
-        const lengthBeforeRemovingDead = this.entities.length;
+        // const lengthBeforeRemovingDead = this.entities.length;
         this.entities = this.entities.filter(entity => !entity.removeFromWorld);
-        if (lengthBeforeRemovingDead !== this.entities.length)
-            insertionSort(this.entities, (a, b) => a.z - b.z);
+        // if (lengthBeforeRemovingDead !== this.entities.length)
+        //     insertionSort(this.entities, (a, b) => a.z - b.z);
 
         // Add new things
-        const lengthBeforeAddingEntities = this.entities.length;
+        // const lengthBeforeAddingEntities = this.entities.length;
         this.entities = this.entities.concat(this.entitiesToAdd);
         this.entitiesToAdd = [];
-        if (lengthBeforeAddingEntities !== this.entities.length)
-            insertionSort(this.entities, (a, b) => a.z - b.z);
+        // if (lengthBeforeAddingEntities !== this.entities.length)
+        //     insertionSort(this.entities, (a, b) => a.z - b.z);
+
+        // Reset the inputs
+        this.rightclick = null;
+        this.click = null;
+        this.wheel = null;
     };
 
     loop() {

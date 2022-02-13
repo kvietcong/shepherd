@@ -19,6 +19,8 @@ const initializeCanvas = () => {
 };
 
 const canvas = initializeCanvas();
+const inventory = new Inventory(100, 5, 5, 1);
+console.log("gold: " + inventory.gold);
 
 assetManager.queueDownload("./resources/wolf.png");
 assetManager.queueDownload("./resources/shepherd.png")
@@ -26,10 +28,16 @@ assetManager.queueDownload("./resources/sheep.png")
 assetManager.queueDownload("./resources/1.png");
 assetManager.queueDownload("./resources/2.png");
 assetManager.queueDownload("./resources/3.png");
-assetManager.queueDownload("./resources/slash.png")
-assetManager.queueDownload("./resources/fence_00.png")
-assetManager.queueDownload("./resources/No Worries.mp3")
-assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3")
+assetManager.queueDownload("./resources/slash.png");
+assetManager.queueDownload("./resources/fence_00.png");
+assetManager.queueDownload("./resources/fence_vertical.png");
+assetManager.queueDownload("./resources/fence_horizontal.png");
+assetManager.queueDownload("./resources/fireicon.png");
+assetManager.queueDownload("./resources/campfire.png");
+assetManager.queueDownload("./resources/pinetree.png");
+assetManager.queueDownload("./resources/No Worries.mp3");
+assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3");
+assetManager.queueDownload("./resources/sheep_baa.mp3");
 
 
 assetManager.downloadAll(() => {
@@ -46,8 +54,9 @@ assetManager.downloadAll(() => {
 		let y = randomInt(canvas.height * 2);
 		if (i % 4 === 0) {
 			entities.push(new Wolf(x, y));
+		} else {
+			entities.push(new Sheep(x, y));
 		}
-		entities.push(new Sheep(x, y));
 	}
 
 	//sample obstacles
@@ -137,7 +146,14 @@ assetManager.downloadAll(() => {
 
 	const miniMap = new MiniMap([backgroundEnvironment, mainEnvironment], camera);
 	entities.push(miniMap);
-
+	//const cooldown = new CooldownTimer(50, 50, 100, 100);
+	//entities.push(cooldown);
+	const fenceIcon = new Icon(assetManager.getAsset("./resources/fence_horizontal.png"), 50, 50, 50, 50, "1");
+	const fireIcon = new Icon(assetManager.getAsset("./resources/fireicon.png"), 100, 50, 50, 50, "2");
+	const treeIcon = new Icon(assetManager.getAsset("./resources/pinetree.png"), 150, 50, 50, 50, "3");
+	entities.push(fenceIcon);
+	entities.push(fireIcon);
+	entities.push(treeIcon);
 	gameEngine.addEntities(entities);
 	gameEngine.start();
 });

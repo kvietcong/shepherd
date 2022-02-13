@@ -1,5 +1,5 @@
 class Obstacle extends Entity {
-    constructor(x, y, src, boxX = 96, boxY = 96){
+    constructor(x, y, src, boxX = 96, boxY = 96, frameX = 43, frameY = 38, scale = 2){
         super(x, y, boxX, boxY);
 
         this.src = src;
@@ -8,7 +8,7 @@ class Obstacle extends Entity {
         if (src) {
             let obstacle = assetManager.getAsset(this.src);
             const obAnimations = { only: { frameAmount: 1, startX: 0, startY: 0} };
-            let obAnim = new Animator(obstacle, "only", obAnimations, 43, 38, 1/30, 2);
+            let obAnim = new Animator(obstacle, "only", obAnimations, frameX, frameY, 1/30, scale);
             this.setAnimator(obAnim);
         }
     }

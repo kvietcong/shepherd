@@ -13,18 +13,29 @@ class GUIElement {
 
     draw(ctx) { throw new Error("Draw Please"); }
 }
-
+class Icon extends GUIElement {
+    constructor(source, x, y, width, height, symbol) {
+        super(x, y);
+        this.width = width;
+        this.height = height;
+        this.source = source;
+        this.symbol = symbol;
+    }
+    draw(ctx, gameEngine) {
+        ctx.fillStyle = 'tan';
+        ctx.strokeStyle = 'black';
+        ctx.globalAlpha = 0.5;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.globalAlpha = 1;
+        ctx.drawImage(this.source, this.x, this.y, this.width, this.height);
+        ctx.fillStyle = 'white';
+        ctx.font = "30px impact";
+        ctx.fillText(this.symbol, this.x + .4*this.width, this.y + .8*this.height, this.width);
+    }
+}
 // Shared Offscreen Canvas to manipulate images with.
 GUIElement.offscreenCanvas = document.createElement("canvas");
 GUIElement.offscreenContext = GUIElement.offscreenCanvas.getContext("2d");
-
-class CooldownTimer extends GUIElement {
-    constructor(x, y, width, height) {
-        super(x, y, width, height);
-    }
-
-    draw(ctx) { }
-}
 
 class MiniMap extends GUIElement {
     constructor(mapElements, centeredOn, zoom = 0.2) {
