@@ -56,13 +56,13 @@ class Sheep extends Entity {
         this.animator.setIsLooping();
         this.animator.play();
         this.sheepBaa = assetManager.getAsset("./resources/sheep_baa.mp3").cloneNode();
-        this.sheepBaa.volume = params.volume;
     }
 
     attacked(damage) {
         this.healthAPI.damage(100);
         this.animator.untint();
         this.animator.tint("red", this.deathLength, 0.5);
+        this.sheepBaa.volume = params.volume;
         this.sheepBaa.play();
         if (this.healthAPI.health <= 0) {
             this.dead = true;
