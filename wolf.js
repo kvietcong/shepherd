@@ -31,12 +31,13 @@ const makeWolfAnimator = (color = "brown") => {
 };
 
 class Wolf extends Entity {
-    constructor(x, y, velocity, maxSpeed = 220) {
+    constructor(x, y, velocity, walkSpeed = 100, maxSpeed = 220) {
         super(x, y, 40, 20);
         // movement
         this.velocity = velocity || Vector.randomUnitVector();
         this.detectionRadius = this.width * 12;
         this.flockingRadius = this.detectionRadius * 2;
+        this.walkSpeed = walkSpeed;
         this.maxSpeed = maxSpeed;
 
         // interactions
@@ -57,7 +58,7 @@ class Wolf extends Entity {
     }
 
     attacked(damage) {
-        console.log("wolf is dealt damage");
+        //console.log("wolf is dealt damage");
         this.healthAPI.damage(damage);
         this.animator.untint();
         this.animator.tint("red", this.restTime, 0.6);
@@ -75,30 +76,7 @@ class Wolf extends Entity {
         super.update(gameEngine);
         this.healthAPI.update(gameEngine);
 
-        // Check for collision with sheep
-        gameEngine.entities.forEach(entity => {
-            if (this.collidesWith(entity)) {
-                if (entity instanceof Sheep) {
-                    if (!this.resting && !entity.dead) {
-                        this.timeSinceRest = 0;
-                        entity.attacked(this.damage);
-                        this.animator.untint();
-                        this.animator.tint("cyan", this.restTime, 0.2);
-                        this.resting = true;
-                    }
-                } else if (entity instanceof Obstacle && entity.isCollidable) {
-                    //if (entity instanceof Sheep) return;
-                    if (this.y - 10 > entity.y - this.height && this.y + 10 < entity.y + entity.height) {
-                        if (this.x < entity.x) this.x = entity.x - this.width;
-                        if(this.x > entity.x) this.x = entity.x + entity.width;
-                    } if (this.x > entity.x - this.width && this.x < entity.x + entity.width) {
-                        if (this.y < entity.y) this.y = entity.y - this.height;
-                        if (this.y > entity.y) this.y = entity.y + entity.height;
-                    }
-                }
-            }
-        });
-
+        // Check if resting or dead before updating
         if (this.resting || this.dead) {
             this.timeSinceRest += gameEngine.deltaTime;
             if (this.timeSinceRest >= this.restTime) {
@@ -116,14 +94,18 @@ class Wolf extends Entity {
 
         let flock = 1;
         let close = 1;
+
         gameEngine.entities.forEach(entity => {
-            if (entity === this) return;
-            if (this.resting || entity.resting) return;
+            if (entity === this || entity.resting) return;
+
+            // Update vectors
             const distance = this.distanceTo(entity);
-            if (entity instanceof Obstacle) {
-                if (this.collidesWith(entity)) {
-                    this.x -= .1*this.velocity.x;
-                    this.y -= .1*this.velocity.y;
+            if (entity instanceof Sheep && !entity.dead) {
+                if (
+                    (distance < this.detectionRadius)
+                    && (!closestSheep || (distance < closestSheep.distanceTo(this)))
+                ) {
+                    closestSheep = entity;
                 }
             }
             if (entity instanceof Wolf) {
@@ -153,29 +135,25 @@ class Wolf extends Entity {
                 }
             }
 
-            if (entity instanceof Sheep && !entity.dead) {
-                if ((distance < this.detectionRadius)
-                 && (!closestSheep
-                    || (distance < closestSheep.distanceTo(this)))
-                ) {
-                    closestSheep = entity;
-                }
-                if (this.collidesWith(entity) && !this.resting) {
-                    this.timeSinceRest = 0;
-                    entity.attacked(this.damage);
-                    this.animator.untint();
-                    this.animator.tint("cyan", this.restTime, 0.2);
-                    this.resting = true;
-
-                    entity.x += .2*this.velocity.x;
-                    entity.y += .2*this.velocity.y;
-                }
-            }
-            if (entity instanceof Attack) {
-                if (this.collidesWith(entity)) {
-                    this.animator.tint("red");
-                    this.x -= .2*this.velocity.x;
-                    this.y -= .2*this.velocity.y;
+            // Check collisions
+            if (this.collidesWith(entity)) {
+                if (entity instanceof Sheep) {
+                    if (!this.resting && !entity.dead) {
+                        this.timeSinceRest = 0;
+                        entity.attacked(this.damage);
+                        this.animator.untint();
+                        this.animator.tint("cyan", this.restTime, 0.2);
+                        this.resting = true;
+                    }
+                } else if (entity instanceof Obstacle && entity.isCollidable) {
+                    //if (entity instanceof Sheep) return;
+                    if (this.y - 10 > entity.y - this.height && this.y + 10 < entity.y + entity.height) {
+                        if (this.x < entity.x) this.x = entity.x - this.width;
+                        if(this.x > entity.x) this.x = entity.x + entity.width;
+                    } if (this.x > entity.x - this.width && this.x < entity.x + entity.width) {
+                        if (this.y < entity.y) this.y = entity.y - this.height;
+                        if (this.y > entity.y) this.y = entity.y + entity.height;
+                    }
                 }
             }
         });
@@ -184,10 +162,12 @@ class Wolf extends Entity {
             separationFactor, cohesionFactor, alignmentFactor, chaseFactor
         } = params.wolf;
 
+        const speed = closestSheep ? this.maxSpeed : this.walkSpeed;
+
         // Separation
         const separation = averageRepel.scale(1/close).unit;
         this.velocity.lerpToInPlace(
-            separation.scale(this.maxSpeed * separationFactor),
+            separation.scale(speed * separationFactor),
             1 * gameEngine.deltaTime
         );
 
@@ -195,14 +175,14 @@ class Wolf extends Entity {
         const cohesion = averagePosition.scale(1/flock)
             .subtract(this.x, this.y).unit;
         this.velocity.lerpToInPlace(
-            cohesion.scale(this.maxSpeed * cohesionFactor),
+            cohesion.scale(speed * cohesionFactor),
             1 * gameEngine.deltaTime
         );
 
         // Alignment
         const alignment = averageDirection.scale(1/flock).unit;
         this.velocity.lerpToInPlace(
-            alignment.scale(this.maxSpeed * alignmentFactor),
+            alignment.scale(speed * alignmentFactor),
             1 * gameEngine.deltaTime
         );
 
@@ -210,12 +190,12 @@ class Wolf extends Entity {
         if (closestSheep) {
             const chase = closestSheep.position.subtract(this.x, this.y).unit;
             this.velocity.lerpToInPlace(
-                chase.scale(this.maxSpeed * chaseFactor),
+                chase.scale(speed * chaseFactor),
                 1 * gameEngine.deltaTime
             );
         }
 
-        this.velocity.setUnit().scaleInPlace(this.maxSpeed);
+        this.velocity.setUnit().scaleInPlace(speed);
 
         // Visual
         if (!this.velocity.magnitude) return;

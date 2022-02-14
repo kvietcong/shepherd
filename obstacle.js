@@ -24,3 +24,14 @@ class Obstacle extends Entity {
         super.draw(ctx, gameEngine);
     }
 }
+
+class Barn extends Obstacle {
+
+    constructor(x, y) {
+        super(x, y, 100, 100);
+    }
+
+    update(gameEngine){
+        super.update(gameEngine);
+    }
+}

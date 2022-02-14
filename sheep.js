@@ -34,12 +34,13 @@ const makeSheepAnimator = () => {
 
 class Sheep extends Entity {
 
-    constructor(x, y, velocity, maxSpeed = 200) {
+    constructor(x, y, velocity, walkSpeed = 100, maxSpeed = 200) {
         super(x, y, 50, 20);
         // movement
         this.velocity = velocity || Vector.randomUnitVector();
         this.detectionRadius = this.width * 4;
         this.flockingRadius = this.detectionRadius * 2;
+        this.walkSpeed = walkSpeed;
         this.maxSpeed = maxSpeed;
 
         // interactions
@@ -59,7 +60,7 @@ class Sheep extends Entity {
     }
 
     attacked(damage) {
-        this.healthAPI.damage(100);
+        this.healthAPI.damage(damage);
         this.animator.untint();
         this.animator.tint("red", this.deathLength, 0.5);
         this.sheepBaa.volume = params.volume;
@@ -73,21 +74,6 @@ class Sheep extends Entity {
     update(gameEngine) {
         super.update(gameEngine);
         this.healthAPI.update(gameEngine);
-
-        gameEngine.entities.forEach(entity => {
-            if (this.collidesWith(entity)) {
-                if (entity instanceof Obstacle && entity.isCollidable) {
-                    //if (entity instanceof Sheep) return;
-                    if (this.y - 10 > entity.y - this.height && this.y + 10 < entity.y + entity.height) {
-                        if (this.x < entity.x) this.x = entity.x - this.width;
-                        if(this.x > entity.x) this.x = entity.x + entity.width;
-                    } if (this.x > entity.x - this.width && this.x < entity.x + entity.width) {
-                        if (this.y < entity.y) this.y = entity.y - this.height;
-                        if (this.y > entity.y) this.y = entity.y + entity.height;
-                    }
-                }
-            }
-        });
 
         if (this.dead) {
             this.timeSinceDeath += gameEngine.deltaTime;
@@ -103,63 +89,77 @@ class Sheep extends Entity {
         //const averageToShep = new Vector(shepherd.x - this.x, shepherd.y - this.y);
         const averageWolfRepel = this.velocity.unit.scale(-1);
 
-        let shepherd;
+        let shepherd = null;
 
         let flock = 1;
         let close = 1;
 
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
-            //if (entity instanceof Wolf) return;
+
+            const distance = this.distanceTo(entity);
             if (entity instanceof Shepherd) {
-                // add distance check and check if shepherd is detected later
                 shepherd = entity;
-                return;
             }
             if (entity instanceof Wolf) {
-                if (this.distanceTo(entity) < this.detectionRadius) {
+                if (distance < this.detectionRadius) {
                     averageWolfRepel.addInPlace(
                         new Vector(entity.x - this.x, entity.y - this.y)
                             .unit.scale(-1)
                     );
                     close++;
                 }
-                return;
             }
-            if (!(entity instanceof Sheep || entity instanceof Wolf)) return;
+            if (entity instanceof Sheep && !entity.dead) {
+                // Cohesion and Alignment
+                if (distance < this.flockingRadius) {
+                    flock++;
+                    averagePosition.addInPlace(entity.x, entity.y);
+                    averageDirection.addInPlace(entity.velocity.unit);
+                }
+                // Build average vector to the shepherd
+                //averageToShep.addInPlace(new Vector(this.shepherd.x - entity.x, this.shepherd.y - entity.y).unit);
 
-            // Cohesion and Alignment
-            if (this.distanceTo(entity) < this.flockingRadius) {
-                flock++;
-                averagePosition.addInPlace(entity.x, entity.y);
-                averageDirection.addInPlace(entity.velocity.unit);
+                // Separation
+                if (distance < this.detectionRadius) {
+                    averageRepel.addInPlace(
+                        new Vector(entity.x - this.x, entity.y - this.y)
+                            .unit.scale(-1)
+                    );
+                    close++;
+                }
+
+                // Avoid Overlap
+                if (this.collidesWith(entity)) {
+                    averageRepel.addInPlace(
+                        new Vector(entity.x - this.x, entity.y - this.y)
+                            .unit.scale(-50)
+                    );
+                    close++;
+                }
             }
-            // Build average vector to the shepherd
-            //averageToShep.addInPlace(new Vector(this.shepherd.x - entity.x, this.shepherd.y - entity.y).unit);
 
-            // Separation
-            if (this.distanceTo(entity) < this.detectionRadius) {
-                averageRepel.addInPlace(
-                    new Vector(entity.x - this.x, entity.y - this.y)
-                        .unit.scale(-1)
-                );
-                close++;
-            }
-
-            // Avoid Overlap
+            // Check collisions
             if (this.collidesWith(entity)) {
-                averageRepel.addInPlace(
-                    new Vector(entity.x - this.x, entity.y - this.y)
-                        .unit.scale(-50)
-                );
-                close++;
+                if (entity instanceof Barn) {
+                    this.removeFromWorld = true;
+                    inventory.addGold(params.inventory.sheepReward);
+                    console.log("gold: " + inventory.gold);
+                } else if (entity instanceof Obstacle && entity.isCollidable) {
+                    if (this.y - 10 > entity.y - this.height && this.y + 10 < entity.y + entity.height) {
+                        if (this.x < entity.x) this.x = entity.x - this.width;
+                        if(this.x > entity.x) this.x = entity.x + entity.width;
+                    } if (this.x > entity.x - this.width && this.x < entity.x + entity.width) {
+                        if (this.y < entity.y) this.y = entity.y - this.height;
+                        if (this.y > entity.y) this.y = entity.y + entity.height;
+                    }
+                }
             }
         });
 
         const separation = averageRepel.scale(1/close).unit;
         const wolfRepel = averageWolfRepel.scale(1/close).unit;
-        const cohesion = averagePosition.scale(1/flock)
-            .subtract(this.x, this.y).unit;
+        const cohesion = averagePosition.scale(1/flock).subtract(this.x, this.y).unit;
         const alignment = averageDirection.scale(1/flock).unit;
         const distToShep = new Vector(shepherd.x - this.x, shepherd.y - this.y);
         const shepAlignment = distToShep.magnitude < 75 ? distToShep.scale(-75).unit : distToShep.scale(50 /* 1/50 * distToShep.magnitude */).unit;
@@ -169,7 +169,7 @@ class Sheep extends Entity {
         } = params.sheep;
 
         //const speed = this.maxSpeed * distToShep / 100
-        const speed = this.maxSpeed;
+        const speed = (distToShep.magnitude < this.detectionRadius * 5) ? this.maxSpeed : this.walkSpeed;
 
         // Separation
         this.velocity.lerpToInPlace(
@@ -238,7 +238,7 @@ class Sheep extends Entity {
         super.draw(ctx, gameEngine);
         this.healthAPI.draw(
             this.xCenter, this.y - 35,
-            75, 10,
+            65, 10,
             ctx, gameEngine);
 
         // Directional Line
