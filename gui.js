@@ -112,12 +112,12 @@ class MiniMap extends GUIElement {
     }
 
     update(gameEngine) {
-        const { Alt, ArrowUp: Up, ArrowDown: Down } = gameEngine.keys;
-        if (Alt) {
+        const { Shift, ArrowUp: Up, ArrowDown: Down } = gameEngine.keys;
+        if (Shift) {
             if (Up) this.zoom += 0.0025;
             if (Down) this.zoom -= 0.0025;
-            if (gameEngine.wheel?.deltaY < 0) this.zoom += 0.05;
-            if (gameEngine.wheel?.deltaY > 0) this.zoom -= 0.05;
+            if (gameEngine.wheel?.deltaY < 0) this.zoom += 0.025;
+            if (gameEngine.wheel?.deltaY > 0) this.zoom -= 0.025;
         }
     }
 }

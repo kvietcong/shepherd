@@ -63,7 +63,7 @@ class Camera {
         } = gameEngine.keys;
         const space = gameEngine.keys[" "];
 
-        if ((right || left || up || down) && !Control && !Alt) {
+        if ((right || left || up || down) && !Control && !Shift) {
             this.unfollow();
             if (right) this.targetX += 8;
             if (left) this.targetX -= 8;
@@ -92,7 +92,7 @@ class Camera {
             if (down) this.zoom -= 0.01;
         }
 
-        if (gameEngine.wheel && !Alt) {
+        if (gameEngine.wheel && !Shift) {
             if (gameEngine.wheel.deltaY < 0) {
                 this.zoom += 0.05;
             } else if (gameEngine.wheel.deltaY > 0) {
