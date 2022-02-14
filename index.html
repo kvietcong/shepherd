@@ -86,18 +86,17 @@
                 <div>
                     <h2>Instructions</h2>
                     <p>
-                        WASD keys to move Shepherd.
-                        Space to Attack, E to Swipe, and Q to Pray.
-                        Space relocks the camera to the shepherd.
+                        Try to make it to the barn with as many sheep as you can!
+                    </p>
+                    <p>
+                        WASD keys move and refocus the camera on the Shepherd.
+                        Space and Q let you attack wolves.
                     </p>
                     <p>
                         Arrow Keys to move camera freely.
-                        Ctrl+(Up Arrow or Down Arrow) or Scroll to zoom.
+                        Ctrl+⬆️/⬇️ or Scroll to zoom Camera.
+                        Alt+⬆️/⬇️ or Alt+Scroll to zoom MiniMap.
                     </p>
-                    <button onclick="resetCamera()">Reset Camera</button>
-                    <button onclick="resetZoom()">Reset Camera Zoom</button>
-                    <button onclick="resetTarget()">Reset Camera Position</button>
-                    <button onclick="toggleWorldBorder()">Toggle World Border</button>
                     <button id="pause-play" onclick="pausePlay()">Play/Pause Game</button>
                 </div>
                 <hr>
@@ -107,15 +106,7 @@
                 </div>
                 <hr>
                 <div>
-                    <h3>
-                        <label for="debug">Debug Enabled</label>
-                        <input type="checkbox" name="debug" id="debug">
-                    </h3>
-                </div>
-                <hr>
-                <div>
-                    <h2>Sheep Factors</h2>
-                    <button onclick="resetFactors()">Reset Factors</button>
+                    <h2>The Shop</h2>
                     <div class="input">
                         <label for="separation">Separation</label>
                         <input type="number" min="1" id="separation">
@@ -136,6 +127,17 @@
                         <label for="wolfRepel">Wolf Repel</label>
                         <input type="number" min="1" id="wolf-repel">
                     </div>
+                </div>
+                <hr>
+                <div>
+                    <details>
+                        <summary><h2 style="display: inline-block;">Debug Tools</h2></summary>
+                        <h3>
+                            <label for="debug">Debug Enabled</label>
+                            <input type="checkbox" name="debug" id="debug">
+                        </h3>
+                        <button onclick="resetFactors()">Reset Factors</button>
+                    </details>
                 </div>
             </section>
         </main>

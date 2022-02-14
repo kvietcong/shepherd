@@ -2,7 +2,7 @@ class Camera {
     constructor(
         x = 0, y = 0,
         lerpRate = 5, isLerping = true,
-        zoom = 1, zoomMax = 3, zoomMin = 0.25
+        zoom = 1, zoomMax = 2, zoomMin = 0.9
     ) {
         this.x = x;
         this.y = y;
@@ -59,11 +59,11 @@ class Camera {
         const {
             w, a, s, d, q, e,
             ArrowRight: right, ArrowLeft: left, ArrowUp: up, ArrowDown: down,
-            Shift, Control,
+            Shift, Control, Alt,
         } = gameEngine.keys;
         const space = gameEngine.keys[" "];
 
-        if ((right || left || up || down) && !Control) {
+        if ((right || left || up || down) && !Control && !Alt) {
             this.unfollow();
             if (right) this.targetX += 8;
             if (left) this.targetX -= 8;
@@ -88,17 +88,16 @@ class Camera {
 
         // Zooming
         if (Control) {
-            if (up) this.zoom += 0.05;
-            if (down) this.zoom -= 0.05;
+            if (up) this.zoom += 0.01;
+            if (down) this.zoom -= 0.01;
         }
 
-        if (gameEngine.wheel) {
+        if (gameEngine.wheel && !Alt) {
             if (gameEngine.wheel.deltaY < 0) {
                 this.zoom += 0.05;
             } else if (gameEngine.wheel.deltaY > 0) {
                 this.zoom -= 0.05;
             }
-            gameEngine.wheel = null;
         }
     }
 }

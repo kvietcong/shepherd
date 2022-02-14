@@ -159,16 +159,6 @@ assetManager.downloadAll(() => {
 	gameEngine.start();
 });
 
-const toggleWorldBorder = () =>
-	gameEngine.options.hasWorldBorder = !gameEngine.options.hasWorldBorder;
-
-const resetTarget = () => gameEngine.camera
-	.setPosition(gameEngine.width / 2, gameEngine.height / 2);
-
-const resetZoom = () => gameEngine.camera.zoom = 1;
-
-const resetCamera = () => { resetTarget(); resetZoom(); };
-
 // Event Hooks
 window.addEventListener("resize", () => { resizeCanvas(canvas) });
 
