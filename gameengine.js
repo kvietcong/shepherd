@@ -174,7 +174,7 @@ class GameEngine {
             const pauseText = "Game Paused";
             const pauseTextWidth = this.ctx.measureText(pauseText).width;
             this.ctx.fillStyle = "red";
-            this.ctx.font = "bold 50px Arial";
+            this.ctx.font = "bold 70px VT323, Arial";
             this.ctx.fillText(
                 pauseText,
                 this.ctx.canvas.width / 2 - pauseTextWidth / 2,

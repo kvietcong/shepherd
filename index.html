@@ -29,6 +29,27 @@
         <style>
             * {
                 box-sizing: border-box;
+                font-family: "VT323", monospace;
+            }
+
+            p {
+                font-size: 1.3rem;
+            }
+
+            h2, h2 > label {
+                font-size: 2rem;
+            }
+
+            h3 {
+                font-size: 1.5rem;
+            }
+
+            label, input {
+                font-size: 1.3rem;
+            }
+
+            button {
+                font-size: 1.3rem;
             }
 
             body {
@@ -98,11 +119,10 @@
                         Alt+⬆️/⬇️ or Alt+Scroll to zoom MiniMap.
                     </p>
                     <button id="pause-play" onclick="pausePlay()">Play/Pause Game</button>
-                </div>
-                <hr>
-                <div class="slider">
-                    <h2><label for="volume-slider">Volume</label></h2>
-                    <input type="range" min="0" max="1" step="0.01" value="0.1" id="volume-slider">
+                    <div class="slider">
+                        <h2><label for="volume-slider">Volume</label></h2>
+                        <input type="range" min="0" max="1" step="0.01" value="0.1" id="volume-slider">
+                    </div>
                 </div>
                 <hr>
                 <div>
