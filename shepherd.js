@@ -124,10 +124,10 @@ class Shepherd extends Entity {
             if (this.collidesWith(entity)) {
                 if (entity.isCollidable) {
                     if (entity instanceof Sheep) return;
-                    if (this.y - 10 > entity.y - this.height && this.y + 10 < entity.y + entity.height) {
+                    if (this.y - 30 > entity.y - this.height && this.y + 30 < entity.y + entity.height) {
                         if (this.x < entity.x) this.x = entity.x - this.width;
-                        if(this.x > entity.x) this.x = entity.x + entity.width;
-                    } if (this.x > entity.x - this.width && this.x < entity.x + entity.width) {
+                        if (this.x > entity.x) this.x = entity.x + entity.width;
+                    } if (this.x - 30 > entity.x - this.width && this.x + 30 < entity.x + entity.width) {
                         if (this.y < entity.y) this.y = entity.y - this.height;
                         if (this.y > entity.y) this.y = entity.y + entity.height;
                     }
@@ -143,7 +143,6 @@ class Shepherd extends Entity {
                     entity.velocity.y = 0;
                 }
             }
-
         });
         // shepherd takes actions.
         //this.actionTimeElapsed += gameEngine.deltaTime;
@@ -152,24 +151,24 @@ class Shepherd extends Entity {
         });
         if (one) {
             if (this.actionTimeElapsed.fence1 >= params.shepherd.fenceCooldown) {
-                if (this.facing == 0) gameEngine.addEntity(new Obstacle(this.x - 25, this.y - 60, "./resources/fence_vertical.png", 15, 50, 20, 63, 1));
-                if (this.facing == 1) gameEngine.addEntity(new Obstacle(this.x - 40, this.y - 30, "./resources/fence_horizontal.png", 50, 15, 46, 32, 1));
-                if (this.facing == 2) gameEngine.addEntity(new Obstacle(this.x - 25, this.y + 10, "./resources/fence_vertical.png", 15, 50, 20, 63, 1));
-                if (this.facing == 3) gameEngine.addEntity(new Obstacle(this.x + 10, this.y - 30, "./resources/fence_horizontal.png", 50, 15, 46, 32, 1));
+                if (this.facing == 0) gameEngine.addEntity(new Obstacle(this.x - 25, this.y - 60, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50));
+                if (this.facing == 1) gameEngine.addEntity(new Obstacle(this.x - 40, this.y - 30, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15));
+                if (this.facing == 2) gameEngine.addEntity(new Obstacle(this.x - 25, this.y + 10, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50));
+                if (this.facing == 3) gameEngine.addEntity(new Obstacle(this.x + 10, this.y - 30, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15));
                 gameEngine.addEntity(new CooldownTimer(50, 50, 50, 50, params.shepherd.fenceCooldown));
                 this.actionTimeElapsed.fence1 = 0;
             }
         }
         if (two) {
             if (this.actionTimeElapsed.action2 >= 1) {
-                gameEngine.addEntity(new Obstacle(this.x, this.y, "./resources/fireicon.png", 50, 50, 33, 38, 2));
+                gameEngine.addEntity(new Obstacle(this.x, this.y, "./resources/fireicon.png", 0, 0, 33, 38, 2, 50, 30));
                 gameEngine.addEntity(new CooldownTimer(100, 50, 50, 50, 1));
                 this.actionTimeElapsed.action2 = 0;
             }
         }
         if (three) {
             if (this.actionTimeElapsed.action3 >= 4) {
-                gameEngine.addEntity(new Obstacle(this.x, this.y, "./resources/pinetree.png", 40, 50, 50, 82, 1.8));
+                gameEngine.addEntity(new Obstacle(this.x, this.y, "./resources/pinetree.png", 0, 0, 50, 82, 1.8, 40, 70));
                 gameEngine.addEntity(new CooldownTimer(150, 50, 50, 50, 4));
                 this.actionTimeElapsed.action3 = 0;
             }
