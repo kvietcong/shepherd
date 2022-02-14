@@ -15,7 +15,7 @@ class Environment {
      * }
      * @param {Array<Array<String>>} tileTypes 2D array of tile types
      */
-    constructor(width, height, tileData, z, tileTypes, tileSize = 96.5) {
+    constructor(width, height, tileData, z, importedMap, tileTypes, tileSize = 96.5) {
         if (!("default" in tileData)) throw new Error("No default tile defined");
         for (const tileType in tileData) {
             const tile = tileData[tileType];
@@ -37,56 +37,26 @@ class Environment {
 
         this.entities = [];
         this.tileSize = tileSize;
+        this.importedMap = importedMap;
 
         // Initialize tileTypes before it can be read as undefined
         this.tileTypes = [];
+        
+        
         if (tileTypes) {
             this.tileTypes = tileTypes;
         } else {
-
-            if(this.z == -1){
-                //constucting map
-            // initialize every tile as default
-            for (let i = 0; i < height; i++) {
-                this.tileTypes[i] = [];
-                for (let j = 0; j < width; j++) {
-                    this.tileTypes[i][j] = "default";
-                }
-            }
-            //building onto map
-            for (let i = 0; i < height; i++) {
-                for (let j = 0; j < width; j++) {
-                    //place light grass tiles
-                    if(i > floor(height/2)){
-                        this.tileTypes[i][j] = "lightGrass";
-                    }
-                    //place water tiles
-                    if (i < 1 || j < 1 || i > height-1 || j > width-1 || i == floor(height/2)){
-                        this.tileTypes[i][j] = "water";
-                    }
-                    //place edge tiles
-                    if(i == floor(height/2)-1 && j > 0 && j < width){
-                        this.tileTypes[i][j] = "grassEdge";
-                    }
-                    if(i == floor(height)-1 && j > 0 && j < width){
-                        this.tileTypes[i][j] = "lightGrassEdge";
-                    }
-                }
-            }
-            //fills background layer with one tile
-            } else {
-                //this.isZoomable = false;
-                //this.isRelative = false;
-                this.tileSize = 192;
-                for (let i = 0; i < height; i++) {
-                    this.tileTypes[i] = [];
-                    for (let j = 0; j < width; j++) {
-                        this.tileTypes[i][j] = "default";
-                    }
-                }
-            }
-
+            this.tileTypes = this.importedMap.tiles;
+            this.width = this.importedMap.width;
+            this.height = this.importedMap.height;
+            //console.log(this.tileTypes[0][0]);
+            //console.log(this.tileData["grassEdge"]);
+            //console.log(this.tileTypes);
+            //let importedMap = new Map("Test");
+            //this.tileTypes = importedMap.getTileArray();
+            //console.log(this.tileTypes);
         }
+        
     }
 
     addEntity(gameEngine, entity) { this.addEntities(gameEngine, [entity]); }
@@ -123,6 +93,7 @@ class Environment {
 
     draw(ctx) {
 
+       //console.log(this.tileTypes)
         for (let i = 0; i < this.height; i++) {
 
             for (let j = 0; j < this.width; j++) {
@@ -132,11 +103,15 @@ class Environment {
                 const scaleFactor = this.tileSize / width;
                 let worldX = j * this.tileSize;
                 let worldY = i * this.tileSize;
-                if(this.z == -2){
-                    worldX = (0 - this.height*this.tileSize)/2.5 + j * this.tileSize;
-                    worldY = (0 - this.width*this.tileSize)/6 + i * this.tileSize;
-                }
 
+
+
+                /*
+                if(this.z == -2){
+                    worldX = (0 - this.height*this.tileSize)/4 + j * this.tileSize;
+                    worldY = (0 - this.width*this.tileSize)/5 + i * this.tileSize;
+                }
+                */
                 const wasImageSmoothingEnabled = ctx.imageSmoothingEnabled;
                 ctx.imageSmoothingEnabled = true;
                 //console.log(image, x, y, this.width, this.height, worldX, worldY, scaleFactor);

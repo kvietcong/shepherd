@@ -110,7 +110,7 @@ class Shepherd extends Entity {
         }
 
         let isAttacking = false;
-        if (space || one || q || e) {
+        if (space || one || q) {
             if (one) {
                 this.state = 2;
                 this.animator.tint("cyan")
@@ -174,7 +174,7 @@ class Shepherd extends Entity {
                 this.actionTimeElapsed.action3 = 0;
             }
         }
-        if (space) {
+        if (space && !q) {
             if (this.actionTimeElapsed.attack >= params.shepherd.attackCooldown) {
                 //x - 40, y - 30, left; x + 10, y - 30, right; x - 10, y + 10, down; x - 10, y - 60, up.
                 if (this.facing == 0) gameEngine.addEntity(new Attack(this.x - 10, this.y - 60, 3, new Vector(0, -100)));

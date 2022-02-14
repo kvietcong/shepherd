@@ -218,11 +218,12 @@ class Animator {
         return (ctx, x, y) => {
             const pixelWidth = this.frameWidth * this.scale;
             const pixelHeight = this.frameHeight * this.scale;
+            const pixelSize = max(pixelWidth, pixelHeight);
 
-            const offscreenContext = Animator.offscreenContext;
+            const { offscreenContext, offscreenCanvas } = Animator;
 
-            offscreenContext.width = pixelWidth;
-            offscreenContext.height = pixelHeight;
+            offscreenCanvas.width = pixelSize;
+            offscreenCanvas.height = pixelSize;
 
             offscreenContext.save();
             offscreenContext.imageSmoothingEnabled = this.isImageSmoothingEnabled;
@@ -254,13 +255,12 @@ class Animator {
                 0, 0,
                 pixelWidth, pixelHeight
             );
-            offscreenContext.restore();
 
             const drawX = x - (pixelWidth / 2);
             const drawY = y - pixelHeight;
             ctx.drawImage(offscreenContext.canvas, drawX, drawY);
+            offscreenContext.restore();
 
-            const pixelSize = max(pixelWidth, pixelHeight);
             offscreenContext.clearRect(0, 0, pixelSize, pixelSize);
         };
     }
