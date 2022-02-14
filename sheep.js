@@ -141,8 +141,11 @@ class Sheep extends Entity {
 
             // Check collisions
             if (this.collidesWith(entity)) {
-                if (entity instanceof Obstacle && entity.isCollidable) {
-                    //if (entity instanceof Sheep) return;
+                if (entity instanceof Barn) {
+                    this.removeFromWorld = true;
+                    inventory.addGold(params.inventory.sheepReward);
+                    console.log("gold: " + inventory.gold);
+                } else if (entity instanceof Obstacle && entity.isCollidable) {
                     if (this.y - 10 > entity.y - this.height && this.y + 10 < entity.y + entity.height) {
                         if (this.x < entity.x) this.x = entity.x - this.width;
                         if(this.x > entity.x) this.x = entity.x + entity.width;
@@ -154,16 +157,9 @@ class Sheep extends Entity {
             }
         });
 
-
-
-        gameEngine.entities.forEach(entity => {
-
-        });
-
         const separation = averageRepel.scale(1/close).unit;
         const wolfRepel = averageWolfRepel.scale(1/close).unit;
-        const cohesion = averagePosition.scale(1/flock)
-            .subtract(this.x, this.y).unit;
+        const cohesion = averagePosition.scale(1/flock).subtract(this.x, this.y).unit;
         const alignment = averageDirection.scale(1/flock).unit;
         const distToShep = new Vector(shepherd.x - this.x, shepherd.y - this.y);
         const shepAlignment = distToShep.magnitude < 75 ? distToShep.scale(-75).unit : distToShep.scale(50 /* 1/50 * distToShep.magnitude */).unit;

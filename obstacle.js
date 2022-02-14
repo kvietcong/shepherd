@@ -1,4 +1,5 @@
 class Obstacle extends Entity {
+
     constructor(x, y, src, boxX = 96, boxY = 96, frameX = 43, frameY = 38, scale = 2){
         super(x, y, boxX, boxY);
 
@@ -28,5 +29,16 @@ class Obstacle extends Entity {
 
     draw(ctx, gameEngine){
         super.draw(ctx, gameEngine);
+    }
+}
+
+class Barn extends Obstacle {
+
+    constructor(x, y) {
+        super(x, y, 100, 100);
+    }
+
+    update(gameEngine){
+        super.update(gameEngine);
     }
 }
