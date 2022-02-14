@@ -17,15 +17,16 @@ class GameEngine {
         this.keys = {};
 
         // THE KILL SWITCH
-        this.running = false;
+        this.isRunning = false;
+
+        this.isPaused = false;
 
         // Options and the Details
         this.options = options || {
             prevent: {
-                contextMenu: true,
+                contextMenu: false,
                 scrolling: true,
             },
-            hasWorldBorder: false,
         };
     };
 
@@ -40,10 +41,10 @@ class GameEngine {
     }
 
     start() {
-        this.running = true;
+        this.isRunning = true;
         const gameLoop = () => {
             this.loop();
-            if (this.running) {
+            if (this.isRunning) {
                 requestAnimFrame(gameLoop, this.ctx.canvas);
             }
         };
@@ -86,7 +87,9 @@ class GameEngine {
             const { key } = event;
             if (params.isDebugging) console.log(event);
 
-            this.keys[event.key] = true;
+            this.keys[key] = true;
+
+            if (key.toLowerCase() === "p") this.isPaused = !this.isPaused;
 
             // Enable all valid letters when pressing Shift or capital letters
             if (key === "Shift" || (key.length === 1 && isLetters(key) && isUpperCase(key))) {
@@ -96,6 +99,9 @@ class GameEngine {
                     const activation = this.keys[upper] || this.keys[lower];
                     this.keys[upper] = this.keys[lower] = activation;
                 }
+            }
+            if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(event.code) > -1) {
+                event.preventDefault();
             }
         });
 
@@ -162,57 +168,57 @@ class GameEngine {
             this.drawEffects(entity, () => entity.draw(this.ctx, this));
         }
 
-        if (this.options.hasWorldBorder) {
-            this.drawEffects({isRelative: true, isZoomable: true}, () => {
-                this.ctx.beginPath();
-                this.ctx.rect(0, 0, this.width*2, this.height*2);
-                this.ctx.strokeStyle = "black";
-                this.ctx.stroke();
-            });
+        if (this.isPaused) {
+            this.ctx.fillStyle = rgba(0, 0, 0, 0.5);
+            this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+            const pauseText = "Game Paused";
+            const pauseTextWidth = this.ctx.measureText(pauseText).width;
+            this.ctx.fillStyle = "red";
+            this.ctx.font = "bold 70px VT323, Arial";
+            this.ctx.fillText(
+                pauseText,
+                this.ctx.canvas.width / 2 - pauseTextWidth / 2,
+                this.ctx.canvas.height / 2,
+                this.ctx.canvas.width
+            );
         }
     };
 
     update() {
+        if (this.isPaused) return;
+
         // Update Entities
         this.entities.forEach(entity => {
             entity.update(this);
-            if (this.options.hasWorldBorder) {
-                const worldWidth = gameEngine.width * 2;
-                const worldHeight = gameEngine.height * 2;
-                if (entity.x > worldWidth) entity.x = 0;
-                if (entity.y > worldHeight) entity.y = 0;
-                if (entity.x < 0) entity.x = worldWidth;
-                if (entity.y < 0) entity.y = worldHeight;
-            }
         });
         if (this.camera) this.camera.update(this);
 
-        // Maybe use this in the future. To discuss.
-        // const comparator = (a, b) => {
-        //     if (b.z === undefined && a.z === undefined) return 0;
-        //     if (b.z === undefined) return 1;
-        //     if (a.z === undefined) return -1;
-        //     if (   (a.z !== 0)
-        //         || (b.z !== 0)
-        //         || (!a instanceof Entity)
-        //         || (!b instanceof Entity)
-        //     ) return b.z - a.z;
-        //     return (b.y + b.height) - (a.y + a.height);
-        // };
-        // this.entities.sort(comparator);
+        //Maybe use this in the future. To discuss.
+        const comparator = (a, b) => {
+            if (b.z === undefined && a.z === undefined) return 0;
+            if (b.z === undefined) return 1;
+            if (a.z === undefined) return -1;
+            if (   (a.z !== 0)
+                || (b.z !== 0)
+                || (!a instanceof Entity)
+                || (!b instanceof Entity)
+            ) return b.z - a.z;
+            return (b.y + b.height) - (a.y + a.height);
+        };
+        this.entities.sort(comparator);
 
         // Remove dead things
-        const lengthBeforeRemovingDead = this.entities.length;
+        // const lengthBeforeRemovingDead = this.entities.length;
         this.entities = this.entities.filter(entity => !entity.removeFromWorld);
-        if (lengthBeforeRemovingDead !== this.entities.length)
-            insertionSort(this.entities, (a, b) => a.z - b.z);
+        // if (lengthBeforeRemovingDead !== this.entities.length)
+        //     insertionSort(this.entities, (a, b) => a.z - b.z);
 
         // Add new things
-        const lengthBeforeAddingEntities = this.entities.length;
+        // const lengthBeforeAddingEntities = this.entities.length;
         this.entities = this.entities.concat(this.entitiesToAdd);
         this.entitiesToAdd = [];
-        if (lengthBeforeAddingEntities !== this.entities.length)
-            insertionSort(this.entities, (a, b) => a.z - b.z);
+        // if (lengthBeforeAddingEntities !== this.entities.length)
+        //     insertionSort(this.entities, (a, b) => a.z - b.z);
 
         // Reset the inputs
         this.rightclick = null;

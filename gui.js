@@ -18,20 +18,42 @@ class GUIElement {
 GUIElement.offscreenCanvas = document.createElement("canvas");
 GUIElement.offscreenContext = GUIElement.offscreenCanvas.getContext("2d");
 
-class CooldownTimer extends GUIElement {
-    constructor(x, y, width, height) {
-        super(x, y, width, height);
+class Icon extends GUIElement {
+    constructor(source, x, y, width, height, symbol) {
+        super(x, y);
+        this.width = width;
+        this.height = height;
+        this.source = source;
+        this.symbol = symbol;
     }
-
-    draw(ctx) { }
+    draw(ctx, gameEngine) {
+        ctx.fillStyle = 'tan';
+        ctx.strokeStyle = 'black';
+        ctx.globalAlpha = 0.5;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.globalAlpha = 1;
+        ctx.drawImage(this.source, this.x, this.y, this.width, this.height);
+        ctx.fillStyle = 'white';
+        ctx.font = "30px impact";
+        ctx.fillText(this.symbol, this.x + .4*this.width, this.y + .8*this.height, this.width);
+    }
 }
 
 class MiniMap extends GUIElement {
-    constructor(mapElements, centeredOn, zoom = 0.2) {
+    constructor(mapElements, centeredOn, zoom = 0.125, zoomMax = 0.5, zoomMin = 0.05) {
         super();
         this.mapElements = mapElements;
         this.centeredOn = centeredOn;
-        this.zoom = zoom;
+        this._zoom = zoom;
+        this.zoomMax = zoomMax;
+        this.zoomMin = zoomMin;
+    }
+
+    get zoom() { return this._zoom; }
+    set zoom(zoom) {
+        this._zoom = zoom;
+        if (this._zoom < this.zoomMin) this._zoom = this.zoomMin;
+        if (this._zoom > this.zoomMax) this._zoom = this.zoomMax;
     }
 
     draw(ctx, gameEngine) {
@@ -87,5 +109,15 @@ class MiniMap extends GUIElement {
 
         offscreenContext.restore();
         offscreenContext.clearRect(0, 0, width, height);
+    }
+
+    update(gameEngine) {
+        const { Shift, ArrowUp: Up, ArrowDown: Down } = gameEngine.keys;
+        if (Shift) {
+            if (Up) this.zoom += 0.0025;
+            if (Down) this.zoom -= 0.0025;
+            if (gameEngine.wheel?.deltaY < 0) this.zoom += 0.025;
+            if (gameEngine.wheel?.deltaY > 0) this.zoom -= 0.025;
+        }
     }
 }
