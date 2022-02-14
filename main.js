@@ -2,7 +2,8 @@ const gameEngine = new GameEngine();
 const assetManager = new AssetManager();
 
 const resizeCanvas = canvas => {
-	canvas.width = round(document.documentElement.clientWidth * 0.75);
+	const main = document.getElementsByTagName("main")[0];
+	canvas.width = round(main.clientWidth * 0.65);
 	canvas.height = round(canvas.width / (16 / 9));
 	return canvas;
 };

@@ -56,7 +56,7 @@ class Sheep extends Entity {
         this.animator.setIsLooping();
         this.animator.play();
         this.sheepBaa = assetManager.getAsset("./resources/sheep_baa.mp3").cloneNode();
-        this.sheepBaa.volume = 0.3; // TODO: make adjustable
+        this.sheepBaa.volume = params.volume;
     }
 
     attacked(damage) {
