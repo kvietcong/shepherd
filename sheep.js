@@ -34,7 +34,7 @@ const makeSheepAnimator = () => {
 
 class Sheep extends Entity {
 
-    constructor(x, y, velocity, walkSpeed = 50, maxSpeed = 100) {
+    constructor(x, y, velocity, walkSpeed = 100, maxSpeed = 200) {
         super(x, y, 50, 20);
         // movement
         this.velocity = velocity || Vector.randomUnitVector();

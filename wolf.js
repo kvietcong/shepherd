@@ -31,7 +31,7 @@ const makeWolfAnimator = (color = "brown") => {
 };
 
 class Wolf extends Entity {
-    constructor(x, y, velocity, walkSpeed = 60, maxSpeed = 110) {
+    constructor(x, y, velocity, walkSpeed = 110, maxSpeed = 210) {
         super(x, y, 40, 20);
         // movement
         this.velocity = velocity || Vector.randomUnitVector();

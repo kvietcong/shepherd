@@ -41,8 +41,7 @@ class Environment {
 
         // Initialize tileTypes before it can be read as undefined
         this.tileTypes = [];
-        
-        
+
         if (tileTypes) {
             this.tileTypes = tileTypes;
         } else {
@@ -56,7 +55,7 @@ class Environment {
             //this.tileTypes = importedMap.getTileArray();
             //console.log(this.tileTypes);
         }
-        
+
     }
 
     addEntity(gameEngine, entity) { this.addEntities(gameEngine, [entity]); }

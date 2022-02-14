@@ -1,18 +1,22 @@
 class Obstacle extends Entity {
-    constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionWidth, collisionHeight) {
-        super(x, y, collisionWidth || (sizeX*scale), collisionHeight || (sizeY*scale));
-
-        this.src = src;
-
-        // Attaching default animator
+    constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH) {
+        const collisionWidth = collisionW || (sizeX * scale);
+        const collisionHeight = collisionH || (sizeY * scale);
+        super(x, y, collisionWidth, collisionHeight);
         if (src) {
-            let obstacle = assetManager.getAsset(this.src);
-            const obAnimations = { only: { frameAmount: 1, startX, startY} };
-            let obAnim = new Animator(
-                obstacle, "only", obAnimations,
-                sizeX, sizeY, 500, scale,
-            );
-            this.setAnimator(obAnim);
+            const obstacle = assetManager.getAsset(src);
+            const pixelWidth = sizeX * scale;
+            const pixelHeight = sizeY * scale;
+            const drawX = this.xCenter - (pixelWidth / 2);
+            const drawY = y + collisionHeight - pixelHeight;
+            this.drawer = (ctx, gameEngine) => {
+                ctx.drawImage(obstacle,
+                    startX, startY,
+                    sizeX, sizeY,
+                    drawX, drawY,
+                    sizeX * scale, sizeY * scale,
+                );
+            };
         }
     }
 
@@ -22,7 +26,7 @@ class Obstacle extends Entity {
 
     draw(ctx, gameEngine){
         super.draw(ctx, gameEngine);
-        
+        this.drawer(ctx, gameEngine);
     }
 }
 
