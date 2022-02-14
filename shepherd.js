@@ -2,6 +2,8 @@ params.shepherd = {
     energyLossRate: 20,
     energyRegenRate: 10,
     fenceCooldown: 2,
+    action2Cooldown: 1,
+    action3Cooldown: 4,
     attackCooldown: 0.7
 };
 
@@ -43,7 +45,7 @@ const makeShepherdAnimator = () => {
 };
 
 class Shepherd extends Entity {
-    constructor(x, y, maxSpeed = 120) {
+    constructor(x, y, maxSpeed = 220) {
         super(x, y, 30, 20);
         this.facing = 0; // 0 = back, 1 = left, 2 = forward, 3 = right.
         this.state = 0; // 0 = static, 1 = walking, 2 = spell, 3 = poke, 4 = swipe, 5 = die.
@@ -51,7 +53,12 @@ class Shepherd extends Entity {
         this.maxSpeed = maxSpeed;
 
         // shepherds's fire state variables
-        this.actionTimeElapsed = {fence1: 2, action2: 1, action3: 4, attack: 0.4};
+        this.actionTimeElapsed = {
+            fence1: params.shepherd.fenceCooldown,
+            action2: params.shepherd.action2Cooldown,
+            action3: params.shepherd.action3Cooldown,
+            attack: params.shepherd.attackCooldown
+        };
         this.time = 0;
         this.setAnimator(makeShepherdAnimator());
         this.animator.setIsLooping();
@@ -116,7 +123,9 @@ class Shepherd extends Entity {
                 this.animator.tint("cyan")
             }
             if (space) this.state = 4;
-            if (q) this.state = 3;
+            if (q) {
+                this.state = 3;
+            }
             isAttacking = true;
         }
         gameEngine.entities.forEach(entity => {
@@ -124,10 +133,10 @@ class Shepherd extends Entity {
             if (this.collidesWith(entity)) {
                 if (entity.isCollidable) {
                     if (entity instanceof Sheep) return;
-                    if (this.y - 30 > entity.y - this.height && this.y + 30 < entity.y + entity.height) {
+                    if (this.y - 10 > entity.y - this.height && this.y + 10 < entity.y + entity.height) {
                         if (this.x < entity.x) this.x = entity.x - this.width;
                         if (this.x > entity.x) this.x = entity.x + entity.width;
-                    } if (this.x - 30 > entity.x - this.width && this.x + 30 < entity.x + entity.width) {
+                    } if (this.x - 10 > entity.x - this.width && this.x + 10 < entity.x + entity.width) {
                         if (this.y < entity.y) this.y = entity.y - this.height;
                         if (this.y > entity.y) this.y = entity.y + entity.height;
                     }
@@ -230,28 +239,7 @@ class Shepherd extends Entity {
     }
 }
 
-class CooldownTimer extends GUIElement {
-    constructor(x, y, width, height, time) {
-        super(x, y, width, height);
-        this.width = width;
-        this.height = height;
-        this.actionTimeElapsed = 0;
-        this.time = time;
-        this.z = 0;
-    }
-    update(gameEngine) {
-        this.actionTimeElapsed += gameEngine.deltaTime;
-        if (this.actionTimeElapsed > this.time) this.removeFromWorld = true;
-    }
-    draw(ctx) {
-        ctx.beginPath();
-        ctx.globalAlpha = .8;
-        ctx.fillStyle = "black";
-        ctx.moveTo(this.x + .5*this.width, this.y + .5*this.height);
-        ctx.arc(this.x + .5*this.width, this.y + .5*this.height, .5*this.width, 0,2*this.actionTimeElapsed * PI/this.time, true);
-        ctx.fill();
-     }
-}
+
 
 const makeAttackAnimator = () => {
     const size = 140;

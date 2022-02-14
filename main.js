@@ -1,5 +1,6 @@
 const gameEngine = new GameEngine();
 const assetManager = new AssetManager();
+const sceneManager = new SceneManager();
 
 const resizeCanvas = canvas => {
 	const main = document.getElementsByTagName("main")[0];
@@ -25,6 +26,8 @@ const canvas = initializeCanvas();
 const inventory = new Inventory(100, 5, 5, 1);
 console.log("gold: " + inventory.gold);
 
+assetManager.queueDownload("./resources/pixel_landscape_1.jpg");
+assetManager.queueDownload("./resources/Play.png");
 assetManager.queueDownload("./resources/wolf.png");
 assetManager.queueDownload("./resources/shepherd.png")
 assetManager.queueDownload("./resources/sheep.png")
@@ -47,61 +50,13 @@ assetManager.queueDownload("./resources/pinetree.png");
 assetManager.queueDownload("./resources/No Worries.mp3");
 assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3");
 assetManager.queueDownload("./resources/sheep_baa.mp3");
+assetManager.queueDownload("./resources/level_completed.png");
 
 
 assetManager.downloadAll(() => {
 	const ctx = canvas.getContext("2d");
 	gameEngine.init(ctx);
-
-	const entities = [];
-	const shepherd = new Shepherd(1200, 800);
-	//const shepherd = new Shepherd(canvas.width / 2, canvas.height / 2);
-	params.debugEntities.shepherd = shepherd;
-
-	entities.push(shepherd);
-	for (let i = 0; i < 25; i++) {
-		let x = randomInt(canvas.width * 2);
-		let y = randomInt(canvas.height * 2);
-		if (i % 4 === 0) {
-			entities.push(new Wolf(x, y));
-		} else {
-			entities.push(new Sheep(x, y));
-		}
-	}
-
-	const mainEnvironment = setupEnvironment(entities);
-
-	const volumeSlider = document.getElementById("volume-slider");
-	volumeSlider.value = params.volume;
-	const backgroundMusic = assetManager.getAsset("./resources/No Worries.mp3");
-	backgroundMusic.loop = true;
-	volumeSlider.addEventListener("change", event => {
-		const newVolume = event.target.value;
-		backgroundMusic.volume = newVolume;
-		backgroundMusic.play();
-	});
-	backgroundMusic.volume = volumeSlider.value;
-	const autoPlayID = setInterval(() => {
-		backgroundMusic.play()
-			.then(() => clearInterval(autoPlayID))
-			.catch(console.error);
-	}, 500);
-
-	const camera = new Camera(gameEngine.width / 2, gameEngine.height / 2);
-	camera.follow(shepherd);
-	gameEngine.setCamera(camera);
-
-	const miniMap = new MiniMap([mainEnvironment], camera);
-	entities.push(miniMap);
-	//const cooldown = new CooldownTimer(50, 50, 100, 100);
-	//entities.push(cooldown);
-	const fenceIcon = new Icon(assetManager.getAsset("./resources/fence_horizontal.png"), 50, 50, 50, 50, "1");
-	const fireIcon = new Icon(assetManager.getAsset("./resources/fireicon.png"), 100, 50, 50, 50, "2");
-	const treeIcon = new Icon(assetManager.getAsset("./resources/pinetree.png"), 150, 50, 50, 50, "3");
-	entities.push(fenceIcon);
-	entities.push(fireIcon);
-	entities.push(treeIcon);
-	gameEngine.addEntities(entities);
+	gameEngine.addEntity(sceneManager);
 	gameEngine.start();
 });
 
