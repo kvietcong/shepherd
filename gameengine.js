@@ -187,11 +187,6 @@ class GameEngine {
     update() {
         if (this.isPaused) return;
 
-        // Reset the inputs
-        this.rightclick = null;
-        this.click = null;
-        this.wheel = null;
-
         // Update Entities
         this.entities.forEach(entity => {
             entity.update(this);
