@@ -27,16 +27,59 @@ class Icon extends GUIElement {
         this.symbol = symbol;
     }
     draw(ctx, gameEngine) {
-        ctx.fillStyle = 'tan';
-        ctx.strokeStyle = 'black';
-        ctx.globalAlpha = 0.5;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-        ctx.globalAlpha = 1;
-        ctx.drawImage(this.source, this.x, this.y, this.width, this.height);
-        ctx.fillStyle = 'white';
-        ctx.font = "30px impact";
-        ctx.fillText(this.symbol, this.x + .4*this.width, this.y + .8*this.height, this.width);
+        if (this.symbol) {
+            ctx.fillStyle = 'tan';
+            ctx.strokeStyle = 'black';
+            ctx.globalAlpha = 0.5;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+        if (this.source) {
+            ctx.globalAlpha = 1;
+            ctx.drawImage(this.source, this.x, this.y, this.width, this.height);
+        }
+        if (this.symbol) {
+            ctx.fillStyle = 'white';
+            ctx.font = "30px impact";
+            ctx.fillText(this.symbol, this.x + .4*this.width, 
+                this.y + .8*this.height, this.width);
+        }
     }
+}
+class Screen extends Icon {
+    constructor(source, x, y, width, height, z) {
+        super(source, x, y, width, height);
+        this.z = z;
+    }
+    update(gameEngine) {
+        super.update(gameEngine);
+    }
+    draw(ctx, gameEngine) {
+        super.draw(ctx, gameEngine);
+        ctx.drawImage(this.source, this.x, this.y, this.width, this.height);
+    }
+    
+}
+class CooldownTimer extends GUIElement {
+    constructor(x, y, width, height, time) {
+        super(x, y, width, height);
+        this.width = width;
+        this.height = height;
+        this.actionTimeElapsed = 0;
+        this.time = time;
+        this.z = 6;
+    }
+    update(gameEngine) {
+        this.actionTimeElapsed += gameEngine.deltaTime;
+        if (this.actionTimeElapsed > this.time) this.removeFromWorld = true;
+    }
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.globalAlpha = .5;
+        ctx.fillStyle = "black";
+        ctx.moveTo(this.x + .5*this.width, this.y + .5*this.height);
+        ctx.arc(this.x + .5*this.width, this.y + .5*this.height, .5*this.width, 0,2*this.actionTimeElapsed * PI/this.time, true);
+        ctx.fill();
+     }
 }
 
 class MiniMap extends GUIElement {

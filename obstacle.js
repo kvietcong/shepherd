@@ -28,5 +28,6 @@ class Obstacle extends Entity {
 
     draw(ctx, gameEngine){
         super.draw(ctx, gameEngine);
+        
     }
 }
