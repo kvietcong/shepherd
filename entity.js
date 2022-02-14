@@ -74,24 +74,9 @@ class Entity {
         const isCollidingTop = this.y < other.y + other.height;
         const isCollidingBottom = this.y + this.height > other.y;
 
-        if (isCollidingRight && isCollidingLeft
-            && isCollidingTop && isCollidingBottom
-        ) {
-            // Auto Generated. Haven't checked XD
-            return {
-                x: this.x < other.x ? other.x : this.x,
-                y: this.y < other.y ? other.y : this.y,
-                width: this.x + this.width > other.x + other.width
-                    ? other.x + other.width - this.x
-                    : this.x + this.width - other.x,
-                height: this.y + this.height > other.y + other.height
-                    ? other.y + other.height - this.y
-                    : this.y + this.height - other.y,
 
-                isCollidingLeft, isCollidingRight,
-                isCollidingTop, isCollidingBottom,
-            };
-        } else return false;
+        return isCollidingRight && isCollidingLeft
+            && isCollidingTop && isCollidingBottom;
     }
 
     get xCenter() { return this.x + this.width / 2; }

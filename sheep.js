@@ -34,7 +34,7 @@ const makeSheepAnimator = () => {
 
 class Sheep extends Entity {
 
-    constructor(x, y, velocity, walkSpeed = 100, maxSpeed = 200) {
+    constructor(x, y, velocity, walkSpeed = 50, maxSpeed = 100) {
         super(x, y, 50, 20);
         // movement
         this.velocity = velocity || Vector.randomUnitVector();
@@ -105,7 +105,7 @@ class Sheep extends Entity {
                 if (distance < this.detectionRadius) {
                     averageWolfRepel.addInPlace(
                         new Vector(entity.x - this.x, entity.y - this.y)
-                            .unit.scale(-1)
+                            .setUnit().scale(-1)
                     );
                     close++;
                 }
@@ -124,7 +124,7 @@ class Sheep extends Entity {
                 if (distance < this.detectionRadius) {
                     averageRepel.addInPlace(
                         new Vector(entity.x - this.x, entity.y - this.y)
-                            .unit.scale(-1)
+                            .setUnit().scale(-1)
                     );
                     close++;
                 }
@@ -133,7 +133,7 @@ class Sheep extends Entity {
                 if (this.collidesWith(entity)) {
                     averageRepel.addInPlace(
                         new Vector(entity.x - this.x, entity.y - this.y)
-                            .unit.scale(-50)
+                            .setUnit().scale(-50)
                     );
                     close++;
                 }
