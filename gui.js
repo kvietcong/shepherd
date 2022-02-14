@@ -19,15 +19,15 @@ GUIElement.offscreenCanvas = document.createElement("canvas");
 GUIElement.offscreenContext = GUIElement.offscreenCanvas.getContext("2d");
 
 class Icon extends GUIElement {
-    constructor(source, x, y, width, height, symbol) {
+    constructor(source, x, y, width, height, text) {
         super(x, y);
         this.width = width;
         this.height = height;
         this.source = source;
-        this.symbol = symbol;
+        this.text = text;
     }
     draw(ctx, gameEngine) {
-        if (this.symbol) {
+        if (this.text) {
             ctx.fillStyle = 'tan';
             ctx.strokeStyle = 'black';
             ctx.globalAlpha = 0.5;
@@ -37,13 +37,34 @@ class Icon extends GUIElement {
             ctx.globalAlpha = 1;
             ctx.drawImage(this.source, this.x, this.y, this.width, this.height);
         }
-        if (this.symbol) {
+        if (this.text) {
             ctx.fillStyle = 'white';
             ctx.font = "30px impact";
-            ctx.fillText(this.symbol, this.x + .4*this.width, 
+            ctx.strokeText(this.text, this.x + .4*this.width, 
+                this.y + .8*this.height, this.width);
+            ctx.fillText(this.text, this.x + .4*this.width, 
                 this.y + .8*this.height, this.width);
         }
     }
+}
+class GoldText extends GUIElement {
+    constructor(x, y, width, size) {
+        super(x, y);
+        this.text = inventory.gold;
+        this.width = width;
+        this.size = size;
+    }
+    draw(ctx, gameEngine) {
+        ctx.fillStyle = 'gold';
+        ctx.font = this.size + 'px impact';
+        ctx.strokeText(this.text, this.x, this.y, this.width);
+        ctx.fillText(this.text, this.x, this.y, this.width);
+    }
+    update(gameEngine) {
+        super.update(gameEngine);
+        this.text = inventory.gold;
+    }
+    
 }
 class Screen extends Icon {
     constructor(source, x, y, width, height, z) {

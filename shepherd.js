@@ -150,6 +150,8 @@ class Shepherd extends Entity {
                     entity.y += 20*this.velocity.y;
                     entity.velocity.x = 0;
                     entity.velocity.y = 0;
+                } else if (entity instanceof Coin) {
+                    entity.taken();
                 }
             }
 
@@ -160,27 +162,30 @@ class Shepherd extends Entity {
             this.actionTimeElapsed[key] += gameEngine.deltaTime;
         });
         if (one) {
-            if (this.actionTimeElapsed.fence1 >= params.shepherd.fenceCooldown) {
+            if (this.actionTimeElapsed.fence1 >= params.shepherd.fenceCooldown && inventory.gold >= params.inventory.fenceCost) {
                 if (this.facing == 0) gameEngine.addEntity(new Obstacle(this.x - 25, this.y - 60, "./resources/fence_vertical.png", 15, 50, 20, 63, 1));
                 if (this.facing == 1) gameEngine.addEntity(new Obstacle(this.x - 40, this.y - 30, "./resources/fence_horizontal.png", 50, 15, 46, 32, 1));
                 if (this.facing == 2) gameEngine.addEntity(new Obstacle(this.x - 25, this.y + 10, "./resources/fence_vertical.png", 15, 50, 20, 63, 1));
                 if (this.facing == 3) gameEngine.addEntity(new Obstacle(this.x + 10, this.y - 30, "./resources/fence_horizontal.png", 50, 15, 46, 32, 1));
-                gameEngine.addEntity(new CooldownTimer(50, 50, 50, 50, params.shepherd.fenceCooldown));
+                gameEngine.addEntity(new CooldownTimer(50, 25, 50, 50, params.shepherd.fenceCooldown));
                 this.actionTimeElapsed.fence1 = 0;
+                inventory.removeGold(params.inventory.fenceCost);
             }
         }
         if (two) {
-            if (this.actionTimeElapsed.action2 >= params.shepherd.action2Cooldown) {
+            if (this.actionTimeElapsed.action2 >= params.shepherd.action2Cooldown && inventory.gold >= params.inventory.torchCost) {
                 gameEngine.addEntity(new Obstacle(this.x, this.y, "./resources/fireicon.png", 50, 50, 33, 38, 2));
-                gameEngine.addEntity(new CooldownTimer(100, 50, 50, 50, 1));
+                gameEngine.addEntity(new CooldownTimer(100, 25, 50, 50, 1));
                 this.actionTimeElapsed.action2 = 0;
+                inventory.removeGold(params.inventory.torchCost);
             }
         }
         if (three) {
-            if (this.actionTimeElapsed.action3 >= params.shepherd.action3Cooldown) {
+            if (this.actionTimeElapsed.action3 >= params.shepherd.action3Cooldown && inventory.gold >= 20) {
                 gameEngine.addEntity(new Obstacle(this.x, this.y, "./resources/pinetree.png", 40, 50, 50, 82, 1.8));
-                gameEngine.addEntity(new CooldownTimer(150, 50, 50, 50, 4));
+                gameEngine.addEntity(new CooldownTimer(150, 25, 50, 50, 4));
                 this.actionTimeElapsed.action3 = 0;
+                inventory.removeGold(20);
             }
         }
         if (space && !q) {
@@ -240,7 +245,38 @@ class Shepherd extends Entity {
     }
 }
 
-
+const makeCoinAnimator = () => {
+    const size = 16;
+    const frameAmount = 8;
+    const coinAnimations = {
+        static: {frameAmount, startX: 0, startY: 0}
+    }
+    const coin = assetManager.getAsset("./resources/coin.png");
+    return new Animator(
+        coin, "static", coinAnimations, 16, 16, 1/10, 2
+    );
+}
+class Coin extends Entity {
+    constructor(x, y) {
+        super(x, y, 16, 16);
+        this.isCollidable = false;
+        this.setAnimator(makeCoinAnimator());
+        this.animator.setIsLooping();
+        this.animator.play();
+    }
+    taken() {
+        if (!this.removeFromWorld) {
+            inventory.addGold(1);
+            this.removeFromWorld = true;
+        }
+    }
+    update(gameEngine) {
+        super.update(gameEngine);
+    }
+    draw(ctx, gameEngine) {
+        super.draw(ctx, gameEngine);
+    }
+}
 
 const makeAttackAnimator = () => {
     const size = 140;

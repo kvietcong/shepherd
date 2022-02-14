@@ -15,15 +15,6 @@ class Obstacle extends Entity {
 
     update(gameEngine){
         super.update(gameEngine);
-
-        gameEngine.entities.forEach(entity => {
-            if (entity === this) return;
-
-            // Avoid Overlap
-            if (this.collidesWith(entity)) {
-                //console.log("collision detected with obstacle: " + this);
-            }
-        });
     }
 
     draw(ctx, gameEngine){

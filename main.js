@@ -43,6 +43,8 @@ assetManager.queueDownload("./resources/No Worries.mp3");
 assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3");
 assetManager.queueDownload("./resources/sheep_baa.mp3");
 assetManager.queueDownload("./resources/level_completed.png");
+assetManager.queueDownload("./resources/coin.png");
+assetManager.queueDownload("./resources/coin_01.png");
 
 
 assetManager.downloadAll(() => {
