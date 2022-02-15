@@ -133,10 +133,10 @@ class Shepherd extends Entity {
             if (this.collidesWith(entity)) {
                 if (entity.isCollidable) {
                     if (entity instanceof Sheep) return;
-                    if (this.y - 10 > entity.y - this.height && this.y + 10 < entity.y + entity.height) {
+                    if (this.y - 15 > entity.y - this.height && this.y + 15 < entity.y + entity.height) {
                         if (this.x < entity.x) this.x = entity.x - this.width;
                         if (this.x > entity.x) this.x = entity.x + entity.width;
-                    } if (this.x - 10 > entity.x - this.width && this.x + 10 < entity.x + entity.width) {
+                    } if (this.x - 15 > entity.x - this.width && this.x + 15 < entity.x + entity.width) {
                         if (this.y < entity.y) this.y = entity.y - this.height;
                         if (this.y > entity.y) this.y = entity.y + entity.height;
                     }
@@ -150,6 +150,8 @@ class Shepherd extends Entity {
                     entity.y += 20*this.velocity.y;
                     entity.velocity.x = 0;
                     entity.velocity.y = 0;
+                } else if (entity instanceof Coin) {
+                    entity.taken();
                 }
             }
         });
@@ -166,6 +168,7 @@ class Shepherd extends Entity {
                 if (this.facing == 3) gameEngine.addEntity(new Obstacle(this.x + 10, this.y - 30, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15));
                 gameEngine.addEntity(new CooldownTimer(50, 50, 50, 50, params.shepherd.fenceCooldown));
                 this.actionTimeElapsed.fence1 = 0;
+                inventory.removeGold(params.inventory.fenceCost);
             }
         }
         if (two) {
@@ -173,6 +176,7 @@ class Shepherd extends Entity {
                 gameEngine.addEntity(new Obstacle(this.x, this.y, "./resources/fireicon.png", 0, 0, 33, 38, 2, 50, 30));
                 gameEngine.addEntity(new CooldownTimer(100, 50, 50, 50, 1));
                 this.actionTimeElapsed.action2 = 0;
+                inventory.removeGold(params.inventory.torchCost);
             }
         }
         if (three) {
@@ -180,6 +184,7 @@ class Shepherd extends Entity {
                 gameEngine.addEntity(new Obstacle(this.x, this.y, "./resources/pinetree.png", 0, 0, 50, 82, 1.8, 40, 70));
                 gameEngine.addEntity(new CooldownTimer(150, 50, 50, 50, 4));
                 this.actionTimeElapsed.action3 = 0;
+                inventory.removeGold(20);
             }
         }
         if (space && !q) {
@@ -239,7 +244,38 @@ class Shepherd extends Entity {
     }
 }
 
-
+const makeCoinAnimator = () => {
+    const size = 16;
+    const frameAmount = 8;
+    const coinAnimations = {
+        static: {frameAmount, startX: 0, startY: 0}
+    }
+    const coin = assetManager.getAsset("./resources/coin.png");
+    return new Animator(
+        coin, "static", coinAnimations, 16, 16, 1/10, 2
+    );
+}
+class Coin extends Entity {
+    constructor(x, y) {
+        super(x, y, 16, 16);
+        this.isCollidable = false;
+        this.setAnimator(makeCoinAnimator());
+        this.animator.setIsLooping();
+        this.animator.play();
+    }
+    taken() {
+        if (!this.removeFromWorld) {
+            inventory.addGold(1);
+            this.removeFromWorld = true;
+        }
+    }
+    update(gameEngine) {
+        super.update(gameEngine);
+    }
+    draw(ctx, gameEngine) {
+        super.draw(ctx, gameEngine);
+    }
+}
 
 const makeAttackAnimator = () => {
     const size = 140;
@@ -279,7 +315,7 @@ class Attack extends Entity {
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
             if (this.collidesWith(entity)) {
-                if (entity instanceof Wolf && !this.entitiesToIgnore.has(entity)) {
+                if (entity instanceof Wolf && !this.entitiesToIgnore.has(entity) && !entity.dead) {
                     entity.attacked(this.damage);
                     entity.x += 1;
                     entity.y += 1;

@@ -81,7 +81,10 @@ class Wolf extends Entity {
             this.timeSinceRest += gameEngine.deltaTime;
             if (this.timeSinceRest >= this.restTime) {
                 this.resting = false;
-                if (this.dead) this.removeFromWorld = true;
+                if (this.dead) {
+                    this.removeFromWorld = true;
+                    gameEngine.addEntity(new Coin(this.x, this.y));
+                }
             }
             if (this.resting || this.dead) return;
         };

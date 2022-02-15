@@ -74,16 +74,24 @@ class SceneManager extends Entity {
         camera.follow(shepherd);
         gameEngine.setCamera(camera);
 
-        const miniMap = new MiniMap([mainEnvironment], camera);
-        entities.push(miniMap);
         //const cooldown = new CooldownTimer(50, 50, 100, 100);
         //entities.push(cooldown);
-        const fenceIcon = new Icon(assetManager.getAsset("./resources/fence_horizontal.png"), 50, 50, 50, 50, "1");
-        const fireIcon = new Icon(assetManager.getAsset("./resources/fireicon.png"), 100, 50, 50, 50, "2");
-        const treeIcon = new Icon(assetManager.getAsset("./resources/pinetree.png"), 150, 50, 50, 50, "3");
+        const fenceIcon = new Icon(assetManager.getAsset("./resources/fence_horizontal.png")
+            , 50, 25, 50, 50, params.inventory.fenceCost);
+        const fireIcon = new Icon(assetManager.getAsset("./resources/fireicon.png")
+            , 100, 25, 50, 50, params.inventory.torchCost);
+        const treeIcon = new Icon(assetManager.getAsset("./resources/pinetree.png"), 150, 25, 50, 50, "20");
+        const goldIcon = new Icon(assetManager.getAsset("./resources/coin_01.png"), 450, 25, 50, 50);
+        const goldText = new GoldText(500, 65, 85, 40);
         entities.push(fenceIcon);
         entities.push(fireIcon);
         entities.push(treeIcon);
+        entities.push(goldIcon);
+        entities.push(goldText);
+
+        const miniMap = new MiniMap(mainEnvironment, camera);
+        entities.push(miniMap);
+
         gameEngine.addEntities(entities);
     }
 
