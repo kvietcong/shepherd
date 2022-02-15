@@ -40,9 +40,9 @@ class Icon extends GUIElement {
         if (this.text) {
             ctx.fillStyle = 'white';
             ctx.font = "30px impact";
-            ctx.strokeText(this.text, this.x + .4*this.width, 
+            ctx.strokeText(this.text, this.x + .4*this.width,
                 this.y + .8*this.height, this.width);
-            ctx.fillText(this.text, this.x + .4*this.width, 
+            ctx.fillText(this.text, this.x + .4*this.width,
                 this.y + .8*this.height, this.width);
         }
     }
@@ -64,7 +64,7 @@ class GoldText extends GUIElement {
         super.update(gameEngine);
         this.text = inventory.gold;
     }
-    
+
 }
 class Screen extends Icon {
     constructor(source, x, y, width, height, z) {
@@ -78,7 +78,7 @@ class Screen extends Icon {
         super.draw(ctx, gameEngine);
         ctx.drawImage(this.source, this.x, this.y, this.width, this.height);
     }
-    
+
 }
 class CooldownTimer extends GUIElement {
     constructor(x, y, width, height, time) {
@@ -104,9 +104,9 @@ class CooldownTimer extends GUIElement {
 }
 
 class MiniMap extends GUIElement {
-    constructor(mapElements, centeredOn, zoom = 0.125, zoomMax = 0.5, zoomMin = 0.05) {
+    constructor(mapElement, centeredOn, zoom = 0.125, zoomMax = 0.5, zoomMin = 0.05) {
         super();
-        this.mapElements = mapElements;
+        this.mapElement = mapElement;
         this.centeredOn = centeredOn;
         this._zoom = zoom;
         this.zoomMax = zoomMax;
@@ -133,7 +133,7 @@ class MiniMap extends GUIElement {
         offscreenContext.translate(-x * this.zoom + radius, -y * this.zoom + radius);
         offscreenContext.scale(this.zoom, this.zoom);
 
-        this.mapElements.forEach(element => element.draw(offscreenContext));
+        this.mapElement.draw(offscreenContext, gameEngine);
         gameEngine.entities.forEach(entity => {
             if (!(entity instanceof Entity)) return;
 
