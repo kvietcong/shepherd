@@ -32,8 +32,9 @@ class Obstacle extends Entity {
 
 class Barn extends Obstacle {
 
-    constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH) {
+    constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH, minSheep) {
         super(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH);
+        this.minSheep = minSheep;
     }
 
     update(gameEngine){
@@ -45,6 +46,9 @@ class Barn extends Obstacle {
         this.drawer(ctx, gameEngine);
     }
 }
+
+Barn.sheepCount = 0;
+Barn.sheepRequired = 10;
 
 const makeCampfireAnimator = () => {
     const size = 64;
@@ -74,10 +78,5 @@ class Fire extends Obstacle {
     update(gameEngine){
         super.update(gameEngine);
         this.animator.update(gameEngine);
-    }
-
-    draw(ctx, gameEngine){
-        super.draw(ctx, gameEngine);
-        this.drawer(ctx, gameEngine);
     }
 }

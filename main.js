@@ -1,6 +1,6 @@
 const gameEngine = new GameEngine();
 const assetManager = new AssetManager();
-const sceneManager = new SceneManager();
+
 
 const resizeCanvas = canvas => {
 	const main = document.getElementsByTagName("main")[0];
@@ -23,8 +23,13 @@ const initializeCanvas = () => {
 };
 
 const canvas = initializeCanvas();
+const sceneManager = new SceneManager();
 const inventory = new Inventory(100, 5, 5, 1);
 console.log("gold: " + inventory.gold);
+
+const gameOver = () => {
+	return (Barn.sheepRequired - Barn.sheepCount) > Sheep.count;
+}
 
 assetManager.queueDownload("./resources/pixel_landscape_1.jpg");
 assetManager.queueDownload("./resources/Play.png");

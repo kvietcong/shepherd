@@ -106,7 +106,7 @@ class Wolf extends Entity {
             // Update vectors
             const distance = this.distanceTo(entity);
             if (entity instanceof Fire) {
-                if (distance < this.detectionRadius) {
+                if (distance < this.detectionRadius * inventory.fireLevel) {
                     averageFireRepel.addInPlace(
                         new Vector(entity.x - this.x, entity.y - this.y)
                             .setUnit().scale(-1)
@@ -211,7 +211,7 @@ class Wolf extends Entity {
         // Fear
         const fireRepel = averageFireRepel.scale(1/close).unit;
         this.velocity.lerpToInPlace(
-            fireRepel.scale(speed * fearFactor * inventory.fireLevel),
+            fireRepel.scale(speed * fearFactor),
             1 * gameEngine.deltaTime
         );
 
