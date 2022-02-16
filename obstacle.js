@@ -47,8 +47,8 @@ class Obstacle extends Entity {
 
 class Barn extends Obstacle {
 
-    constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH, minSheep) {
-        super(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH);
+    constructor(x, y, src, startX, startY, sizeX, sizeY, scale, dFlag, collisionW, collisionH, minSheep) {
+        super(x, y, src, startX, startY, sizeX, sizeY, scale, dFlag, collisionW, collisionH);
         this.minSheep = minSheep;
     }
 
