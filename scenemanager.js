@@ -12,12 +12,16 @@ class SceneManager {
     }
 
     loadTitle(gameEngine) {
-        console.log(canvas);
-        console.log("loading title")
-        let screen = new Icon(assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
-		0, 0, canvas.width, canvas.height);
+        const screen = new Icon(
+            assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
+            0, 0, canvas.width, canvas.height
+        );
         screen.z = 8;
-	    let begin = new Icon(assetManager.getAsset("./resources/Play.png"), canvas.width/2 - 150, canvas.height/2 - 40, 300, 80);
+	    const begin = new Icon(
+            assetManager.getAsset("./resources/Play.png"),
+            canvas.width/2 - 150, canvas.height/2 - 40,
+            300, 80
+        );
         begin.z = 9;
 	    gameEngine.addEntity(screen);
 	    gameEngine.addEntity(begin);
@@ -64,8 +68,6 @@ class SceneManager {
         camera.follow(shepherd);
         gameEngine.setCamera(camera);
 
-        //const cooldown = new CooldownTimer(50, 50, 100, 100);
-        //entities.push(cooldown);
         const fenceIcon = new Icon(assetManager.getAsset("./resources/fence_horizontal.png")
             , 50, 25, 50, 50, params.inventory.fenceCost);
         const fireIcon = new Icon(assetManager.getAsset("./resources/fireicon.png")
@@ -123,28 +125,6 @@ class SceneManager {
                 // play again button?
                 break;
         }
-
-        // if (this.title) {
-        //     if (!this.loaded) {
-        //         this.loadTitle(gameEngine);
-        //         this.loaded = true;
-        //     }
-        //     let click = gameEngine.click;
-        //     if (click && click.x > canvas.width/2 - 150 && click.x < canvas.width/2 + 150
-        //         && click.y > canvas.height/2 - 40 && click.y < canvas.height/2 + 40) {
-        //         this.clearEntities(gameEngine);
-        //         this.title = false;
-        //         this.loaded = false;
-        //         this.loadLevelOne(gameEngine);
-        //     }
-        // } else if (this.credits) {
-        //     if (!this.loaded) {
-        //         this.clearEntities(gameEngine);
-        //         this.loadCredits(gameEngine);
-        //         this.loaded = true;
-        //     }
-        // }
-
     }
 
     draw(ctx, gameEngine) {}
