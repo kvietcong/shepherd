@@ -1,38 +1,32 @@
 class Obstacle extends Entity {
-    constructor(x, y, src, srtX = 0, srtY = 0, sizeX = 43, sizeY = 38, scale = 2, boxX = 96, boxY = 96){
-        super(x, y, sizeX*scale, sizeY*scale);
-
-        this.src = src;
-        this.srtX = srtX;
-        this.srtY = srtY;
-        this.sizeX = sizeX;
-        this.sizeY = sizeY;
-        this.scale = scale;
-
-        // Attaching default animator
+    constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH) {
+        const collisionWidth = collisionW || (sizeX * scale);
+        const collisionHeight = collisionH || (sizeY * scale);
+        super(x, y, collisionWidth, collisionHeight);
         if (src) {
-            let obstacle = assetManager.getAsset(this.src);
-            const obAnimations = { only: { frameAmount: 1, startX: this.srtX, startY: this.srtY} };
-            let obAnim = new Animator(obstacle, "only", obAnimations, this.sizeX, this.sizeY, 1/30, this.scale);
-            this.setAnimator(obAnim);
+            const obstacle = assetManager.getAsset(src);
+            const pixelWidth = sizeX * scale;
+            const pixelHeight = sizeY * scale;
+            const drawX = this.xCenter - (pixelWidth / 2);
+            const drawY = y + collisionHeight - pixelHeight;
+            this.drawer = (ctx, gameEngine) => {
+                ctx.drawImage(obstacle,
+                    startX, startY,
+                    sizeX, sizeY,
+                    drawX, drawY,
+                    sizeX * scale, sizeY * scale,
+                );
+            };
         }
     }
 
     update(gameEngine){
         super.update(gameEngine);
-
-        gameEngine.entities.forEach(entity => {
-            if (entity === this) return;
-
-            // Avoid Overlap
-            if (this.collidesWith(entity)) {
-                //console.log("collision detected with obstacle: " + this);
-            }
-        });
     }
 
     draw(ctx, gameEngine){
         super.draw(ctx, gameEngine);
+        this.drawer(ctx, gameEngine);
     }
 }
 

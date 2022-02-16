@@ -31,7 +31,7 @@ const makeWolfAnimator = (color = "brown") => {
 };
 
 class Wolf extends Entity {
-    constructor(x, y, velocity, walkSpeed = 100, maxSpeed = 220) {
+    constructor(x, y, velocity, walkSpeed = 110, maxSpeed = 210) {
         super(x, y, 40, 20);
         // movement
         this.velocity = velocity || Vector.randomUnitVector();
@@ -81,7 +81,10 @@ class Wolf extends Entity {
             this.timeSinceRest += gameEngine.deltaTime;
             if (this.timeSinceRest >= this.restTime) {
                 this.resting = false;
-                if (this.dead) this.removeFromWorld = true;
+                if (this.dead) {
+                    this.removeFromWorld = true;
+                    gameEngine.addEntity(new Coin(this.x, this.y));
+                }
             }
             if (this.resting || this.dead) return;
         };

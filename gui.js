@@ -19,30 +19,94 @@ GUIElement.offscreenCanvas = document.createElement("canvas");
 GUIElement.offscreenContext = GUIElement.offscreenCanvas.getContext("2d");
 
 class Icon extends GUIElement {
-    constructor(source, x, y, width, height, symbol) {
+    constructor(source, x, y, width, height, text) {
         super(x, y);
         this.width = width;
         this.height = height;
         this.source = source;
-        this.symbol = symbol;
+        this.text = text;
     }
     draw(ctx, gameEngine) {
-        ctx.fillStyle = 'tan';
-        ctx.strokeStyle = 'black';
-        ctx.globalAlpha = 0.5;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-        ctx.globalAlpha = 1;
-        ctx.drawImage(this.source, this.x, this.y, this.width, this.height);
-        ctx.fillStyle = 'white';
-        ctx.font = "30px impact";
-        ctx.fillText(this.symbol, this.x + .4*this.width, this.y + .8*this.height, this.width);
+        if (this.text) {
+            ctx.fillStyle = 'tan';
+            ctx.strokeStyle = 'black';
+            ctx.globalAlpha = 0.5;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+        if (this.source) {
+            ctx.globalAlpha = 1;
+            ctx.drawImage(this.source, this.x, this.y, this.width, this.height);
+        }
+        if (this.text) {
+            ctx.fillStyle = 'white';
+            ctx.font = "30px impact";
+            ctx.strokeText(this.text, this.x + .4*this.width,
+                this.y + .8*this.height, this.width);
+            ctx.fillText(this.text, this.x + .4*this.width,
+                this.y + .8*this.height, this.width);
+        }
     }
+}
+class GoldText extends GUIElement {
+    constructor(x, y, width, size) {
+        super(x, y);
+        this.text = inventory.gold;
+        this.width = width;
+        this.size = size;
+    }
+    draw(ctx, gameEngine) {
+        ctx.fillStyle = 'gold';
+        ctx.font = this.size + 'px impact';
+        ctx.strokeText(this.text, this.x, this.y, this.width);
+        ctx.fillText(this.text, this.x, this.y, this.width);
+    }
+    update(gameEngine) {
+        super.update(gameEngine);
+        this.text = inventory.gold;
+    }
+
+}
+class Screen extends Icon {
+    constructor(source, x, y, width, height, z) {
+        super(source, x, y, width, height);
+        this.z = z;
+    }
+    update(gameEngine) {
+        super.update(gameEngine);
+    }
+    draw(ctx, gameEngine) {
+        super.draw(ctx, gameEngine);
+        ctx.drawImage(this.source, this.x, this.y, this.width, this.height);
+    }
+
+}
+class CooldownTimer extends GUIElement {
+    constructor(x, y, width, height, time) {
+        super(x, y, width, height);
+        this.width = width;
+        this.height = height;
+        this.actionTimeElapsed = 0;
+        this.time = time;
+        this.z = 6;
+    }
+    update(gameEngine) {
+        this.actionTimeElapsed += gameEngine.deltaTime;
+        if (this.actionTimeElapsed > this.time) this.removeFromWorld = true;
+    }
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.globalAlpha = .5;
+        ctx.fillStyle = "black";
+        ctx.moveTo(this.x + .5*this.width, this.y + .5*this.height);
+        ctx.arc(this.x + .5*this.width, this.y + .5*this.height, .5*this.width, 0,2*this.actionTimeElapsed * PI/this.time, true);
+        ctx.fill();
+     }
 }
 
 class MiniMap extends GUIElement {
-    constructor(mapElements, centeredOn, zoom = 0.125, zoomMax = 0.5, zoomMin = 0.05) {
+    constructor(mapElement, centeredOn, zoom = 0.125, zoomMax = 0.5, zoomMin = 0.05) {
         super();
-        this.mapElements = mapElements;
+        this.mapElement = mapElement;
         this.centeredOn = centeredOn;
         this._zoom = zoom;
         this.zoomMax = zoomMax;
@@ -69,7 +133,7 @@ class MiniMap extends GUIElement {
         offscreenContext.translate(-x * this.zoom + radius, -y * this.zoom + radius);
         offscreenContext.scale(this.zoom, this.zoom);
 
-        this.mapElements.forEach(element => element.draw(offscreenContext));
+        this.mapElement.draw(offscreenContext, gameEngine);
         gameEngine.entities.forEach(entity => {
             if (!(entity instanceof Entity)) return;
 
