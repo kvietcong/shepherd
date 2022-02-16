@@ -46,3 +46,14 @@ class Barn extends Obstacle {
         super.update(gameEngine);
     }
 }
+
+class Fire extends Obstacle {
+
+    constructor(x, y) {
+        super(x, y, 100, 100);
+    }
+
+    update(gameEngine){
+        super.update(gameEngine);
+    }
+}
