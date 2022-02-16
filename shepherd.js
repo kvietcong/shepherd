@@ -173,7 +173,7 @@ class Shepherd extends Entity {
         }
         if (two) {
             if (this.actionTimeElapsed.action2 >= 1) {
-                gameEngine.addEntity(new Obstacle(this.x, this.y, "./resources/fireicon.png", 0, 0, 33, 38, 2, 50, 30));
+                gameEngine.addEntity(new Fire(this.x, this.y, "./resources/campfire_2.png", 0, 0, 33, 38, 2, 50, 30));
                 gameEngine.addEntity(new CooldownTimer(100, 50, 50, 50, 1));
                 this.actionTimeElapsed.action2 = 0;
                 inventory.removeGold(params.inventory.torchCost);

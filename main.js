@@ -53,7 +53,8 @@ assetManager.queueDownload("./resources/sheep_baa.mp3");
 assetManager.queueDownload("./resources/level_completed.png");
 assetManager.queueDownload("./resources/coin.png");
 assetManager.queueDownload("./resources/coin_01.png");
-
+assetManager.queueDownload("./resources/campfire_2.png");
+assetManager.queueDownload("./resources/campfire_3.png");
 
 assetManager.downloadAll(() => {
 	const ctx = canvas.getContext("2d");

@@ -101,13 +101,18 @@ class Sheep extends Entity {
             if (entity instanceof Shepherd) {
                 shepherd = entity;
             }
+            if (entity instanceof Barn) {
+                if (distance < this.detectionRadius) {
+                    // Be attracted to barn?
+                }
+            }
             if (entity instanceof Wolf) {
                 if (distance < this.detectionRadius) {
                     averageWolfRepel.addInPlace(
                         new Vector(entity.x - this.x, entity.y - this.y)
                             .setUnit().scale(-1)
                     );
-                    close++;
+                    //close++;
                 }
             }
             if (entity instanceof Sheep && !entity.dead) {
