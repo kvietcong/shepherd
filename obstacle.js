@@ -32,11 +32,51 @@ class Obstacle extends Entity {
 
 class Barn extends Obstacle {
 
-    constructor(x, y) {
-        super(x, y, 100, 100);
+    constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH, minSheep) {
+        super(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH);
+        this.minSheep = minSheep;
     }
 
     update(gameEngine){
         super.update(gameEngine);
+    }
+
+    draw(ctx, gameEngine){
+        super.draw(ctx, gameEngine);
+        this.drawer(ctx, gameEngine);
+    }
+}
+
+Barn.sheepCount = 0;
+Barn.sheepRequired = 10;
+
+const makeCampfireAnimator = () => {
+    const size = 64;
+    const campfireAnimations = {
+        main: {frameAmount: 4, startX: 0, startY: 0},
+    };
+    return new Animator(
+        assetManager.getAsset("./resources/campfire_3.png"),
+        "main",
+        campfireAnimations,
+        size,
+        size,
+        1/5
+    );
+};
+
+class Fire extends Obstacle {
+
+    constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH) {
+        super(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH);
+        //this.animator = makeCampfireAnimator();
+        this.setAnimator(makeCampfireAnimator());
+        this.animator.setIsLooping();
+        this.animator.play();
+    }
+
+    update(gameEngine){
+        super.update(gameEngine);
+        this.animator.update(gameEngine);
     }
 }

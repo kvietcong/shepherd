@@ -1,19 +1,7 @@
-class SceneManager extends Entity {
+class SceneManager {
     constructor() {
-        super(0, 0, 0, 0);
-        this.isCollidable = false;
-        this.gameOver = false;
-        this.title = true;
-        this.loaded = false;
-        this.credits = false;
-        this.level = null;
-        this.menuSelect = {
-            play: false
-        }
-        this.menuSelectIndex = -10;
-        this.creditsLineIndex = 0;
-        this.menuButtonTimer = 0.15;
-        this.menuButtonCooldown = 0.15;
+        this.scenes = ["title", "level1", "credits"];
+        this.currentScene = "";
     }
 
     clearEntities(gameEngine) {
@@ -24,6 +12,8 @@ class SceneManager extends Entity {
     }
 
     loadTitle(gameEngine) {
+        console.log(canvas);
+        console.log("loading title")
         let screen = new Icon(assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
 		0, 0, canvas.width, canvas.height);
         screen.z = 8;
@@ -106,27 +96,56 @@ class SceneManager extends Entity {
     }
 
     update(gameEngine) {
-        super.update(gameEngine);
-        if (this.title) {
-            if (!this.loaded) {
+        switch(this.currentScene) {
+            case "":
                 this.loadTitle(gameEngine);
-                this.loaded = true;
-            }
-            let click = gameEngine.click;
-            if (click && click.x > canvas.width/2 - 150 && click.x < canvas.width/2 + 150
-                && click.y > canvas.height/2 - 40 && click.y < canvas.height/2 + 40) {
-                this.clearEntities(gameEngine);
-                this.title = false;
-                this.loaded = false;
-                this.loadLevelOne(gameEngine);
-            }
-        } else if (this.credits) {
-            if (!this.loaded) {
-                this.clearEntities(gameEngine);
-                this.loadCredits(gameEngine);
-                this.loaded = true;
-            }
+                this.currentScene = "title";
+                break;
+            case "title":
+                // switch to level1 when start button is clicked
+                let click = gameEngine.click;
+                if (click && click.x > canvas.width/2 - 150 && click.x < canvas.width/2 + 150
+                    && click.y > canvas.height/2 - 40 && click.y < canvas.height/2 + 40) {
+                    this.currentScene = "level1";
+                    this.clearEntities(gameEngine);
+                    this.loadLevelOne(gameEngine);
+                    //this.loadLevel(this.currentScene);
+                }
+                break;
+            case "level1":
+                if (gameOver()) {
+                    this.currentScene = "credits";
+                    this.clearEntities(gameEngine);
+                    this.loadCredits(gameEngine);
+                }
+                break;
+            case "credits":
+                // play again button?
+                break;
         }
 
+        // if (this.title) {
+        //     if (!this.loaded) {
+        //         this.loadTitle(gameEngine);
+        //         this.loaded = true;
+        //     }
+        //     let click = gameEngine.click;
+        //     if (click && click.x > canvas.width/2 - 150 && click.x < canvas.width/2 + 150
+        //         && click.y > canvas.height/2 - 40 && click.y < canvas.height/2 + 40) {
+        //         this.clearEntities(gameEngine);
+        //         this.title = false;
+        //         this.loaded = false;
+        //         this.loadLevelOne(gameEngine);
+        //     }
+        // } else if (this.credits) {
+        //     if (!this.loaded) {
+        //         this.clearEntities(gameEngine);
+        //         this.loadCredits(gameEngine);
+        //         this.loaded = true;
+        //     }
+        // }
+
     }
+
+    draw(ctx, gameEngine) {}
 }

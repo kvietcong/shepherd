@@ -36,6 +36,7 @@ class Sheep extends Entity {
 
     constructor(x, y, velocity, walkSpeed = 100, maxSpeed = 200) {
         super(x, y, 50, 20);
+        Sheep.count++;
         // movement
         this.velocity = velocity || Vector.randomUnitVector();
         this.detectionRadius = this.width * 4;
@@ -67,6 +68,7 @@ class Sheep extends Entity {
         this.sheepBaa.play();
         if (this.healthAPI.health <= 0) {
             this.dead = true;
+            Sheep.count--;
             this.animator.setAnimation("staticE");
         }
     }
@@ -101,13 +103,18 @@ class Sheep extends Entity {
             if (entity instanceof Shepherd) {
                 shepherd = entity;
             }
+            if (entity instanceof Barn) {
+                if (distance < this.detectionRadius) {
+                    // Be attracted to barn?
+                }
+            }
             if (entity instanceof Wolf) {
                 if (distance < this.detectionRadius) {
                     averageWolfRepel.addInPlace(
                         new Vector(entity.x - this.x, entity.y - this.y)
                             .setUnit().scale(-1)
                     );
-                    close++;
+                    //close++;
                 }
             }
             if (entity instanceof Sheep && !entity.dead) {
@@ -143,6 +150,7 @@ class Sheep extends Entity {
             if (this.collidesWith(entity)) {
                 if (entity instanceof Barn) {
                     this.removeFromWorld = true;
+                    Barn.sheepCount++;
                     inventory.addGold(params.inventory.sheepReward);
                     console.log("gold: " + inventory.gold);
                 } else if (entity instanceof Obstacle && entity.isCollidable) {
@@ -251,3 +259,5 @@ class Sheep extends Entity {
         }
     }
 }
+
+Sheep.count = 0;
