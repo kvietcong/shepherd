@@ -145,7 +145,9 @@ class MiniMap extends GUIElement {
                     ? "cyan"
                     : entity instanceof Shepherd
                         ? "salmon"
-                        : "gray";
+                        : entity.isDestructible
+                            ? "gray"
+                            : rgba(0, 0, 0, 0);
             offscreenContext.fillRect(x, y, width, height);
         });
 

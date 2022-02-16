@@ -163,10 +163,10 @@ class Shepherd extends Entity {
         });
         if (one) {
             if (this.actionTimeElapsed.fence1 >= params.shepherd.fenceCooldown) {
-                if (this.facing == 0) gameEngine.addEntity(new Obstacle(this.x - 25, this.y - 60, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50));
-                if (this.facing == 1) gameEngine.addEntity(new Obstacle(this.x - 40, this.y - 30, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15));
-                if (this.facing == 2) gameEngine.addEntity(new Obstacle(this.x - 25, this.y + 10, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50));
-                if (this.facing == 3) gameEngine.addEntity(new Obstacle(this.x + 10, this.y - 30, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15));
+                if (this.facing == 0) gameEngine.addEntity(new Obstacle(this.x - 25, this.y - 60, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true));
+                if (this.facing == 1) gameEngine.addEntity(new Obstacle(this.x - 40, this.y - 30, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true));
+                if (this.facing == 2) gameEngine.addEntity(new Obstacle(this.x - 25, this.y + 10, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true));
+                if (this.facing == 3) gameEngine.addEntity(new Obstacle(this.x + 10, this.y - 30, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true));
                 gameEngine.addEntity(new CooldownTimer(50, 50, 50, 50, params.shepherd.fenceCooldown));
                 this.actionTimeElapsed.fence1 = 0;
                 inventory.removeGold(params.inventory.fenceCost);
@@ -174,7 +174,7 @@ class Shepherd extends Entity {
         }
         if (two) {
             if (this.actionTimeElapsed.action2 >= 1) {
-                gameEngine.addEntity(new Fire(this.x, this.y, "./resources/campfire_2.png", 0, 0, 33, 38, 2, 50, 30));
+                gameEngine.addEntity(new Fire(this.x, this.y, "./resources/campfire_2.png", 0, 0, 33, 38, 2, 50, 30, true));
                 gameEngine.addEntity(new CooldownTimer(100, 50, 50, 50, 1));
                 this.actionTimeElapsed.action2 = 0;
                 inventory.removeGold(params.inventory.torchCost);
@@ -182,7 +182,7 @@ class Shepherd extends Entity {
         }
         if (three) {
             if (this.actionTimeElapsed.action3 >= 4) {
-                gameEngine.addEntity(new Obstacle(this.x, this.y, "./resources/pinetree.png", 0, 0, 50, 82, 1.8, 40, 70));
+                gameEngine.addEntity(new Obstacle(this.x, this.y, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2, true));
                 gameEngine.addEntity(new CooldownTimer(150, 50, 50, 50, 4));
                 this.actionTimeElapsed.action3 = 0;
                 inventory.removeGold(20);
@@ -342,7 +342,7 @@ class Attack extends Entity {
                     entity.velocity.y = 0;
                     this.entitiesToIgnore.add(entity);
                 }
-                if (entity instanceof Obstacle) {
+                if (entity instanceof Obstacle && entity.isDestructible) {
                     entity.removeFromWorld = true;
                 }
             }

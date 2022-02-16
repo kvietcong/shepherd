@@ -30,7 +30,7 @@ class SceneManager {
     loadLevelOne(gameEngine) {
         const entities = [];
 
-        const shepherd = new Shepherd(5900, 900);
+        const shepherd = new Shepherd(1200, 800);
         //const shepherd = new Shepherd(canvas.width / 2, canvas.height / 2);
         params.debugEntities.shepherd = shepherd;
 
