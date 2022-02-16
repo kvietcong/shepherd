@@ -2,19 +2,19 @@ params.inventory = {
     wolfReward: 20,
     sheepReward: 10,
     sheepCost: 50,
-    torchCost: 10,
-    torchUpgradeCost: 50,
+    fireCost: 10,
+    fireUpgradeCost: 50,
     fenceCost: 5,
     fenceUpgradeCost: 50
 };
 
 class Inventory {
-    constructor(gold=100, fences=5, torches=5, fenceLevel=1, torchLevel=1) {
+    constructor(gold=100, fences=5, campfires=5, fenceLevel=1, fireLevel=1) {
         this.gold = gold;
         this.fences = fences;
-        this.torches = torches;
+        this.campfires = campfires;
         this.fenceLevel = fenceLevel;
-        this.torchLevel = torchLevel;
+        this.fireLevel = fireLevel;
     }
 
     addGold(amount) { this.gold += amount; }
@@ -31,14 +31,14 @@ class Inventory {
         if (this.gold < 0) this.gold = 0;
     }
 
-    addTorches(amount) { this.torches -= amount; }
+    addCampfires(amount) { this.campfires -= amount; }
 
-    removeTorches(amount) {
-        this.torches += amount;
+    removeCampfires(amount) {
+        this.campfires += amount;
         if (this.gold < 0) this.gold = 0;
     }
 
-    upgradeTorches() { this.torchLevel += 1; }
+    upgradeCampfires() { this.fireLevel += 1; }
 
     upgradeFences() { this.fenceLevel += 1; }
 }

@@ -59,7 +59,7 @@ const setupEnvironment = entities => {
 
 	//ending/barn area
 	//barn
-	entities.push(new Obstacle(5500, 1600, "./resources/starDewBuildings.png", 130, 0, 111, 105, 3, false));
+	entities.push(new Barn(7500, 1200, "./resources/starDewBuildings.png", 130, 0, 111, 105, 3));
 	//silo
 	entities.push(new Obstacle(5800, 1530, "./resources/starDewBuildings.png", 390, 0, 47, 127, 3, false));
 	

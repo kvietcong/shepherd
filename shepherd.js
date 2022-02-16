@@ -141,6 +141,7 @@ class Shepherd extends Entity {
                         if (this.y > entity.y) this.y = entity.y + entity.height;
                     }
                 } else if (isAttacking && entity instanceof Wolf) {
+                    // TODO: Ask about this
                     if (entity.health > 0) {
                         entity.health--;
                     } else {
@@ -173,7 +174,7 @@ class Shepherd extends Entity {
         }
         if (two) {
             if (this.actionTimeElapsed.action2 >= 1) {
-                gameEngine.addEntity(new Obstacle(this.x, this.y, "./resources/fireicon.png", 0, 0, 33, 38, 2, 50, 30));
+                gameEngine.addEntity(new Fire(this.x, this.y, "./resources/campfire_2.png", 0, 0, 33, 38, 2, 50, 30));
                 gameEngine.addEntity(new CooldownTimer(100, 50, 50, 50, 1));
                 this.actionTimeElapsed.action2 = 0;
                 inventory.removeGold(params.inventory.torchCost);
@@ -232,6 +233,24 @@ class Shepherd extends Entity {
 
     draw(ctx, gameEngine) {
         super.draw(ctx, gameEngine);
+
+        // Draw energy bar
+        const ratio = this.energy / this.maxEnergy;
+        if (ratio !== 1) {
+            const [width, height] = [100, 20];
+            const xDraw = this.xCenter - width / 2;
+            const yDraw = this.y + this.height + 10;
+
+            ctx.save();
+            ctx.fillStyle = rgba(0, 0, 0, 0);
+            ctx.fillRect(xDraw, yDraw, width, height);
+            ctx.fillStyle = "yellow";
+            ctx.fillRect(xDraw, yDraw, width * ratio, height);
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(xDraw, yDraw, width, height);
+            ctx.restore();
+        }
 
         // Directional Line
         if (params.isDebugging) {

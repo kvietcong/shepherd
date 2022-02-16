@@ -1,6 +1,6 @@
 const gameEngine = new GameEngine();
 const assetManager = new AssetManager();
-const sceneManager = new SceneManager();
+
 
 const resizeCanvas = canvas => {
 	const main = document.getElementsByTagName("main")[0];
@@ -23,8 +23,13 @@ const initializeCanvas = () => {
 };
 
 const canvas = initializeCanvas();
+const sceneManager = new SceneManager();
 const inventory = new Inventory(100, 5, 5, 1);
 console.log("gold: " + inventory.gold);
+
+const gameOver = () => {
+	return (Barn.sheepRequired - Barn.sheepCount) > Sheep.count;
+}
 
 assetManager.queueDownload("./resources/pixel_landscape_1.jpg");
 assetManager.queueDownload("./resources/Play.png");
@@ -54,7 +59,8 @@ assetManager.queueDownload("./resources/sheep_baa.mp3");
 assetManager.queueDownload("./resources/level_completed.png");
 assetManager.queueDownload("./resources/coin.png");
 assetManager.queueDownload("./resources/coin_01.png");
-
+assetManager.queueDownload("./resources/campfire_2.png");
+assetManager.queueDownload("./resources/campfire_3.png");
 
 assetManager.downloadAll(() => {
 	const ctx = canvas.getContext("2d");

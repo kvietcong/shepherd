@@ -3,6 +3,7 @@ params.wolf = {
     cohesionFactor: 5,
     alignmentFactor: 400,
     chaseFactor: 50,
+    fearFactor: 200 // With Joe Rogan
 };
 
 const makeWolfAnimator = (color = "brown") => {
@@ -92,6 +93,7 @@ class Wolf extends Entity {
         const averagePosition = this.position;
         const averageDirection = this.velocity.clone();
         const averageRepel = this.velocity.unit.scale(-1);
+        const averageFireRepel = this.velocity.unit.scale(-1);
 
         let closestSheep = null;
 
@@ -103,6 +105,14 @@ class Wolf extends Entity {
 
             // Update vectors
             const distance = this.distanceTo(entity);
+            if (entity instanceof Fire) {
+                if (distance < this.detectionRadius * inventory.fireLevel) {
+                    averageFireRepel.addInPlace(
+                        new Vector(entity.x - this.x, entity.y - this.y)
+                            .setUnit().scale(-1)
+                    );
+                }
+            }
             if (entity instanceof Sheep && !entity.dead) {
                 if (
                     (distance < this.detectionRadius)
@@ -162,7 +172,7 @@ class Wolf extends Entity {
         });
 
         const {
-            separationFactor, cohesionFactor, alignmentFactor, chaseFactor
+            separationFactor, cohesionFactor, alignmentFactor, chaseFactor, fearFactor
         } = params.wolf;
 
         const speed = closestSheep ? this.maxSpeed : this.walkSpeed;
@@ -198,6 +208,13 @@ class Wolf extends Entity {
             );
         }
 
+        // Fear
+        const fireRepel = averageFireRepel.scale(1/close).unit;
+        this.velocity.lerpToInPlace(
+            fireRepel.scale(speed * fearFactor),
+            1 * gameEngine.deltaTime
+        );
+
         this.velocity.setUnit().scaleInPlace(speed);
 
         // Visual
@@ -217,7 +234,7 @@ class Wolf extends Entity {
         const directions = Object.keys(directionInfo);
         // Sort to find the closest cardinal/ordinal direction
         directions.sort((a, b) => {
-            return this.velocity.angleTo(directionInfo[a])  - this.velocity.angleTo(directionInfo[b]);
+            return this.velocity.angleTo(directionInfo[a]) - this.velocity.angleTo(directionInfo[b]);
         });
         let direction = directions[0];
 
