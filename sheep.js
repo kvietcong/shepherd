@@ -1,11 +1,50 @@
-// Keep This Comment: 18 se, 10 co, 300 al are good base factors for non-cardinal
-params.sheep = {
-    separationFactor: 30,
-    cohesionFactor: 10,
-    alignmentFactor: 300,
-    shepherdFactor: 25,
-    wolfFactor: 100
+params.sheep = {};
+const testPrinter = newValue => console.log(`Inserted ${newValue}`);
+const separationFactorCallback = newValue => {
+    const separationContainer = document.getElementById("separation");
+    const p = separationContainer.children[0];
+    p.textContent = `Separation Factor: ${newValue}`;
 };
+const cohesionFactorCallback = newValue => {
+    const cohesionContainer = document.getElementById("cohesion");
+    const p = cohesionContainer.children[0];
+    p.textContent = `Cohesion Factor: ${newValue}`;
+};
+const alignmentFactorCallback = newValue => {
+    const alignmentContainer = document.getElementById("alignment");
+    const p = alignmentContainer.children[0];
+    p.textContent = `Alignment Factor: ${newValue}`;
+};
+const shepherdFactorCallback = newValue => {
+    const shepherdContainer = document.getElementById("shepherd");
+    const p = shepherdContainer.children[0];
+    p.textContent = `Shepherd Factor: ${newValue}`;
+};
+const wolfFactorCallback = newValue => {
+    const wolfContainer = document.getElementById("wolf");
+    const p = wolfContainer.children[0];
+    p.textContent = `Wolf Factor: ${newValue}`;
+};
+const walkSpeedCallback = newValue => {
+    const walkSpeedContainer = document.getElementById("walk-speed");
+    const p = walkSpeedContainer.children[0];
+    p.textContent = `Walk Speed: ${newValue}`;
+};
+const maxSpeedCallback = newValue => {
+    const maxSpeedContainer = document.getElementById("max-speed");
+    const p = maxSpeedContainer.children[0];
+    p.textContent = `Max Speed: ${newValue}`;
+};
+
+attachPropertiesWithCallbacks(params.sheep, [
+    [ "separationFactor", 30, separationFactorCallback ],
+    [ "cohesionFactor", 10, cohesionFactorCallback ],
+    [ "alignmentFactor", 300, alignmentFactorCallback ],
+    [ "shepherdFactor", 25, shepherdFactorCallback ],
+    [ "wolfFactor", 100, wolfFactorCallback ],
+    [ "walkSpeed", 100, walkSpeedCallback ],
+    [ "maxSpeed", 200, maxSpeedCallback ],
+]);
 
 const makeSheepAnimator = () => {
     const size = 64;
@@ -34,15 +73,13 @@ const makeSheepAnimator = () => {
 
 class Sheep extends Entity {
 
-    constructor(x, y, velocity, walkSpeed = 100, maxSpeed = 200) {
+    constructor(x, y, velocity) {
         super(x, y, 50, 20);
         Sheep.count++;
         // movement
         this.velocity = velocity || Vector.randomUnitVector();
         this.detectionRadius = this.width * 4;
         this.flockingRadius = this.detectionRadius * 2;
-        this.walkSpeed = walkSpeed;
-        this.maxSpeed = maxSpeed;
 
         // interactions
         this.healthAPI = new HealthAPI(
@@ -152,7 +189,7 @@ class Sheep extends Entity {
                     this.removeFromWorld = true;
                     Barn.sheepCount++;
                     inventory.addGold(params.inventory.sheepReward);
-                    console.log("gold: " + inventory.gold);
+                    console.log("gold: " + inventory._gold);
                 } else if (entity instanceof Obstacle && entity.isCollidable) {
                     if (this.y - 10 > entity.y - this.height && this.y + 10 < entity.y + entity.height) {
                         if (this.x < entity.x) this.x = entity.x - this.width;
@@ -177,7 +214,7 @@ class Sheep extends Entity {
         } = params.sheep;
 
         //const speed = this.maxSpeed * distToShep / 100
-        const speed = (distToShep.magnitude < this.detectionRadius * 5) ? this.maxSpeed : this.walkSpeed;
+        const speed = (distToShep.magnitude < this.detectionRadius * 5) ? params.sheep.maxSpeed : params.sheep.walkSpeed;
 
         // Separation
         this.velocity.lerpToInPlace(

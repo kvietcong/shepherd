@@ -1,7 +1,6 @@
 const gameEngine = new GameEngine();
 const assetManager = new AssetManager();
 
-
 const resizeCanvas = canvas => {
 	const main = document.getElementsByTagName("main")[0];
 	canvas.width = round(main.clientWidth * 0.65);
@@ -25,7 +24,7 @@ const initializeCanvas = () => {
 const canvas = initializeCanvas();
 const sceneManager = new SceneManager();
 const inventory = new Inventory(100, 5, 5, 1);
-console.log("gold: " + inventory.gold);
+console.log("gold: " + inventory._gold);
 
 const gameOver = () => {
 	return (Barn.sheepRequired - Barn.sheepCount) > Sheep.count;
@@ -72,47 +71,11 @@ assetManager.downloadAll(() => {
 // Event Hooks
 window.addEventListener("resize", () => { resizeCanvas(canvas) });
 
-const alignmentInput = document.getElementById("alignment");
-const shepAlignmentInput = document.getElementById("shep-alignment");
-const wolfRepelInput = document.getElementById("wolf-repel");
-const cohesionInput = document.getElementById("cohesion");
-const separationInput = document.getElementById("separation");
-
-
-alignmentInput.value = params.sheep.alignmentFactor;
-//alignmentInput.value = params.sheep.shepAlignmentInput
-cohesionInput.value = params.sheep.cohesionFactor;
-separationInput.value = params.sheep.separationFactor;
-
-alignmentInput.addEventListener("change", event => {
-	let { value } = event.target;
-	if (value < 1) {
-		value = 1;
-		alignmentInput.value = value;
-	}
-	params.sheep.alignmentFactor = value;
-});
-cohesionInput.addEventListener("change", event => {
-	let { value } = event.target;
-	if (value < 1) {
-		value = 1;
-		cohesionInput.value = value;
-	}
-	params.sheep.cohesionFactor = value;
-});
-separationInput.addEventListener("change", event => {
-	let { value } = event.target;
-	if (value < 1) {
-		value = 1;
-		separationInput.value = value;
-	}
-	params.sheep.separationFactor = value;
-});
-
-const resetFactors = () => {
-	separationInput.value = params.sheep.separationFactor = 18;
-	cohesionInput.value = params.sheep.cohesionFactor = 10;
-	alignmentInput.value = params.sheep.alignmentFactor = 300;
+const upgradeCost = 10;
+const changeSheepFactor = (factor, change) => {
+	if (params.sheep[factor] + change < 0) { return; }
+	const successful = inventory.attemptSpend(upgradeCost);
+	if (successful) params.sheep[factor] += change;
 };
 
 const debugInput = document.getElementById("debug");

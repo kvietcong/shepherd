@@ -137,6 +137,24 @@ const normalizeAngle = angle => {
     return normalizedAngle;
 };
 
+const attachPropertiesWithCallbacks = (object, things) => {
+    const t = things.reduce((acc, thing) => {
+        const [ property, _initialValue, callback ] = thing;
+        acc[property] = {
+            get: () => object[`_${property}`],
+            set: newValue => {
+                object[`_${property}`] = newValue;
+                callback(newValue);
+            }
+        };
+        return acc;
+    }, {});
+    Object.defineProperties(object, t);
+    things.forEach(([ property, initialValue, _callback ]) => {
+        object[property] = initialValue;
+    });
+};
+
 /**
  * Returns random element from array
  * @param {Array} items

@@ -55,6 +55,7 @@ class SceneManager {
         volumeSlider.addEventListener("change", event => {
             const newVolume = event.target.value;
             backgroundMusic.volume = newVolume;
+            params.volume = newVolume;
             backgroundMusic.play();
         });
         backgroundMusic.volume = volumeSlider.value;
