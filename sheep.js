@@ -1,20 +1,9 @@
-<<<<<<< HEAD
 params.sheep = {};
 const testPrinter = newValue => console.log(`Inserted ${newValue}`);
 const separationFactorCallback = newValue => {
     const separationContainer = document.getElementById("separation");
     const p = separationContainer.children[0];
     p.textContent = `Separation Factor: ${newValue}`;
-=======
-// Keep This Comment: 18 se, 10 co, 300 al are good base factors for non-cardinal
-params.sheep = {
-    separationFactor: 30,
-    cohesionFactor: 10,
-    alignmentFactor: 300,
-    shepherdFactor: 25,
-    wolfFactor: 100,
-    obstacleFactor: 10
->>>>>>> b0d7ba4cf70276e9b33691300e0d75ebb8ba07f3
 };
 const cohesionFactorCallback = newValue => {
     const cohesionContainer = document.getElementById("cohesion");

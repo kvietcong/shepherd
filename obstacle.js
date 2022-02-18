@@ -84,7 +84,6 @@ class Fire extends Obstacle {
 
     constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH) {
         super(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH);
-        //this.animator = makeCampfireAnimator();
         this.setAnimator(makeCampfireAnimator());
         this.animator.setIsLooping();
         this.animator.play();

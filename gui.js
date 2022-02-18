@@ -38,12 +38,12 @@ class Icon extends GUIElement {
             ctx.drawImage(this.source, this.x, this.y, this.width, this.height);
         }
         if (this.text) {
-            ctx.fillStyle = 'white';
+            ctx.fillStyle = 'gold';
             ctx.font = "30px impact";
-            ctx.strokeText(this.text, this.x + .4*this.width,
-                this.y + .8*this.height, this.width);
-            ctx.fillText(this.text, this.x + .4*this.width,
-                this.y + .8*this.height, this.width);
+            ctx.strokeText(this.text, this.x + .5*this.width,
+                this.y + .9*this.height, this.width);
+            ctx.fillText(this.text, this.x + .5*this.width,
+                this.y + .9*this.height, this.width);
         }
     }
 }
