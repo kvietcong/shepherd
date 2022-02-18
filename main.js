@@ -24,10 +24,14 @@ const initializeCanvas = () => {
 const canvas = initializeCanvas();
 const sceneManager = new SceneManager();
 const inventory = new Inventory(100, 5, 5, 1);
+const darkness = new Darkness();
 console.log("gold: " + inventory.gold);
 
 const gameOver = () => {
 	return (Barn.sheepRequired - Barn.sheepCount) > Sheep.count;
+}
+const levelOver = () => {
+	return (Barn.sheepRequired <= Barn.sheepCount);
 }
 
 assetManager.queueDownload("./resources/pixel_landscape_1.jpg");
@@ -60,6 +64,9 @@ assetManager.queueDownload("./resources/coin.png");
 assetManager.queueDownload("./resources/coin_01.png");
 assetManager.queueDownload("./resources/campfire_2.png");
 assetManager.queueDownload("./resources/campfire_3.png");
+assetManager.queueDownload("./resources/game_over.png");
+assetManager.queueDownload("./resources/play_again.png");
+
 
 assetManager.downloadAll(() => {
 	const ctx = canvas.getContext("2d");

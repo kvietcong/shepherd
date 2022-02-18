@@ -51,7 +51,7 @@ class Shepherd extends Entity {
         this.state = 0; // 0 = static, 1 = walking, 2 = spell, 3 = poke, 4 = swipe, 5 = die.
         this.velocity = new Vector(0, 0);
         this.maxSpeed = maxSpeed;
-
+        this.damage = 10;
         // shepherds's fire state variables
         this.actionTimeElapsed = {
             fence1: params.shepherd.fenceCooldown,
@@ -142,11 +142,7 @@ class Shepherd extends Entity {
                     }
                 } else if (isAttacking && entity instanceof Wolf) {
                     // TODO: Ask about this
-                    if (entity.health > 0) {
-                        entity.health--;
-                    } else {
-                        entity.removeFromWorld = true;
-                    }
+                    entity.attacked(damage);
                     entity.x += 20*this.velocity.x;
                     entity.y += 20*this.velocity.y;
                     entity.velocity.x = 0;
@@ -162,28 +158,31 @@ class Shepherd extends Entity {
             this.actionTimeElapsed[key] += gameEngine.deltaTime;
         });
         if (one) {
-            if (this.actionTimeElapsed.fence1 >= params.shepherd.fenceCooldown) {
+            if (this.actionTimeElapsed.fence1 >= params.shepherd.fenceCooldown &&
+                    inventory.gold > params.inventory.fenceCost) {
                 if (this.facing == 0) gameEngine.addEntity(new Obstacle(this.x - 25, this.y - 60, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true));
                 if (this.facing == 1) gameEngine.addEntity(new Obstacle(this.x - 40, this.y - 30, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true));
                 if (this.facing == 2) gameEngine.addEntity(new Obstacle(this.x - 25, this.y + 10, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true));
                 if (this.facing == 3) gameEngine.addEntity(new Obstacle(this.x + 10, this.y - 30, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true));
-                gameEngine.addEntity(new CooldownTimer(50, 50, 50, 50, params.shepherd.fenceCooldown));
+                gameEngine.addEntity(new CooldownTimer(50, 25, 50, 50, params.shepherd.fenceCooldown));
                 this.actionTimeElapsed.fence1 = 0;
                 inventory.removeGold(params.inventory.fenceCost);
             }
         }
         if (two) {
-            if (this.actionTimeElapsed.action2 >= 1) {
+            if (this.actionTimeElapsed.action2 >= 1 &&
+                    inventory.gold > params.inventory.fireCost) {
                 gameEngine.addEntity(new Fire(this.x, this.y, "./resources/campfire_2.png", 0, 0, 33, 38, 2, 50, 30, true));
-                gameEngine.addEntity(new CooldownTimer(100, 50, 50, 50, 1));
+                gameEngine.addEntity(new CooldownTimer(100, 25, 50, 50, 1));
                 this.actionTimeElapsed.action2 = 0;
-                inventory.removeGold(params.inventory.torchCost);
+                inventory.removeGold(params.inventory.fireCost);
             }
         }
         if (three) {
-            if (this.actionTimeElapsed.action3 >= 4) {
+            if (this.actionTimeElapsed.action3 >= 4 &&
+                    inventory.gold > 20) {
                 gameEngine.addEntity(new Obstacle(this.x, this.y, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2, true));
-                gameEngine.addEntity(new CooldownTimer(150, 50, 50, 50, 4));
+                gameEngine.addEntity(new CooldownTimer(150, 25, 50, 50, 4));
                 this.actionTimeElapsed.action3 = 0;
                 inventory.removeGold(20);
             }
@@ -334,17 +333,15 @@ class Attack extends Entity {
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
             if (this.collidesWith(entity)) {
-                if (entity instanceof Wolf && !this.entitiesToIgnore.has(entity) && !entity.dead) {
-                    entity.attacked(this.damage);
-                    entity.x += 1;
-                    entity.y += 1;
-                    entity.velocity.x = 0;
-                    entity.velocity.y = 0;
-                    this.entitiesToIgnore.add(entity);
-                }
-                if (entity instanceof Obstacle && entity.isDestructible) {
-                    entity.removeFromWorld = true;
-                }
+                if (!this.entitiesToIgnore.has(entity) && !entity.dead) {
+                    if (entity instanceof Wolf) {
+                        entity.attacked(this.damage);
+                        this.entitiesToIgnore.add(entity);
+                    } else if (entity instanceof Obstacle && entity.isDestructible) {
+                        entity.attacked(this.damage);
+                        this.entitiesToIgnore.add(entity);
+                    }
+                }       
             }
         });
         this.x += this.velocity.x * gameEngine.deltaTime;

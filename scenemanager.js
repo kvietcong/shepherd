@@ -1,6 +1,6 @@
 class SceneManager {
     constructor() {
-        this.scenes = ["title", "level1", "credits"];
+        this.scenes = ["title", "level1", "credits", "gameOver"];
         this.currentScene = "";
     }
 
@@ -72,7 +72,7 @@ class SceneManager {
         const fenceIcon = new Icon(assetManager.getAsset("./resources/fence_horizontal.png")
             , 50, 25, 50, 50, params.inventory.fenceCost);
         const fireIcon = new Icon(assetManager.getAsset("./resources/fireicon.png")
-            , 100, 25, 50, 50, params.inventory.torchCost);
+            , 100, 25, 50, 50, params.inventory.fireCost);
         const treeIcon = new Icon(assetManager.getAsset("./resources/pinetree.png"), 150, 25, 50, 50, "20");
         const goldIcon = new Icon(assetManager.getAsset("./resources/coin_01.png"), 450, 25, 50, 50);
         const goldText = new GoldText(500, 65, 85, 40);
@@ -86,6 +86,7 @@ class SceneManager {
         entities.push(miniMap);
 
         gameEngine.addEntities(entities);
+        //gameEngine.addEntity(darkness);
     }
 
     loadCredits(gameEngine) {
@@ -96,6 +97,19 @@ class SceneManager {
 	    end.z = 9;
         gameEngine.addEntity(screen);
 	    gameEngine.addEntity(end);
+    }
+
+    loadGameOver(gameEngine) {
+        const screen = new Icon(assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
+		0, 0, canvas.width, canvas.height);
+        screen.z = 8;
+	    const end = new Icon(assetManager.getAsset("./resources/game_over.png"), canvas.width/2 - 150, canvas.height/2 - 160, 300, 80);
+        const again = new Icon(assetManager.getAsset("./resources/play_again.png"), canvas.width/2 - 150, canvas.height/2 - 40, 300, 80);
+        again.z = 9;
+        end.z = 9;
+        gameEngine.addEntity(screen);
+	    gameEngine.addEntity(end);
+        gameEngine.addEntity(again);
     }
 
     update(gameEngine) {
@@ -117,13 +131,24 @@ class SceneManager {
                 break;
             case "level1":
                 if (gameOver()) {
+                    this.currentScene = "gameOver";
+                    this.clearEntities(gameEngine);
+                    this.loadGameOver(gameEngine);
+                } else if (levelOver()) {
                     this.currentScene = "credits";
                     this.clearEntities(gameEngine);
                     this.loadCredits(gameEngine);
                 }
                 break;
-            case "credits":
-                // play again button?
+            case "gameOver":
+                let click2 = gameEngine.click;
+                if (click2 && click2.x > canvas.width/2 - 150 && click2.x < canvas.width/2 + 150
+                    && click2.y > canvas.height/2 - 40 && click2.y < canvas.height/2 + 40) {
+                    this.currentScene = "level1";
+                    this.clearEntities(gameEngine);
+                    this.loadLevelOne(gameEngine);
+                    //this.loadLevel(this.currentScene);
+                }
                 break;
         }
     }
