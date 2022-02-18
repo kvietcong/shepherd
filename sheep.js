@@ -1,9 +1,20 @@
+<<<<<<< HEAD
 params.sheep = {};
 const testPrinter = newValue => console.log(`Inserted ${newValue}`);
 const separationFactorCallback = newValue => {
     const separationContainer = document.getElementById("separation");
     const p = separationContainer.children[0];
     p.textContent = `Separation Factor: ${newValue}`;
+=======
+// Keep This Comment: 18 se, 10 co, 300 al are good base factors for non-cardinal
+params.sheep = {
+    separationFactor: 30,
+    cohesionFactor: 10,
+    alignmentFactor: 300,
+    shepherdFactor: 25,
+    wolfFactor: 100,
+    obstacleFactor: 10
+>>>>>>> b0d7ba4cf70276e9b33691300e0d75ebb8ba07f3
 };
 const cohesionFactorCallback = newValue => {
     const cohesionContainer = document.getElementById("cohesion");
@@ -129,6 +140,8 @@ class Sheep extends Entity {
         const averageWolfRepel = this.velocity.unit.scale(-1);
 
         let shepherd = null;
+        // let toObstacle = null;
+        // let newDirection = null;
 
         let flock = 1;
         let close = 1;
@@ -137,13 +150,18 @@ class Sheep extends Entity {
             if (entity === this) return;
 
             const distance = this.distanceTo(entity);
-            if (entity instanceof Shepherd) {
-                shepherd = entity;
-            }
             if (entity instanceof Barn) {
                 if (distance < this.detectionRadius) {
                     // Be attracted to barn?
                 }
+            } else if (entity instanceof Obstacle) {
+                // if (distance < this.detectionRadius) {
+                //     toObstacle = new Vector(entity.x - this.x, entity.y - this.y);
+                //     //const newDirection = toObstacle.add()
+                // }
+            }
+            if (entity instanceof Shepherd) {
+                shepherd = entity;
             }
             if (entity instanceof Wolf) {
                 if (distance < this.detectionRadius) {
@@ -202,15 +220,22 @@ class Sheep extends Entity {
             }
         });
 
+        // if (toObstacle) {
+        //     newDirection = toObstacle.x.magnitude > toObstacle.y.magnitude ?
+        //         new Vector(0, -1)
+        //         :
+        //         new Vector(-1, 0);
+        // }
+
         const separation = averageRepel.scale(1/close).unit;
         const wolfRepel = averageWolfRepel.scale(1/close).unit;
         const cohesion = averagePosition.scale(1/flock).subtract(this.x, this.y).unit;
         const alignment = averageDirection.scale(1/flock).unit;
         const distToShep = new Vector(shepherd.x - this.x, shepherd.y - this.y);
-        const shepAlignment = distToShep.magnitude < 75 ? distToShep.scale(-75).unit : distToShep.scale(50 /* 1/50 * distToShep.magnitude */).unit;
+        const shepAlignment = distToShep.magnitude < 75 ? distToShep.scale(-75).unit : distToShep.scale(50).unit;
 
         const {
-            separationFactor, cohesionFactor, alignmentFactor, shepherdFactor, wolfFactor
+            separationFactor, cohesionFactor, alignmentFactor, shepherdFactor, wolfFactor, obstacleFactor
         } = params.sheep;
 
         //const speed = this.maxSpeed * distToShep / 100
@@ -245,6 +270,14 @@ class Sheep extends Entity {
             wolfRepel.scale(speed * wolfFactor),
             1 * gameEngine.deltaTime
         );
+
+        // Avoid Obstacles
+        // if (newDirection) {
+        //     this.velocity.lerpToInPlace(
+        //         newDirection.scale(speed * obstacleFactor),
+        //         1 * gameEngine.deltaTime
+        //     );
+        // }
 
         this.velocity.setUnit().scaleInPlace(speed);
 

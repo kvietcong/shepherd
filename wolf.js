@@ -49,7 +49,7 @@ class Wolf extends Entity {
         this.dead = false;
         this.resting = false;
         this.timeSinceRest = 0;
-        this.restTime = 3;
+        this.restTime = 0.5;
         this.damage = 50;
 
         // media

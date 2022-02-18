@@ -39,7 +39,7 @@ class SceneManager {
             let x = randomInt(canvas.width * 2);
             let y = randomInt(canvas.height * 2);
             if (i % 4 === 0) {
-                entities.push(new Wolf(x, y));
+                //entities.push(new Wolf(x, y));
             } else {
                 entities.push(new Sheep(x, y));
             }
@@ -101,8 +101,8 @@ class SceneManager {
     update(gameEngine) {
         switch(this.currentScene) {
             case "":
-                this.loadTitle(gameEngine);
                 this.currentScene = "title";
+                this.loadTitle(gameEngine);
                 break;
             case "title":
                 // switch to level1 when start button is clicked

@@ -30,6 +30,10 @@ const gameOver = () => {
 	return (Barn.sheepRequired - Barn.sheepCount) > Sheep.count;
 }
 
+const gameWon = () => {
+	return Barn.sheepCount >= Barn.sheepRequired;
+}
+
 assetManager.queueDownload("./resources/pixel_landscape_1.jpg");
 assetManager.queueDownload("./resources/Play.png");
 assetManager.queueDownload("./resources/wolf.png");
