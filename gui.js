@@ -50,22 +50,30 @@ class Icon extends GUIElement {
 class GoldText extends GUIElement {
     constructor(x, y, width, size) {
         super(x, y);
-        this.text = inventory.gold;
         this.width = width;
         this.size = size;
     }
     draw(ctx, gameEngine) {
         ctx.fillStyle = 'gold';
         ctx.font = this.size + 'px impact';
-        ctx.strokeText(this.text, this.x, this.y, this.width);
-        ctx.fillText(this.text, this.x, this.y, this.width);
+        ctx.strokeText(inventory.gold, this.x, this.y, this.width);
+        ctx.fillText(inventory.gold, this.x, this.y, this.width);
     }
-    update(gameEngine) {
-        super.update(gameEngine);
-        this.text = inventory.gold;
-    }
-
 }
+class WoodText extends GUIElement {
+    constructor(x, y, width, size) {
+        super(x, y);
+        this.width = width;
+        this.size = size;
+    }
+    draw(ctx, gameEngine) {
+        ctx.fillStyle = 'gold';
+        ctx.font = this.size + 'px impact';
+        ctx.strokeText(inventory.wood, this.x, this.y, this.width);
+        ctx.fillText(inventory.wood, this.x, this.y, this.width);
+    }
+}
+
 class Screen extends Icon {
     constructor(source, x, y, width, height, z) {
         super(source, x, y, width, height);

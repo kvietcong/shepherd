@@ -45,7 +45,6 @@ class Wolf extends Entity {
         this.healthAPI = new HealthAPI(
             100, 100, 1.5, true, true
         ).attachShortcutsTo(this);
-        this.health = 3;
         this.dead = false;
         this.stunned = false;
         this.timeSinceStunned = 0;
