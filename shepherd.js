@@ -51,7 +51,8 @@ class Shepherd extends Entity {
         this.state = 0; // 0 = static, 1 = walking, 2 = spell, 3 = poke, 4 = swipe, 5 = die.
         this.velocity = new Vector(0, 0);
         this.maxSpeed = maxSpeed;
-        this.damage = 10;
+        this.slashDamage = 10;
+        this.jabDamage = 10;
         // shepherds's fire state variables
         this.actionTimeElapsed = {
             fence1: params.shepherd.fenceCooldown,
@@ -141,10 +142,11 @@ class Shepherd extends Entity {
                         if (this.y > entity.y) this.y = entity.y + entity.height;
                     }
                 }
-                if ((entity instanceof Wolf || entity.isDestructible) && isAttacking && !entity.dead) {
-                    // TODO: Ask about this
-                    entity.attacked(this.damage*.01);
-                } else if (entity instanceof Coin || entity instanceof Log) {
+                // if ((entity instanceof Wolf || entity.isDestructible) && isAttacking && !entity.dead) {
+                //     // TODO: Ask about this
+                //     entity.attacked(this.damage*.01);
+                // } else
+                if (entity instanceof Coin || entity instanceof Log) {
                     entity.taken();
                 }
             }
@@ -180,11 +182,24 @@ class Shepherd extends Entity {
         if (space && !q) {
             if (this.actionTimeElapsed.attack >= params.shepherd.attackCooldown) {
                 //x - 40, y - 30, left; x + 10, y - 30, right; x - 10, y + 10, down; x - 10, y - 60, up.
-                if (this.facing == 0) gameEngine.addEntity(new Attack(this.x - 10, this.y - 60, 3, new Vector(0, -100)));
-                if (this.facing == 1) gameEngine.addEntity(new Attack(this.x - 40, this.y - 30, 2, new Vector(-100, 0)));
-                if (this.facing == 2) gameEngine.addEntity(new Attack(this.x - 10, this.y + 10, 1, new Vector(0, 100)));
-                if (this.facing == 3) gameEngine.addEntity(new Attack(this.x + 10, this.y - 30, 0, new Vector(100, 0)));
+                const attackAnimator = makeAttackAnimator();
+                if (this.facing == 0) gameEngine.addEntity(new Attack(this.x - 10, this.y - 60, this.slashDamage, 3, new Vector(0, -100), attackAnimator));
+                if (this.facing == 1) gameEngine.addEntity(new Attack(this.x - 40, this.y - 30, this.slashDamage, 2, new Vector(-100, 0), attackAnimator));
+                if (this.facing == 2) gameEngine.addEntity(new Attack(this.x - 10, this.y + 10, this.slashDamage, 1, new Vector(0, 100), attackAnimator));
+                if (this.facing == 3) gameEngine.addEntity(new Attack(this.x + 10, this.y - 30, this.slashDamage, 0, new Vector(100, 0), attackAnimator));
                 this.actionTimeElapsed.attack = 0;
+            }
+        }
+        if (!space && q) {
+            if (this.actionTimeElapsed.attack >= params.shepherd.attackCooldown) {
+                //x - 40, y - 30, left; x + 10, y - 30, right; x - 10, y + 10, down; x - 10, y - 60, up.
+                if (this.facing == 0) gameEngine.addEntity(new Attack(this.x - 10, this.y - 60, this.jabDamage, 3, new Vector(0, -100)));
+                if (this.facing == 1) gameEngine.addEntity(new Attack(this.x - 40, this.y - 30, this.jabDamage, 2, new Vector(-100, 0)));
+                if (this.facing == 2) gameEngine.addEntity(new Attack(this.x - 10, this.y + 10, this.jabDamage, 1, new Vector(0, 100)));
+                if (this.facing == 3) gameEngine.addEntity(new Attack(this.x + 10, this.y - 30, this.jabDamage, 0, new Vector(100, 0)));
+                this.actionTimeElapsed.attack = 0;
+
+                // different attack cooldown for jab vs slash?
             }
         }
         // Beyblade moment
@@ -319,18 +334,24 @@ const makeAttackAnimator = () => {
 }
 
 class Attack extends Entity {
-    constructor(x, y, direction, velocity, maxSpeed = 100) {
+    constructor(x, y, damage, direction, velocity, animator=null) {
         super(x, y, 60, 60);
         this.velocity = velocity;
-        this.maxSpeed = maxSpeed;
         this.time = 0;
-        this.setAnimator(makeAttackAnimator());
-        this.animator.setIsLooping();
-        this.animator.play();
-        this.animator.rotation += 90*direction;
+
+        console.log(animator)
+
+        if (animator) {
+            console.log("setting animator")
+            this.setAnimator(animator);
+            this.animator.setIsLooping();
+            this.animator.play();
+            this.animator.rotation += 90*direction;
+        }
+
         this.time = 0;
         this.isCollidable = false;
-        this.damage = 25;
+        this.damage = damage;
         this.entitiesToIgnore = new Set();
     }
 
@@ -340,7 +361,6 @@ class Attack extends Entity {
         super.update(gameEngine);
         if (this.time > .3) this.removeFromWorld = true;
 
-        this.animator.tint("black");
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
             if (this.collidesWith(entity)) {
@@ -358,8 +378,10 @@ class Attack extends Entity {
         this.x += this.velocity.x * gameEngine.deltaTime;
         this.y += this.velocity.y * gameEngine.deltaTime;
 
-        const animationList = Object.keys(this.animator.animationInfo);
-        this.animator.setAnimation(animationList[0]);
+        if (this.animator) {
+            const animationList = Object.keys(this.animator.animationInfo);
+            this.animator.setAnimation(animationList[0]);
+        }
     }
 
     draw(ctx, gameEngine) {
