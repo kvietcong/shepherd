@@ -24,7 +24,7 @@ const initializeCanvas = () => {
 const canvas = initializeCanvas();
 const sceneManager = new SceneManager();
 const inventory = new Inventory(100, 5, 5, 1);
-console.log("gold: " + inventory._gold);
+console.log("gold: " + inventory.gold);
 
 const gameOver = () => {
 	return (Barn.sheepRequired - Barn.sheepCount) > Sheep.count;

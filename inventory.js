@@ -24,32 +24,32 @@ class Inventory {
     }
 
     attemptSpend(amount) {
-        if (this._gold >= amount) {
-            this._gold -= amount;
+        if (this.gold >= amount) {
+            this.gold -= amount;
             return true;
         }
         return false;
     }
 
-    addGold(amount) { this._gold += amount; }
+    addGold(amount) { this.gold += amount; }
 
     removeGold(amount) {
-        this._gold -= amount;
-        if (this._gold < 0) this._gold = 0;
+        this.gold -= amount;
+        if (this.gold < 0) this.gold = 0;
     }
 
     addFences(amount) { this.fences -= amount; }
 
     removeFences(amount) {
         this.fences += amount;
-        if (this._gold < 0) this._gold = 0;
+        if (this.gold < 0) this.gold = 0;
     }
 
     addCampfires(amount) { this.campfires -= amount; }
 
     removeCampfires(amount) {
         this.campfires += amount;
-        if (this._gold < 0) this._gold = 0;
+        if (this.gold < 0) this.gold = 0;
     }
 
     upgradeCampfires() { this.fireLevel += 1; }

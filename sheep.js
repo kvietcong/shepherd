@@ -189,7 +189,7 @@ class Sheep extends Entity {
                     this.removeFromWorld = true;
                     Barn.sheepCount++;
                     inventory.addGold(params.inventory.sheepReward);
-                    console.log("gold: " + inventory._gold);
+                    console.log("gold: " + inventory.gold);
                 } else if (entity instanceof Obstacle && entity.isCollidable) {
                     if (this.y - 10 > entity.y - this.height && this.y + 10 < entity.y + entity.height) {
                         if (this.x < entity.x) this.x = entity.x - this.width;
