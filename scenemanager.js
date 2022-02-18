@@ -73,14 +73,22 @@ class SceneManager {
             , 50, 25, 50, 50, params.inventory.fenceCost);
         const fireIcon = new Icon(assetManager.getAsset("./resources/fireicon.png")
             , 100, 25, 50, 50, params.inventory.fireCost);
-        const treeIcon = new Icon(assetManager.getAsset("./resources/pinetree.png"), 150, 25, 50, 50, "20");
-        const goldIcon = new Icon(assetManager.getAsset("./resources/coin_01.png"), 450, 25, 50, 50);
-        const goldText = new GoldText(500, 65, 85, 40);
+        const treeIcon = new Icon(assetManager.getAsset("./resources/pinetree.png")
+            , 150, 25, 50, 50, "20");
+        const goldIcon = new Icon(assetManager.getAsset("./resources/coin_01.png")
+            , 400, 25, 50, 50);
+        const goldText = new GoldText(
+            450, 65, 85, 40);
+        const woodIcon = new Icon(assetManager.getAsset("./resources/logs.png")
+            , 550, 25, 50, 50);
+        const woodText = new WoodText(600, 65, 85, 40);
         entities.push(fenceIcon);
         entities.push(fireIcon);
         entities.push(treeIcon);
         entities.push(goldIcon);
         entities.push(goldText);
+        entities.push(woodIcon);
+        entities.push(woodText);
 
         const miniMap = new MiniMap(mainEnvironment, camera);
         entities.push(miniMap);

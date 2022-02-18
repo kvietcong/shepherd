@@ -1,7 +1,7 @@
 class Darkness {
     constructor(ctx,) {
         this.ambientLight = .1;
-        this.intensity = .6;
+        this.intensity = 1;
         this.radius = 100;
         this.amb = 'rgba(0,0,0,' + (1-this.ambientLight) + ')';
     }
@@ -29,8 +29,8 @@ class Darkness {
         ctx.fillRect(0, 370-this.radius, 50+this.radius, 370+this.radius);
 
         ctx.fillStyle = this.amb;
-        ctx.globalCompositeOperation = 'xor';
-        ctx.fillRect(0,0,500,500);
+        //ctx.globalCompositeOperation = 'xor';
+        //ctx.fillRect(0,0,500,500);
     }   
     update() {
         

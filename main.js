@@ -66,7 +66,7 @@ assetManager.queueDownload("./resources/campfire_2.png");
 assetManager.queueDownload("./resources/campfire_3.png");
 assetManager.queueDownload("./resources/game_over.png");
 assetManager.queueDownload("./resources/play_again.png");
-
+assetManager.queueDownload("./resources/logs.png");
 
 assetManager.downloadAll(() => {
 	const ctx = canvas.getContext("2d");

@@ -85,6 +85,20 @@ class Barn extends Obstacle {
 Barn.sheepCount = 0;
 Barn.sheepRequired = 10;
 
+class Tree extends Obstacle {
+    constructor(x, y) {
+        super(x, y, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2, true);
+    }
+    update(gameEngine) {
+        super.update(gameEngine);
+        this.healthAPI.update(gameEngine);
+        if (this.dead) {
+            this.removeFromWorld = true;
+            gameEngine.addEntity(new Log(this.x, this.y + 100));
+        }
+    }
+}
+
 const makeCampfireAnimator = () => {
     const size = 64;
     const campfireAnimations = {
