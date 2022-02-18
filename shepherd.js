@@ -1,9 +1,9 @@
 params.shepherd = {
     energyLossRate: 20,
     energyRegenRate: 10,
-    fenceCooldown: 2,
+    fenceCooldown: 1,
     action2Cooldown: 1,
-    action3Cooldown: 4,
+    action3Cooldown: 2,
     attackCooldown: 0.7
 };
 
@@ -157,10 +157,10 @@ class Shepherd extends Entity {
         if (one) {
             if (this.actionTimeElapsed.fence1 >= params.shepherd.fenceCooldown &&
                     inventory.attemptSpend(params.inventory.fenceCost, "wood")) {
-                if (this.facing == 0) gameEngine.addEntity(new Obstacle(this.x - 25, this.y - 60, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true));
-                if (this.facing == 1) gameEngine.addEntity(new Obstacle(this.x - 40, this.y - 30, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true));
-                if (this.facing == 2) gameEngine.addEntity(new Obstacle(this.x - 25, this.y + 10, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true));
-                if (this.facing == 3) gameEngine.addEntity(new Obstacle(this.x + 10, this.y - 30, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true));
+                if (this.facing == 0) gameEngine.addEntity(new Obstacle(Math.floor((this.x - 25)/50)*50, Math.floor((this.y - 60)/50)*50, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true));
+                if (this.facing == 1) gameEngine.addEntity(new Obstacle(Math.floor((this.x - 40)/50)*50, Math.floor((this.y - 30)/50)*50, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true));
+                if (this.facing == 2) gameEngine.addEntity(new Obstacle(Math.floor((this.x - 25)/50)*50, Math.floor((this.y - 10)/50)*50, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true));
+                if (this.facing == 3) gameEngine.addEntity(new Obstacle(Math.floor((this.x + 10)/50)*50, Math.floor((this.y - 30)/50)*50, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true));
                 gameEngine.addEntity(new CooldownTimer(50, 25, 50, 50, params.shepherd.fenceCooldown));
                 this.actionTimeElapsed.fence1 = 0;
             }
