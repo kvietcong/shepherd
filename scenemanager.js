@@ -34,12 +34,13 @@ class SceneManager {
         //const shepherd = new Shepherd(canvas.width / 2, canvas.height / 2);
         params.debugEntities.shepherd = shepherd;
 
+        // TODO: Spawn sheep in starting area, spawn wolves throughout map
         entities.push(shepherd);
         for (let i = 0; i < 25; i++) {
             let x = randomInt(canvas.width * 2);
             let y = randomInt(canvas.height * 2);
             if (i % 4 === 0) {
-                //entities.push(new Wolf(x, y));
+                entities.push(new Wolf(x, y));
             } else {
                 entities.push(new Sheep(x, y));
             }

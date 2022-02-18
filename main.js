@@ -30,12 +30,8 @@ console.log("gold: " + inventory.gold);
 const gameOver = () => {
 	return (Barn.sheepRequired - Barn.sheepCount) > Sheep.count;
 }
-const levelOver = () => {
+const levelWon = () => {
 	return (Barn.sheepRequired <= Barn.sheepCount);
-}
-
-const gameWon = () => {
-	return Barn.sheepCount >= Barn.sheepRequired;
 }
 
 assetManager.queueDownload("./resources/pixel_landscape_1.jpg");
