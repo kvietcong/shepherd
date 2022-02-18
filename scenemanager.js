@@ -35,7 +35,7 @@ class SceneManager {
             let x = randomInt(canvas.width * 2);
             let y = randomInt(canvas.height * 2);
             if (i % 4 === 0) {
-                entities.push(new Wolf(x, y));
+                //entities.push(new Wolf(x, y));
             } else {
                 entities.push(new Sheep(x, y));
             }
@@ -98,8 +98,8 @@ class SceneManager {
     update(gameEngine) {
         switch(this.currentScene) {
             case "":
-                this.loadTitle(gameEngine);
                 this.currentScene = "title";
+                this.loadTitle(gameEngine);
                 break;
             case "title":
                 // switch to level1 when start button is clicked
@@ -123,28 +123,6 @@ class SceneManager {
                 // play again button?
                 break;
         }
-
-        // if (this.title) {
-        //     if (!this.loaded) {
-        //         this.loadTitle(gameEngine);
-        //         this.loaded = true;
-        //     }
-        //     let click = gameEngine.click;
-        //     if (click && click.x > canvas.width/2 - 150 && click.x < canvas.width/2 + 150
-        //         && click.y > canvas.height/2 - 40 && click.y < canvas.height/2 + 40) {
-        //         this.clearEntities(gameEngine);
-        //         this.title = false;
-        //         this.loaded = false;
-        //         this.loadLevelOne(gameEngine);
-        //     }
-        // } else if (this.credits) {
-        //     if (!this.loaded) {
-        //         this.clearEntities(gameEngine);
-        //         this.loadCredits(gameEngine);
-        //         this.loaded = true;
-        //     }
-        // }
-
     }
 
     draw(ctx, gameEngine) {}
