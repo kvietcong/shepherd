@@ -1,7 +1,7 @@
 params.shepherd = {
     energyLossRate: 20,
     energyRegenRate: 10,
-    fenceCooldown: 2,
+    fenceCooldown: 0.25,
     action2Cooldown: 1,
     action3Cooldown: 4,
     attackCooldown: 0.7
@@ -51,7 +51,8 @@ class Shepherd extends Entity {
         this.state = 0; // 0 = static, 1 = walking, 2 = spell, 3 = poke, 4 = swipe, 5 = die.
         this.velocity = new Vector(0, 0);
         this.maxSpeed = maxSpeed;
-
+        this.slashDamage = 10;
+        this.jabDamage = 10;
         // shepherds's fire state variables
         this.actionTimeElapsed = {
             fence1: params.shepherd.fenceCooldown,
@@ -140,17 +141,12 @@ class Shepherd extends Entity {
                         if (this.y < entity.y) this.y = entity.y - this.height;
                         if (this.y > entity.y) this.y = entity.y + entity.height;
                     }
-                } else if (isAttacking && entity instanceof Wolf) {
-                    if (entity.health > 0) {
-                        entity.health--;
-                    } else {
-                        entity.removeFromWorld = true;
-                    }
-                    entity.x += 20*this.velocity.x;
-                    entity.y += 20*this.velocity.y;
-                    entity.velocity.x = 0;
-                    entity.velocity.y = 0;
-                } else if (entity instanceof Coin) {
+                }
+                // if ((entity instanceof Wolf || entity.isDestructible) && isAttacking && !entity.dead) {
+                //     // TODO: Ask about this
+                //     entity.attacked(this.damage*.01);
+                // } else
+                if (entity instanceof Coin || entity instanceof Log) {
                     entity.taken();
                 }
             }
@@ -161,40 +157,49 @@ class Shepherd extends Entity {
             this.actionTimeElapsed[key] += gameEngine.deltaTime;
         });
         if (one) {
-            if (this.actionTimeElapsed.fence1 >= params.shepherd.fenceCooldown) {
-                if (this.facing == 0) gameEngine.addEntity(new Obstacle(this.x - 25, this.y - 60, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50));
-                if (this.facing == 1) gameEngine.addEntity(new Obstacle(this.x - 40, this.y - 30, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15));
-                if (this.facing == 2) gameEngine.addEntity(new Obstacle(this.x - 25, this.y + 10, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50));
-                if (this.facing == 3) gameEngine.addEntity(new Obstacle(this.x + 10, this.y - 30, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15));
-                gameEngine.addEntity(new CooldownTimer(50, 50, 50, 50, params.shepherd.fenceCooldown));
+            if (this.actionTimeElapsed.fence1 >= params.shepherd.fenceCooldown &&
+                    inventory.attemptSpend(params.inventory.fenceCost, "wood")) {
+                if (this.facing == 0) gameEngine.addEntity(new Obstacle(this.x - 25, this.y - 60, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true));
+                if (this.facing == 1) gameEngine.addEntity(new Obstacle(this.x - 40, this.y - 30, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true));
+                if (this.facing == 2) gameEngine.addEntity(new Obstacle(this.x - 25, this.y + 10, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true));
+                if (this.facing == 3) gameEngine.addEntity(new Obstacle(this.x + 10, this.y - 30, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true));
+                gameEngine.addEntity(new CooldownTimer(50, 25, 50, 50, params.shepherd.fenceCooldown));
                 this.actionTimeElapsed.fence1 = 0;
-                inventory.removeGold(params.inventory.fenceCost);
             }
         }
         if (two) {
-            if (this.actionTimeElapsed.action2 >= 1) {
-                gameEngine.addEntity(new Fire(this.x, this.y, "./resources/campfire_2.png", 0, 0, 33, 38, 2, 50, 30));
-                gameEngine.addEntity(new CooldownTimer(100, 50, 50, 50, 1));
+            if (this.actionTimeElapsed.action2 >= 1 &&
+                    inventory.attemptSpend(params.inventory.fireCost, "wood")) {
+                if (this.facing == 0) gameEngine.addEntity(new Fire(this.x, this.y - 50, "./resources/campfire_2.png", 0, 0, 33, 38, 2, 50, 30, true));
+                if (this.facing == 1) gameEngine.addEntity(new Fire(this.x - 50, this.y, "./resources/campfire_2.png", 0, 0, 33, 38, 2, 50, 30, true));
+                if (this.facing == 2) gameEngine.addEntity(new Fire(this.x, this.y + 50, "./resources/campfire_2.png", 0, 0, 33, 38, 2, 50, 30, true));
+                if (this.facing == 3) gameEngine.addEntity(new Fire(this.x + 50, this.y, "./resources/campfire_2.png", 0, 0, 33, 38, 2, 50, 30, true));
+
+                gameEngine.addEntity(new CooldownTimer(100, 25, 50, 50, 1));
                 this.actionTimeElapsed.action2 = 0;
-                inventory.removeGold(params.inventory.torchCost);
-            }
-        }
-        if (three) {
-            if (this.actionTimeElapsed.action3 >= 4) {
-                gameEngine.addEntity(new Obstacle(this.x, this.y, "./resources/pinetree.png", 0, 0, 50, 82, 1.8, 40, 70));
-                gameEngine.addEntity(new CooldownTimer(150, 50, 50, 50, 4));
-                this.actionTimeElapsed.action3 = 0;
-                inventory.removeGold(20);
             }
         }
         if (space && !q) {
             if (this.actionTimeElapsed.attack >= params.shepherd.attackCooldown) {
                 //x - 40, y - 30, left; x + 10, y - 30, right; x - 10, y + 10, down; x - 10, y - 60, up.
-                if (this.facing == 0) gameEngine.addEntity(new Attack(this.x - 10, this.y - 60, 3, new Vector(0, -100)));
-                if (this.facing == 1) gameEngine.addEntity(new Attack(this.x - 40, this.y - 30, 2, new Vector(-100, 0)));
-                if (this.facing == 2) gameEngine.addEntity(new Attack(this.x - 10, this.y + 10, 1, new Vector(0, 100)));
-                if (this.facing == 3) gameEngine.addEntity(new Attack(this.x + 10, this.y - 30, 0, new Vector(100, 0)));
+                const attackAnimator = makeAttackAnimator();
+                if (this.facing == 0) gameEngine.addEntity(new Attack(this.x - 10, this.y - 60, this.slashDamage, 3, new Vector(0, -100), attackAnimator));
+                if (this.facing == 1) gameEngine.addEntity(new Attack(this.x - 40, this.y - 30, this.slashDamage, 2, new Vector(-100, 0), attackAnimator));
+                if (this.facing == 2) gameEngine.addEntity(new Attack(this.x - 10, this.y + 10, this.slashDamage, 1, new Vector(0, 100), attackAnimator));
+                if (this.facing == 3) gameEngine.addEntity(new Attack(this.x + 10, this.y - 30, this.slashDamage, 0, new Vector(100, 0), attackAnimator));
                 this.actionTimeElapsed.attack = 0;
+            }
+        }
+        if (!space && q) {
+            if (this.actionTimeElapsed.attack >= params.shepherd.attackCooldown) {
+                //x - 40, y - 30, left; x + 10, y - 30, right; x - 10, y + 10, down; x - 10, y - 60, up.
+                if (this.facing == 0) gameEngine.addEntity(new Attack(this.x - 10, this.y - 60, this.jabDamage, 3, new Vector(0, -100)));
+                if (this.facing == 1) gameEngine.addEntity(new Attack(this.x - 40, this.y - 30, this.jabDamage, 2, new Vector(-100, 0)));
+                if (this.facing == 2) gameEngine.addEntity(new Attack(this.x - 10, this.y + 10, this.jabDamage, 1, new Vector(0, 100)));
+                if (this.facing == 3) gameEngine.addEntity(new Attack(this.x + 10, this.y - 30, this.jabDamage, 0, new Vector(100, 0)));
+                this.actionTimeElapsed.attack = 0;
+
+                // different attack cooldown for jab vs slash?
             }
         }
         // Beyblade moment
@@ -233,6 +238,24 @@ class Shepherd extends Entity {
     draw(ctx, gameEngine) {
         super.draw(ctx, gameEngine);
 
+        // Draw energy bar
+        const ratio = this.energy / this.maxEnergy;
+        if (ratio !== 1) {
+            const [width, height] = [100, 20];
+            const xDraw = this.xCenter - width / 2;
+            const yDraw = this.y + this.height + 10;
+
+            ctx.save();
+            ctx.fillStyle = rgba(0, 0, 0, 0);
+            ctx.fillRect(xDraw, yDraw, width, height);
+            ctx.fillStyle = "yellow";
+            ctx.fillRect(xDraw, yDraw, width * ratio, height);
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(xDraw, yDraw, width, height);
+            ctx.restore();
+        }
+
         // Directional Line
         if (params.isDebugging) {
             const debugLine = this.velocity.unit.scale(30);
@@ -256,8 +279,9 @@ const makeCoinAnimator = () => {
     );
 }
 class Coin extends Entity {
-    constructor(x, y) {
-        super(x, y, 16, 16);
+    constructor(x, y, value) {
+        super(x, y, 20, 20);
+        this.value = value;
         this.isCollidable = false;
         this.setAnimator(makeCoinAnimator());
         this.animator.setIsLooping();
@@ -265,7 +289,7 @@ class Coin extends Entity {
     }
     taken() {
         if (!this.removeFromWorld) {
-            inventory.addGold(1);
+            inventory.addGold(this.value);
             this.removeFromWorld = true;
         }
     }
@@ -274,6 +298,26 @@ class Coin extends Entity {
     }
     draw(ctx, gameEngine) {
         super.draw(ctx, gameEngine);
+    }
+}
+class Log extends Obstacle {
+    constructor(x, y) {
+        super(x, y, "./resources/logs.png", 0, 0, 1200, 940, 1/25, 50, 30);
+        this.isCollidable = false;
+    }
+    taken() {
+        if (!this.removeFromWorld) {
+            inventory.addWood(10);
+            this.removeFromWorld = true;
+        }
+    }
+    update(gameEngine){
+        super.update(gameEngine);
+    }
+
+    draw(ctx, gameEngine) {
+        super.draw(ctx, gameEngine);
+        this.drawer(ctx, gameEngine);
     }
 }
 
@@ -290,18 +334,24 @@ const makeAttackAnimator = () => {
 }
 
 class Attack extends Entity {
-    constructor(x, y, direction, velocity, maxSpeed = 100) {
+    constructor(x, y, damage, direction, velocity, animator=null) {
         super(x, y, 60, 60);
         this.velocity = velocity;
-        this.maxSpeed = maxSpeed;
         this.time = 0;
-        this.setAnimator(makeAttackAnimator());
-        this.animator.setIsLooping();
-        this.animator.play();
-        this.animator.rotation += 90*direction;
+
+        console.log(animator)
+
+        if (animator) {
+            console.log("setting animator")
+            this.setAnimator(animator);
+            this.animator.setIsLooping();
+            this.animator.play();
+            this.animator.rotation += 90*direction;
+        }
+
         this.time = 0;
         this.isCollidable = false;
-        this.damage = 25;
+        this.damage = damage;
         this.entitiesToIgnore = new Set();
     }
 
@@ -311,28 +361,27 @@ class Attack extends Entity {
         super.update(gameEngine);
         if (this.time > .3) this.removeFromWorld = true;
 
-        this.animator.tint("black");
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
             if (this.collidesWith(entity)) {
-                if (entity instanceof Wolf && !this.entitiesToIgnore.has(entity) && !entity.dead) {
-                    entity.attacked(this.damage);
-                    entity.x += 1;
-                    entity.y += 1;
-                    entity.velocity.x = 0;
-                    entity.velocity.y = 0;
-                    this.entitiesToIgnore.add(entity);
-                }
-                if (entity instanceof Obstacle) {
-                    entity.removeFromWorld = true;
+                if (!this.entitiesToIgnore.has(entity) && !entity.dead) {
+                    if (entity instanceof Wolf) {
+                        entity.attacked(this.damage);
+                        this.entitiesToIgnore.add(entity);
+                    } else if (entity instanceof Obstacle && entity.isDestructible) {
+                        entity.attacked(this.damage);
+                        this.entitiesToIgnore.add(entity);
+                    }
                 }
             }
         });
         this.x += this.velocity.x * gameEngine.deltaTime;
         this.y += this.velocity.y * gameEngine.deltaTime;
 
-        const animationList = Object.keys(this.animator.animationInfo);
-        this.animator.setAnimation(animationList[0]);
+        if (this.animator) {
+            const animationList = Object.keys(this.animator.animationInfo);
+            this.animator.setAnimation(animationList[0]);
+        }
     }
 
     draw(ctx, gameEngine) {

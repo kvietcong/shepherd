@@ -123,6 +123,8 @@ class GameEngine {
                 this.keys[key.toUpperCase()] = false;
             }
         });
+
+        this.ctx.canvas.addEventListener("focusout", _ => this.keys = {})
     };
 
     addEntity(entity) {

@@ -1,6 +1,6 @@
 class SceneManager {
     constructor() {
-        this.scenes = ["title", "level1", "credits"];
+        this.scenes = ["title", "level1", "credits", "gameOver"];
         this.currentScene = "";
     }
 
@@ -12,12 +12,16 @@ class SceneManager {
     }
 
     loadTitle(gameEngine) {
-        console.log(canvas);
-        console.log("loading title")
-        let screen = new Icon(assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
-		0, 0, canvas.width, canvas.height);
+        const screen = new Icon(
+            assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
+            0, 0, canvas.width, canvas.height
+        );
         screen.z = 8;
-	    let begin = new Icon(assetManager.getAsset("./resources/Play.png"), canvas.width/2 - 150, canvas.height/2 - 40, 300, 80);
+	    const begin = new Icon(
+            assetManager.getAsset("./resources/Play.png"),
+            canvas.width/2 - 150, canvas.height/2 - 40,
+            300, 80
+        );
         begin.z = 9;
 	    gameEngine.addEntity(screen);
 	    gameEngine.addEntity(begin);
@@ -28,6 +32,7 @@ class SceneManager {
 
         const shepherd = new Shepherd(1200, 800);
         params.debugEntities.shepherd = shepherd;
+<<<<<<< HEAD
         entities.push(shepherd);
         // for (let i = 0; i < 25; i++) {
         //     let x = randomInt(canvas.width * 2);
@@ -47,6 +52,20 @@ class SceneManager {
             [new SpawnPoint(2650, 2230, 500, 300), 4],
             [new SpawnPoint(2650, 2230, 500, 300), 4],
         ];
+=======
+
+        // TODO: Spawn sheep in starting area, spawn wolves throughout map
+        entities.push(shepherd);
+        for (let i = 0; i < 25; i++) {
+            let x = randomInt(canvas.width * 2);
+            let y = randomInt(canvas.height * 2);
+            if (i % 4 === 0) {
+                entities.push(new Wolf(x, y));
+            } else {
+                entities.push(new Sheep(x, y));
+            }
+        }
+>>>>>>> f55be602c56625ee36205106291c93e8540267eb
 
         const mainEnvironment = setupEnvironment(entities);
         gameEngine.addEntity(sceneManager);
@@ -58,6 +77,7 @@ class SceneManager {
         volumeSlider.addEventListener("change", event => {
             const newVolume = event.target.value;
             backgroundMusic.volume = newVolume;
+            params.volume = newVolume;
             backgroundMusic.play();
         });
         backgroundMusic.volume = volumeSlider.value;
@@ -71,25 +91,32 @@ class SceneManager {
         camera.follow(shepherd);
         gameEngine.setCamera(camera);
 
-        //const cooldown = new CooldownTimer(50, 50, 100, 100);
-        //entities.push(cooldown);
         const fenceIcon = new Icon(assetManager.getAsset("./resources/fence_horizontal.png")
             , 50, 25, 50, 50, params.inventory.fenceCost);
         const fireIcon = new Icon(assetManager.getAsset("./resources/fireicon.png")
-            , 100, 25, 50, 50, params.inventory.torchCost);
-        const treeIcon = new Icon(assetManager.getAsset("./resources/pinetree.png"), 150, 25, 50, 50, "20");
-        const goldIcon = new Icon(assetManager.getAsset("./resources/coin_01.png"), 450, 25, 50, 50);
-        const goldText = new GoldText(500, 65, 85, 40);
+            , 100, 25, 50, 50, params.inventory.fireCost);
+        // const treeIcon = new Icon(assetManager.getAsset("./resources/pinetree.png")
+        //     , 150, 25, 50, 50, "20");
+        const goldIcon = new Icon(assetManager.getAsset("./resources/coin_01.png")
+            , 400, 25, 50, 50);
+        const goldText = new GoldText(
+            450, 65, 85, 40);
+        const woodIcon = new Icon(assetManager.getAsset("./resources/logs.png")
+            , 550, 25, 50, 50);
+        const woodText = new WoodText(600, 65, 85, 40);
         entities.push(fenceIcon);
         entities.push(fireIcon);
-        entities.push(treeIcon);
+        //entities.push(treeIcon);
         entities.push(goldIcon);
         entities.push(goldText);
+        entities.push(woodIcon);
+        entities.push(woodText);
 
         const miniMap = new MiniMap(mainEnvironment, camera);
         entities.push(miniMap);
 
         gameEngine.addEntities(entities);
+        //gameEngine.addEntity(darkness);
     }
 
     loadCredits(gameEngine) {
@@ -100,6 +127,19 @@ class SceneManager {
 	    end.z = 9;
         gameEngine.addEntity(screen);
 	    gameEngine.addEntity(end);
+    }
+
+    loadGameOver(gameEngine) {
+        const screen = new Icon(assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
+		0, 0, canvas.width, canvas.height);
+        screen.z = 8;
+	    const end = new Icon(assetManager.getAsset("./resources/game_over.png"), canvas.width/2 - 150, canvas.height/2 - 160, 300, 80);
+        const again = new Icon(assetManager.getAsset("./resources/play_again.png"), canvas.width/2 - 150, canvas.height/2 - 40, 300, 80);
+        again.z = 9;
+        end.z = 9;
+        gameEngine.addEntity(screen);
+	    gameEngine.addEntity(end);
+        gameEngine.addEntity(again);
     }
 
     update(gameEngine) {
@@ -121,13 +161,24 @@ class SceneManager {
                 break;
             case "level1":
                 if (gameOver()) {
+                    this.currentScene = "gameOver";
+                    this.clearEntities(gameEngine);
+                    this.loadGameOver(gameEngine);
+                } else if (levelWon()) {
                     this.currentScene = "credits";
                     this.clearEntities(gameEngine);
                     this.loadCredits(gameEngine);
                 }
                 break;
-            case "credits":
-                // play again button?
+            case "gameOver":
+                let click2 = gameEngine.click;
+                if (click2 && click2.x > canvas.width/2 - 150 && click2.x < canvas.width/2 + 150
+                    && click2.y > canvas.height/2 - 40 && click2.y < canvas.height/2 + 40) {
+                    this.currentScene = "level1";
+                    this.clearEntities(gameEngine);
+                    this.loadLevelOne(gameEngine);
+                    //this.loadLevel(this.currentScene);
+                }
                 break;
         }
     }

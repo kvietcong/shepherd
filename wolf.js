@@ -45,11 +45,13 @@ class Wolf extends Entity {
         this.healthAPI = new HealthAPI(
             100, 100, 1.5, true, true
         ).attachShortcutsTo(this);
-        this.health = 3;
         this.dead = false;
+        this.stunned = false;
+        this.timeSinceStunned = 0;
+        this.stunTime = 0.5;
         this.resting = false;
         this.timeSinceRest = 0;
-        this.restTime = 0.5;
+        this.restTime = 1.5;
         this.damage = 50;
 
         // media
@@ -62,9 +64,9 @@ class Wolf extends Entity {
         //console.log("wolf is dealt damage");
         this.healthAPI.damage(damage);
         this.animator.untint();
-        this.animator.tint("red", this.restTime, 0.6);
-        this.resting = true;
-        this.timeSinceRest = 0;
+        this.animator.tint("red", this.stunTime, 0.6);
+        this.stunned = true;
+        this.timeSinceStunned = 0;
         if (this.healthAPI.health <= 0) {
             inventory.addGold(params.inventory.wolfReward);
             console.log("gold: " + inventory.gold);
@@ -77,17 +79,30 @@ class Wolf extends Entity {
         super.update(gameEngine);
         this.healthAPI.update(gameEngine);
 
-        // Check if resting or dead before updating
-        if (this.resting || this.dead) {
+        if (this.dead) return;
+
+        // Check if resting or stunned before updating
+        if (this.stunned) {
+            this.timeSinceStunned += gameEngine.deltaTime;
+            if (this.timeSinceStunned >= this.stunTime) {
+                this.stunned = false;
+                if (this.dead) {
+                    this.removeFromWorld = true;
+                    gameEngine.addEntity(new Coin(this.x, this.y, 10));
+                }
+            }
+            return;
+        }
+        if (this.resting) {
             this.timeSinceRest += gameEngine.deltaTime;
             if (this.timeSinceRest >= this.restTime) {
                 this.resting = false;
                 if (this.dead) {
                     this.removeFromWorld = true;
-                    gameEngine.addEntity(new Coin(this.x, this.y));
+                    gameEngine.addEntity(new Coin(this.x, this.y, 10));
                 }
             }
-            if (this.resting || this.dead) return;
+            return;
         };
 
         const averagePosition = this.position;

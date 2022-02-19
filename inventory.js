@@ -9,16 +9,39 @@ params.inventory = {
 };
 
 class Inventory {
-    constructor(gold=100, fences=5, campfires=5, fenceLevel=1, fireLevel=1) {
-        this.gold = gold;
+    constructor(gold=100, fences=5, campfires=5, fenceLevel=1, fireLevel=1, wood=100) {
+        this._gold = gold;
         this.fences = fences;
         this.campfires = campfires;
         this.fenceLevel = fenceLevel;
         this.fireLevel = fireLevel;
+        this.wood = wood;
+    }
+
+    get gold() { return this._gold; }
+    set gold(newGold) {
+        this._gold = newGold;
+        if (this._gold < 0) this._gold = 0;
+    }
+
+    attemptSpend(amount, type="gold") {
+        if (type === "gold") {
+            if (this.gold >= amount) {
+                this.gold -= amount;
+                return true;
+            }
+            return false;
+        } else if (type === "wood") {
+            if (this.wood >= amount) {
+                this.wood -= amount;
+                return true;
+            }
+            return false;
+        }
     }
 
     addGold(amount) { this.gold += amount; }
-
+    addWood(amount) { this.wood += amount; }
     removeGold(amount) {
         this.gold -= amount;
         if (this.gold < 0) this.gold = 0;
