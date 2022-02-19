@@ -31,20 +31,31 @@ class SceneManager {
         const entities = [];
 
         const shepherd = new Shepherd(1200, 800);
-        //const shepherd = new Shepherd(canvas.width / 2, canvas.height / 2);
         params.debugEntities.shepherd = shepherd;
-
-        // TODO: Spawn sheep in starting area, spawn wolves throughout map
         entities.push(shepherd);
-        for (let i = 0; i < 25; i++) {
-            let x = randomInt(canvas.width * 2);
-            let y = randomInt(canvas.height * 2);
-            if (i % 4 === 0) {
-                entities.push(new Wolf(x, y));
-            } else {
-                entities.push(new Sheep(x, y));
-            }
-        }
+        // for (let i = 0; i < 25; i++) {
+        //     let x = randomInt(canvas.width * 2);
+        //     let y = randomInt(canvas.height * 2);
+        //     if (i % 4 === 0) {
+        //         //entities.push(new Wolf(x, y));
+        //     } else {
+        //         entities.push(new Sheep(x, y));
+        //     }
+        // }
+
+        const startingArea = new SpawnPoint(1200, 650, 900, 750);
+        startingArea.spawnSheep(20, gameEngine);
+
+        const wolfPacks = [
+            [new SpawnPoint(1830, 1830, 330, 200), 2],
+            [new SpawnPoint(2650, 2230, 500, 300), 4],
+            [new SpawnPoint(3850, 950, 650, 1650), 6],
+            [new SpawnPoint(5350, 1960, 650, 250), 3]
+        ];
+        wolfPacks.forEach((info) => {
+            const [spawnPoint, amount] = info;
+            spawnPoint.spawnWolves(amount, gameEngine);
+        });
 
         const mainEnvironment = setupEnvironment(entities);
         gameEngine.addEntity(sceneManager);
@@ -163,4 +174,32 @@ class SceneManager {
     }
 
     draw(ctx, gameEngine) {}
+}
+
+class SpawnPoint {
+
+    // TODO: make a modular spawn function
+
+    constructor(x, y, w, h) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+    }
+
+    spawnSheep(amount, gameEngine) {
+        for (let i = 0; i < amount; i++) {
+            let randX = this.x + randomInt(this.w);
+            let randY = this.y + randomInt(this.h);
+            gameEngine.addEntity(new Sheep(randX, randY));
+        }
+    }
+
+    spawnWolves(amount, gameEngine) {
+        for (let i = 0; i < amount; i++) {
+            let randX = this.x + randomInt(this.w);
+            let randY = this.y + randomInt(this.h);
+            gameEngine.addEntity(new Wolf(randX, randY));
+        }
+    }
 }
