@@ -32,7 +32,6 @@ class SceneManager {
 
         const shepherd = new Shepherd(1200, 800);
         params.debugEntities.shepherd = shepherd;
-<<<<<<< HEAD
         entities.push(shepherd);
         // for (let i = 0; i < 25; i++) {
         //     let x = randomInt(canvas.width * 2);
@@ -50,22 +49,13 @@ class SceneManager {
         const wolfPacks = [
             [new SpawnPoint(1830, 1830, 330, 200), 2],
             [new SpawnPoint(2650, 2230, 500, 300), 4],
-            [new SpawnPoint(2650, 2230, 500, 300), 4],
+            [new SpawnPoint(3850, 950, 650, 1650), 6],
+            [new SpawnPoint(5350, 1960, 650, 250), 3]
         ];
-=======
-
-        // TODO: Spawn sheep in starting area, spawn wolves throughout map
-        entities.push(shepherd);
-        for (let i = 0; i < 25; i++) {
-            let x = randomInt(canvas.width * 2);
-            let y = randomInt(canvas.height * 2);
-            if (i % 4 === 0) {
-                entities.push(new Wolf(x, y));
-            } else {
-                entities.push(new Sheep(x, y));
-            }
-        }
->>>>>>> f55be602c56625ee36205106291c93e8540267eb
+        wolfPacks.forEach((info) => {
+            const [spawnPoint, amount] = info;
+            spawnPoint.spawnWolves(amount, gameEngine);
+        });
 
         const mainEnvironment = setupEnvironment(entities);
         gameEngine.addEntity(sceneManager);

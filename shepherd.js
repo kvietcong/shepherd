@@ -51,8 +51,8 @@ class Shepherd extends Entity {
         this.state = 0; // 0 = static, 1 = walking, 2 = spell, 3 = poke, 4 = swipe, 5 = die.
         this.velocity = new Vector(0, 0);
         this.maxSpeed = maxSpeed;
-        this.slashDamage = 10;
-        this.jabDamage = 10;
+        this.slashDamage = 25;
+        this.jabDamage = 25;
         // shepherds's fire state variables
         this.actionTimeElapsed = {
             fence1: params.shepherd.fenceCooldown,
