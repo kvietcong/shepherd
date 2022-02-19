@@ -18,6 +18,10 @@ class Obstacle extends Entity {
 
         super(x, y, collisionWidth, collisionHeight);
         this.isDestructible = isDestructible;
+        this.healthAPI = new HealthAPI(
+            100, 100, 1.5, true, true
+        ).attachShortcutsTo(this);
+        this.dead = false;
         if (src) {
             const obstacle = assetManager.getAsset(src);
             const pixelWidth = sizeX * scale;
@@ -35,14 +39,30 @@ class Obstacle extends Entity {
         }
     }
 
+    attacked(damage) {
+        //console.log("obstacle is dealt damage");
+        this.healthAPI.damage(damage);
+        if (this.healthAPI.health <= 0) {
+            //inventory.addGold(params.inventory.obstacleReward);
+            //console.log("gold: " + inventory.gold);
+            this.dead = true;
+        }
+    }
+
     update(gameEngine){
         super.update(gameEngine);
+        this.healthAPI.update(gameEngine);
+        if (this.dead) this.removeFromWorld = true;
     }
 
     draw(ctx, gameEngine){
         this.drawer(ctx, gameEngine);
         super.draw(ctx, gameEngine);
-    }
+        this.healthAPI.draw(
+            this.xCenter, this.y - 35,
+            75, 10,
+            ctx, gameEngine);
+    }    
 }
 
 class Barn extends Obstacle {
@@ -65,6 +85,20 @@ class Barn extends Obstacle {
 Barn.sheepCount = 0;
 Barn.sheepRequired = 10;
 
+class Tree extends Obstacle {
+    constructor(x, y) {
+        super(x, y, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2, true);
+    }
+    update(gameEngine) {
+        super.update(gameEngine);
+        this.healthAPI.update(gameEngine);
+        if (this.dead) {
+            this.removeFromWorld = true;
+            gameEngine.addEntity(new Log(this.x, this.y + 100));
+        }
+    }
+}
+
 const makeCampfireAnimator = () => {
     const size = 64;
     const campfireAnimations = {
@@ -84,7 +118,6 @@ class Fire extends Obstacle {
 
     constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH) {
         super(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH);
-        //this.animator = makeCampfireAnimator();
         this.setAnimator(makeCampfireAnimator());
         this.animator.setIsLooping();
         this.animator.play();

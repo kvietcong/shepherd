@@ -1,6 +1,6 @@
 class SceneManager {
     constructor() {
-        this.scenes = ["title", "level1", "credits"];
+        this.scenes = ["title", "level1", "credits", "gameOver"];
         this.currentScene = "";
     }
 
@@ -30,21 +30,39 @@ class SceneManager {
     loadLevelOne(gameEngine) {
         const entities = [];
 
-        const shepherd = new Shepherd(4000, 2000);
+        //spawn points: 
+        //starting area: 1200, 1200
+        //main area: 4400, 1200
+        //east of bridge: 4000, 2300
+        const shepherd = new Shepherd(1200, 1200);
         //const shepherd = new Shepherd(canvas.width / 2, canvas.height / 2);
         params.debugEntities.shepherd = shepherd;
-
         entities.push(shepherd);
-        for (let i = 0; i < 25; i++) {
-            let x = randomInt(canvas.width * 2);
-            let y = randomInt(canvas.height * 2);
-            if (i % 4 === 0) {
-                //entities.push(new Wolf(x, y));
-            } else {
-                entities.push(new Sheep(x, y));
-            }
-        }
+        // for (let i = 0; i < 25; i++) {
+        //     let x = randomInt(canvas.width * 2);
+        //     let y = randomInt(canvas.height * 2);
+        //     if (i % 4 === 0) {
+        //         //entities.push(new Wolf(x, y));
+        //     } else {
+        //         entities.push(new Sheep(x, y));
+        //     }
+        // }
 
+        const startingArea = new SpawnPoint(1200, 650, 900, 750);
+        startingArea.spawnSheep(20, gameEngine);
+
+        /*
+        const wolfPacks = [
+            [new SpawnPoint(1830, 1830, 330, 200), 2],
+            [new SpawnPoint(2650, 2230, 500, 300), 4],
+            [new SpawnPoint(3850, 950, 650, 1650), 6],
+            [new SpawnPoint(5350, 1960, 650, 250), 3]
+        ];
+        wolfPacks.forEach((info) => {
+            const [spawnPoint, amount] = info;
+            spawnPoint.spawnWolves(amount, gameEngine);
+        });
+        */
         const mainEnvironment = setupEnvironment(entities);
         gameEngine.addEntity(sceneManager);
 
@@ -55,6 +73,7 @@ class SceneManager {
         volumeSlider.addEventListener("change", event => {
             const newVolume = event.target.value;
             backgroundMusic.volume = newVolume;
+            params.volume = newVolume;
             backgroundMusic.play();
         });
         backgroundMusic.volume = volumeSlider.value;
@@ -71,20 +90,29 @@ class SceneManager {
         const fenceIcon = new Icon(assetManager.getAsset("./resources/fence_horizontal.png")
             , 50, 25, 50, 50, params.inventory.fenceCost);
         const fireIcon = new Icon(assetManager.getAsset("./resources/fireicon.png")
-            , 100, 25, 50, 50, params.inventory.torchCost);
-        const treeIcon = new Icon(assetManager.getAsset("./resources/pinetree.png"), 150, 25, 50, 50, "20");
-        const goldIcon = new Icon(assetManager.getAsset("./resources/coin_01.png"), 450, 25, 50, 50);
-        const goldText = new GoldText(500, 65, 85, 40);
+            , 100, 25, 50, 50, params.inventory.fireCost);
+        // const treeIcon = new Icon(assetManager.getAsset("./resources/pinetree.png")
+        //     , 150, 25, 50, 50, "20");
+        const goldIcon = new Icon(assetManager.getAsset("./resources/coin_01.png")
+            , 400, 25, 50, 50);
+        const goldText = new GoldText(
+            450, 65, 85, 40);
+        const woodIcon = new Icon(assetManager.getAsset("./resources/logs.png")
+            , 550, 25, 50, 50);
+        const woodText = new WoodText(600, 65, 85, 40);
         entities.push(fenceIcon);
         entities.push(fireIcon);
-        entities.push(treeIcon);
+        //entities.push(treeIcon);
         entities.push(goldIcon);
         entities.push(goldText);
+        entities.push(woodIcon);
+        entities.push(woodText);
 
         const miniMap = new MiniMap(mainEnvironment, camera);
         entities.push(miniMap);
 
         gameEngine.addEntities(entities);
+        //gameEngine.addEntity(darkness);
     }
 
     loadCredits(gameEngine) {
@@ -97,11 +125,24 @@ class SceneManager {
 	    gameEngine.addEntity(end);
     }
 
+    loadGameOver(gameEngine) {
+        const screen = new Icon(assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
+		0, 0, canvas.width, canvas.height);
+        screen.z = 8;
+	    const end = new Icon(assetManager.getAsset("./resources/game_over.png"), canvas.width/2 - 150, canvas.height/2 - 160, 300, 80);
+        const again = new Icon(assetManager.getAsset("./resources/play_again.png"), canvas.width/2 - 150, canvas.height/2 - 40, 300, 80);
+        again.z = 9;
+        end.z = 9;
+        gameEngine.addEntity(screen);
+	    gameEngine.addEntity(end);
+        gameEngine.addEntity(again);
+    }
+
     update(gameEngine) {
         switch(this.currentScene) {
             case "":
-                this.loadTitle(gameEngine);
                 this.currentScene = "title";
+                this.loadTitle(gameEngine);
                 break;
             case "title":
                 // switch to level1 when start button is clicked
@@ -116,16 +157,55 @@ class SceneManager {
                 break;
             case "level1":
                 if (gameOver()) {
+                    this.currentScene = "gameOver";
+                    this.clearEntities(gameEngine);
+                    this.loadGameOver(gameEngine);
+                } else if (levelWon()) {
                     this.currentScene = "credits";
                     this.clearEntities(gameEngine);
                     this.loadCredits(gameEngine);
                 }
                 break;
-            case "credits":
-                // play again button?
+            case "gameOver":
+                let click2 = gameEngine.click;
+                if (click2 && click2.x > canvas.width/2 - 150 && click2.x < canvas.width/2 + 150
+                    && click2.y > canvas.height/2 - 40 && click2.y < canvas.height/2 + 40) {
+                    this.currentScene = "level1";
+                    this.clearEntities(gameEngine);
+                    this.loadLevelOne(gameEngine);
+                    //this.loadLevel(this.currentScene);
+                }
                 break;
         }
     }
 
     draw(ctx, gameEngine) {}
+}
+
+class SpawnPoint {
+
+    // TODO: make a modular spawn function
+
+    constructor(x, y, w, h) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+    }
+
+    spawnSheep(amount, gameEngine) {
+        for (let i = 0; i < amount; i++) {
+            let randX = this.x + randomInt(this.w);
+            let randY = this.y + randomInt(this.h);
+            gameEngine.addEntity(new Sheep(randX, randY));
+        }
+    }
+
+    spawnWolves(amount, gameEngine) {
+        for (let i = 0; i < amount; i++) {
+            let randX = this.x + randomInt(this.w);
+            let randY = this.y + randomInt(this.h);
+            gameEngine.addEntity(new Wolf(randX, randY));
+        }
+    }
 }

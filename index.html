@@ -17,13 +17,14 @@
         <script type="text/javascript" src="./camera.js"></script>
         <script type="text/javascript" src="./gui.js"></script>
         <script type="text/javascript" src="./health.js"></script>
+        <script type="text/javascript" src="./darkness.js"></script>
 
         <script type="text/javascript" src="./animator.js"></script>
         <script type="text/javascript" src="./entity.js"></script>
         <script type="text/javascript" src="./scenemanager.js"></script>
         <script type="text/javascript" src="./obstacle.js"></script>
         <script type="text/javascript" src="./shepherd.js"></script>
-        <script type="text/javascript" src="./sheep.js"></script>
+        <script type="text/javascript" src="./sheep.js" defer></script>
         <script type="text/javascript" src="./wolf.js"></script>
         <script type="text/javascript" src="./map.js"></script>
         <script type="text/javascript" src="./environment.js"></script>
@@ -37,6 +38,10 @@
 
             p {
                 font-size: 1.3rem;
+            }
+
+            .input > p, summary > h2 {
+                display: inline-block
             }
 
             h2, h2 > label {
@@ -129,37 +134,56 @@
                 </div>
                 <hr>
                 <div>
-                    <h2>The Shop</h2>
-                    <div class="input">
-                        <label for="separation">Separation</label>
-                        <input type="number" min="1" id="separation">
-                    </div>
-                    <div class="input">
-                        <label for="cohesion">Cohesion</label>
-                        <input type="number" min="1" id="cohesion">
-                    </div>
-                    <div class="input">
-                        <label for="alignment">Alignment</label>
-                        <input type="number" min="1" id="alignment">
-                    </div>
-                    <div class="input">
-                        <label for="shepAlignment">Shepherd Alignment</label>
-                        <input type="number" min="1" id="shep-alignment">
-                    </div>
-                    <div class="input">
-                        <label for="wolfRepel">Wolf Repel</label>
-                        <input type="number" min="1" id="wolf-repel">
-                    </div>
+                    <details>
+                        <summary>
+                            <h2>The Shop</h2>
+                        </summary>
+                        <p>It costs 10 gold for each change to these parameters</p>
+                        <div class="input" id="separation">
+                            <p>Separation: </p>
+                            <button onClick="changeSheepFactor('separationFactor', -10)">-10</button>
+                            <button onClick="changeSheepFactor('separationFactor', +10)">+10</button>
+                        </div>
+                        <div class="input" id="cohesion">
+                            <p>Cohesion: </p>
+                            <button onClick="changeSheepFactor('cohesionFactor', -10)">-10</button>
+                            <button onClick="changeSheepFactor('cohesionFactor', +10)">+10</button>
+                        </div>
+                        <div class="input" id="alignment">
+                            <p>Alignment: </p>
+                            <button onClick="changeSheepFactor('alignmentFactor', -10)">-10</button>
+                            <button onClick="changeSheepFactor('alignmentFactor', +10)">+10</button>
+                        </div>
+                        <div class="input" id="shepherd">
+                            <p>Shepherd: </p>
+                            <button onClick="changeSheepFactor('shepherdFactor', -10)">-10</button>
+                            <button onClick="changeSheepFactor('shepherdFactor', +10)">+10</button>
+                        </div>
+                        <div class="input" id="wolf">
+                            <p>Wolf: </p>
+                            <button onClick="changeSheepFactor('wolfFactor', -10)">-10</button>
+                            <button onClick="changeSheepFactor('wolfFactor', +10)">+10</button>
+                        </div>
+                        <div class="input" id="walk-speed">
+                            <p>Walk Speed: </p>
+                            <button onClick="changeSheepFactor('walkSpeed', -10)">-10</button>
+                            <button onClick="changeSheepFactor('walkSpeed', +10)">+10</button>
+                        </div>
+                        <div class="input" id="max-speed">
+                            <p>Max Speed: </p>
+                            <button onClick="changeSheepFactor('maxSpeed', -10)">-10</button>
+                            <button onClick="changeSheepFactor('maxSpeed', +10)">+10</button>
+                        </div>
+                    </details>
                 </div>
                 <hr>
                 <div>
                     <details>
-                        <summary><h2 style="display: inline-block;">Debug Tools</h2></summary>
+                        <summary><h2>Debug Tools</h2></summary>
                         <h3>
                             <label for="debug">Debug Enabled</label>
                             <input type="checkbox" name="debug" id="debug">
                         </h3>
-                        <button onclick="resetFactors()">Reset Factors</button>
                     </details>
                 </div>
             </section>

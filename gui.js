@@ -38,34 +38,42 @@ class Icon extends GUIElement {
             ctx.drawImage(this.source, this.x, this.y, this.width, this.height);
         }
         if (this.text) {
-            ctx.fillStyle = 'white';
+            ctx.fillStyle = 'gold';
             ctx.font = "30px impact";
-            ctx.strokeText(this.text, this.x + .4*this.width,
-                this.y + .8*this.height, this.width);
-            ctx.fillText(this.text, this.x + .4*this.width,
-                this.y + .8*this.height, this.width);
+            ctx.strokeText(this.text, this.x + .5*this.width,
+                this.y + .9*this.height, this.width);
+            ctx.fillText(this.text, this.x + .5*this.width,
+                this.y + .9*this.height, this.width);
         }
     }
 }
 class GoldText extends GUIElement {
     constructor(x, y, width, size) {
         super(x, y);
-        this.text = inventory.gold;
         this.width = width;
         this.size = size;
     }
     draw(ctx, gameEngine) {
         ctx.fillStyle = 'gold';
         ctx.font = this.size + 'px impact';
-        ctx.strokeText(this.text, this.x, this.y, this.width);
-        ctx.fillText(this.text, this.x, this.y, this.width);
+        ctx.strokeText(inventory.gold, this.x, this.y, this.width);
+        ctx.fillText(inventory.gold, this.x, this.y, this.width);
     }
-    update(gameEngine) {
-        super.update(gameEngine);
-        this.text = inventory.gold;
-    }
-
 }
+class WoodText extends GUIElement {
+    constructor(x, y, width, size) {
+        super(x, y);
+        this.width = width;
+        this.size = size;
+    }
+    draw(ctx, gameEngine) {
+        ctx.fillStyle = 'gold';
+        ctx.font = this.size + 'px impact';
+        ctx.strokeText(inventory.wood, this.x, this.y, this.width);
+        ctx.fillText(inventory.wood, this.x, this.y, this.width);
+    }
+}
+
 class Screen extends Icon {
     constructor(source, x, y, width, height, z) {
         super(source, x, y, width, height);

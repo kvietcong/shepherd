@@ -44,7 +44,18 @@ const setupEnvironment = entities => {
 	const well = new Obstacle(2500, 900, "./resources/starDewBuildings.png", 453, 33, 47, 74, 2);
 	well.z = 1;
 	entities.push(well);
-
+	//trees
+	entities.push(new Tree(1200, 1000));
+	entities.push(new Tree(1300, 1000));
+	entities.push(new Tree(1400, 900));
+	entities.push(new Tree(1450, 900));
+	entities.push(new Tree(1500, 900));
+	entities.push(new Tree(1900, 700));
+	entities.push(new Tree(2000, 700));
+	entities.push(new Tree(1550, 1300));
+	entities.push(new Tree(1600, 1300));
+	entities.push(new Tree(1650, 1300));
+	
 
 	//first walkway area
 	//rocks
@@ -57,11 +68,12 @@ const setupEnvironment = entities => {
 	//north west houses
 	entities.push(new Obstacle(3900, 500, "./resources/starDewBuildings.png", 0, 267, 456, 145, 2.5));
 	//long grass
-	entities.push(new Obstacle(4625, 1220, "./resources/forestground.png", 423, 481, 78, 84, 1.5));
-	entities.push(new Obstacle(4625, 1136, "./resources/forestground.png", 423, 481, 78, 84, 1.5));
-	entities.push(new Obstacle(4625, 1052, "./resources/forestground.png", 423, 481, 78, 84, 1.5));
-	entities.push(new Obstacle(4625, 968, "./resources/forestground.png", 423, 481, 78, 84, 1.5));
-	entities.push(new Obstacle(4625, 884, "./resources/forestground.png", 423, 481, 78, 84, 1.5));
+	entities.push(new Obstacle(4650, 1260, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
+	entities.push(new Obstacle(4650, 1176, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
+	entities.push(new Obstacle(4650, 1092, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
+	entities.push(new Obstacle(4650, 1008, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
+	entities.push(new Obstacle(4650, 924, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
+
 	//rocks
 	//type 1
 	entities.push(new Obstacle(3800, 1800, "./resources/forestground.png", 514, 25, 32, 37, 1.5));
@@ -71,6 +83,9 @@ const setupEnvironment = entities => {
 	entities.push(new Obstacle(3900, 2200, "./resources/forestground.png", 450, 36, 33, 25, 1.5));
 	//type 3
 	entities.push(new Obstacle(4150, 2170, "./resources/forestground.png", 518, 90, 31, 35, 1.5));
+	//trees
+	entities.push(new Tree(4400, 2400));
+	entities.push(new Tree(4500, 2200));
 
 	//ending/barn area
 	//barn
