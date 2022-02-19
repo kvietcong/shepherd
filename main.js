@@ -13,9 +13,8 @@ const initializeCanvas = () => {
 	const canvas = document.createElement("canvas");
 	document.getElementById("canvas-container").appendChild(canvas);
 	canvas.style.border = "1px solid black";
-	//let idk2 = new Image(96, 96);
-	//idk2.src = "./resources/Map_tiles.png";
-	canvas.style.background = "url('./resources/forest.jpg')";
+	canvas.style.background = "url('./resources/forestTile.png')";
+	canvas.style.backgroundSize = "100%";
 	canvas.autofocus = true;
 	canvas.tabIndex = 0;
 	resizeCanvas(canvas);

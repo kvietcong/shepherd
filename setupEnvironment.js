@@ -54,17 +54,31 @@ const setupEnvironment = entities => {
 	entities.push(new Obstacle(950, 2000, "./resources/treetrunk.png", 0, 0, 143, 122, 3));
 
 	//main area
-	//tree stump in the south east
-	entities.push(new Obstacle(5675, 2350, "./resources/treetrunk.png", 0, 0, 143, 122, 3));
 	//north west houses
 	entities.push(new Obstacle(3900, 500, "./resources/starDewBuildings.png", 0, 267, 456, 145, 2.5));
+	//long grass
+	entities.push(new Obstacle(4625, 1220, "./resources/forestground.png", 423, 481, 78, 84, 1.5));
+	entities.push(new Obstacle(4625, 1136, "./resources/forestground.png", 423, 481, 78, 84, 1.5));
+	entities.push(new Obstacle(4625, 1052, "./resources/forestground.png", 423, 481, 78, 84, 1.5));
+	entities.push(new Obstacle(4625, 968, "./resources/forestground.png", 423, 481, 78, 84, 1.5));
+	entities.push(new Obstacle(4625, 884, "./resources/forestground.png", 423, 481, 78, 84, 1.5));
+	//rocks
+	//type 1
+	entities.push(new Obstacle(3800, 1800, "./resources/forestground.png", 514, 25, 32, 37, 1.5));
+	entities.push(new Obstacle(4400, 1950, "./resources/forestground.png", 514, 25, 32, 37, 1.5));
+	//type 2
+	entities.push(new Obstacle(4100, 2000, "./resources/forestground.png", 450, 36, 33, 25, 1.5));
+	entities.push(new Obstacle(3900, 2200, "./resources/forestground.png", 450, 36, 33, 25, 1.5));
+	//type 3
+	entities.push(new Obstacle(4150, 2170, "./resources/forestground.png", 518, 90, 31, 35, 1.5));
 
 	//ending/barn area
 	//barn
 	entities.push(new Barn(5470, 1550, "./resources/starDewBuildings.png", 130, 0, 111, 105, 3, 10));
 	//silo
 	entities.push(new Obstacle(5800, 1530, "./resources/starDewBuildings.png", 390, 0, 47, 127, 3));
-
+	//tree stump in the south east
+	entities.push(new Obstacle(5675, 2450, "./resources/treetrunk.png", 0, 0, 143, 122, 3, 400, 250));
 
 	//east of ending area
 	//north east garden
@@ -81,24 +95,7 @@ const setupEnvironment = entities => {
 	//plants surrounding green house
 	entities.push(new Obstacle(6200, 1500, "./resources/plants.png", 15, 13, 55, 55, 2));
 
-
-	/*
-	//sample obstacles
-	let house2 = new Obstacle(387, 380, "./resources/3.png");
-	entities.push(house2);
-	entities.push(new Obstacle(290, 860, "./resources/2.png"));
-	entities.push(new Obstacle(773, 577, "./resources/1.png"));
-	//barn
-	entities.push(new Obstacle(570, 1100, "./resources/starDewBuildings.png", 130, 0, 111, 105, 2));
-	//silo
-	entities.push(new Obstacle(540, 1077, "./resources/starDewBuildings.png", 390, 0, 47, 127, 1));
-	//well
-	entities.push(new Obstacle(600, 1000, "./resources/starDewBuildings.png", 453, 33, 47, 74, 1));
-	//bridge posts
-	entities.push(new Obstacle(670, 775, "./resources/Map_tiles.png", 289, 252, 4, 40, 2.5));
-	entities.push(new Obstacle(958, 775, "./resources/Map_tiles.png", 289, 252, 4, 40, 2.5));
-	*/
-	//new image object for tile set
+	//create tile types
 	let idk = new Image(96, 96);
 	idk.src = "./resources/Map_tiles.png";
 

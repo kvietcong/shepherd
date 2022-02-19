@@ -30,7 +30,7 @@ class SceneManager {
     loadLevelOne(gameEngine) {
         const entities = [];
 
-        const shepherd = new Shepherd(1200, 800);
+        const shepherd = new Shepherd(4000, 2000);
         //const shepherd = new Shepherd(canvas.width / 2, canvas.height / 2);
         params.debugEntities.shepherd = shepherd;
 
@@ -39,7 +39,7 @@ class SceneManager {
             let x = randomInt(canvas.width * 2);
             let y = randomInt(canvas.height * 2);
             if (i % 4 === 0) {
-                entities.push(new Wolf(x, y));
+                //entities.push(new Wolf(x, y));
             } else {
                 entities.push(new Sheep(x, y));
             }
