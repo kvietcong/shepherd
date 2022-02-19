@@ -79,8 +79,6 @@ class Wolf extends Entity {
         super.update(gameEngine);
         this.healthAPI.update(gameEngine);
 
-        if (this.dead) return;
-
         // Check if resting or stunned before updating
         if (this.stunned) {
             this.timeSinceStunned += gameEngine.deltaTime;
@@ -104,6 +102,8 @@ class Wolf extends Entity {
             }
             return;
         };
+
+        if (this.dead) return;
 
         const averagePosition = this.position;
         const averageDirection = this.velocity.clone();
