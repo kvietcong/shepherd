@@ -55,6 +55,7 @@ assetManager.queueDownload("./resources/fence_horizontal.png");
 assetManager.queueDownload("./resources/fireicon.png");
 assetManager.queueDownload("./resources/campfire.png");
 assetManager.queueDownload("./resources/pinetree.png");
+assetManager.queueDownload("./resources/just1Sheep.png");
 assetManager.queueDownload("./resources/No Worries.mp3");
 assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3");
 assetManager.queueDownload("./resources/sheep_baa.mp3");
