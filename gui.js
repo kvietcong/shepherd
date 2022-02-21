@@ -177,7 +177,7 @@ class MiniMap extends GUIElement {
         ctx.clip()
 
         ctx.beginPath();
-        ctx.fillStyle = "black";
+        ctx.fillStyle = "#294429";
         ctx.arc(width - radius - 5, radius + 5, radius, 0, 2 * PI);
         ctx.fill();
 

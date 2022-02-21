@@ -339,10 +339,7 @@ class Attack extends Entity {
         this.velocity = velocity;
         this.time = 0;
 
-        console.log(animator)
-
         if (animator) {
-            console.log("setting animator")
             this.setAnimator(animator);
             this.animator.setIsLooping();
             this.animator.play();
