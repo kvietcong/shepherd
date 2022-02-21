@@ -27,23 +27,29 @@ class Icon extends GUIElement {
         this.text = text;
     }
     draw(ctx, gameEngine) {
+        //x= 1210, y = 681.
+        //x= 906, y = 510.
+        let scaleX = ctx.canvas.width/1210;
+        let scaleY = ctx.canvas.height/681;
+        console.log(scaleX);
+        console.log(scaleY);
         if (this.text) {
             ctx.fillStyle = 'tan';
             ctx.strokeStyle = 'black';
             ctx.globalAlpha = 0.5;
-            ctx.fillRect(this.x, this.y, this.width, this.height);
+            ctx.fillRect(scaleX*this.x, scaleY*this.y, scaleX*this.width, scaleY*this.height);
         }
         if (this.source) {
             ctx.globalAlpha = 1;
-            ctx.drawImage(this.source, this.x, this.y, this.width, this.height);
+            ctx.drawImage(this.source, scaleX*this.x, scaleY*this.y, scaleX*this.width, scaleY*this.height);
         }
         if (this.text) {
-            ctx.fillStyle = 'gold';
-            ctx.font = "30px impact";
-            ctx.strokeText(this.text, this.x + .5*this.width,
-                this.y + .9*this.height, this.width);
-            ctx.fillText(this.text, this.x + .5*this.width,
-                this.y + .9*this.height, this.width);
+            ctx.fillStyle = 'white';
+            ctx.font = scaleX*20 + "px impact";
+            ctx.strokeText(this.text, scaleX*this.x + scaleX*.4*this.width,
+                scaleY*(this.y + .8*this.height), scaleX*this.width);
+            ctx.fillText(this.text, scaleX*(this.x + .4*this.width),
+                scaleY*(this.y + .8*this.height), scaleX*this.width);
         }
     }
 }
@@ -54,10 +60,12 @@ class GoldText extends GUIElement {
         this.size = size;
     }
     draw(ctx, gameEngine) {
+        let scaleX = ctx.canvas.width/1210;
+        let scaleY = ctx.canvas.height/510;
         ctx.fillStyle = 'gold';
-        ctx.font = this.size + 'px impact';
-        ctx.strokeText(inventory.gold, this.x, this.y, this.width);
-        ctx.fillText(inventory.gold, this.x, this.y, this.width);
+        ctx.font = scaleX*this.size + 'px impact';
+        ctx.strokeText(inventory.gold, scaleX*this.x, scaleY*this.y, scaleX*this.width);
+        ctx.fillText(inventory.gold, scaleX*this.x, scaleY*this.y, scaleX*this.width);
     }
 }
 class WoodText extends GUIElement {
@@ -67,10 +75,12 @@ class WoodText extends GUIElement {
         this.size = size;
     }
     draw(ctx, gameEngine) {
+        let scaleX = ctx.canvas.width/1210;
+        let scaleY = ctx.canvas.height/510;
         ctx.fillStyle = 'gold';
-        ctx.font = this.size + 'px impact';
-        ctx.strokeText(inventory.wood, this.x, this.y, this.width);
-        ctx.fillText(inventory.wood, this.x, this.y, this.width);
+        ctx.font = scaleX*this.size + 'px impact';
+        ctx.strokeText(inventory.wood, scaleX*this.x, scaleY*this.y, scaleX*this.width);
+        ctx.fillText(inventory.wood, scaleX*this.x, scaleY*this.y, scaleX*this.width);
     }
 }
 class SheepText extends GUIElement {
@@ -79,11 +89,14 @@ class SheepText extends GUIElement {
         this.width = width;
         this.size = size;
     }
+
     draw(ctx, gameEngine) {
+        let scaleX = ctx.canvas.width/1210;
+        let scaleY = ctx.canvas.height/510;
         ctx.fillStyle = 'gold';
-        ctx.font = this.size + 'px impact';
-        ctx.strokeText(Barn.sheepRequired - Barn.sheepCount, this.x, this.y, this.width);
-        ctx.fillText(Barn.sheepRequired - Barn.sheepCount, this.x, this.y, this.width);
+        ctx.font = scaleX*this.size + 'px impact';
+        ctx.strokeText(Barn.sheepRequired - Barn.sheepCount, scaleX*this.x, scaleY*this.y, scaleX*this.width);
+        ctx.fillText(Barn.sheepRequired - Barn.sheepCount, scaleX*this.x, scaleY*this.y, scaleX*this.width);
     }
 }
 
@@ -115,11 +128,13 @@ class CooldownTimer extends GUIElement {
         if (this.actionTimeElapsed > this.time) this.removeFromWorld = true;
     }
     draw(ctx) {
+        let scaleX = ctx.canvas.width/1210;
+        let scaleY = ctx.canvas.height/510;
         ctx.beginPath();
         ctx.globalAlpha = .5;
         ctx.fillStyle = "black";
-        ctx.moveTo(this.x + .5*this.width, this.y + .5*this.height);
-        ctx.arc(this.x + .5*this.width, this.y + .5*this.height, .5*this.width, 0,2*this.actionTimeElapsed * PI/this.time, true);
+        ctx.moveTo(scaleX*this.x + scaleX*.5*this.width, scaleX*(this.y + .5*this.height));
+        ctx.arc(scaleX*(this.x + .5*this.width), scaleX*(this.y + .5*this.height), scaleX*.5*this.width, 0,2*this.actionTimeElapsed * PI/this.time, true);
         ctx.fill();
      }
 }

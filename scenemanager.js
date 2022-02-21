@@ -1,7 +1,10 @@
 class SceneManager {
+            //x= 1210, y = 681.
     constructor() {
         this.scenes = ["title", "level1", "credits", "gameOver"];
         this.currentScene = "";
+        this.width = 1210;
+        this.height = 681;
     }
 
     clearEntities(gameEngine) {
@@ -14,12 +17,12 @@ class SceneManager {
     loadTitle(gameEngine) {
         const screen = new Icon(
             assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
-            0, 0, canvas.width, canvas.height
+            0, 0, this.width, this.height
         );
         screen.z = 8;
 	    const begin = new Icon(
             assetManager.getAsset("./resources/Play.png"),
-            canvas.width/2 - 150, canvas.height/2 - 40,
+            this.width/2 - 150, this.height/2 - 40,
             300, 80
         );
         begin.z = 9;
@@ -30,11 +33,8 @@ class SceneManager {
     loadLevelOne(gameEngine) {
         const entities = [];
 
-        //spawn points:
-        //starting area: 1200, 1200
-        //main area: 4400, 1200
-        //east of bridge: 4000, 2300
-        const shepherd = new Shepherd(1200, 1200);
+        const shepherd = new Shepherd(1200, 800);
+        //const shepherd = new Shepherd(this.width / 2, this.height / 2);
         params.debugEntities.shepherd = shepherd;
         entities.push(shepherd);
 
@@ -110,9 +110,9 @@ class SceneManager {
 
     loadCredits(gameEngine) {
         let screen = new Icon(assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
-		0, 0, canvas.width, canvas.height);
+		0, 0, this.width, this.height);
         screen.z = 8;
-	    let end = new Icon(assetManager.getAsset("./resources/level_completed.png"), canvas.width/2 - 150, canvas.height/2 - 40, 300, 80);
+	    let end = new Icon(assetManager.getAsset("./resources/level_completed.png"), this.width/2 - 150, this.height/2 - 40, 300, 80);
 	    end.z = 9;
         gameEngine.addEntity(screen);
 	    gameEngine.addEntity(end);
@@ -120,10 +120,10 @@ class SceneManager {
 
     loadGameOver(gameEngine) {
         const screen = new Icon(assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
-		0, 0, canvas.width, canvas.height);
+		0, 0, this.width, this.height);
         screen.z = 8;
-	    const end = new Icon(assetManager.getAsset("./resources/game_over.png"), canvas.width/2 - 150, canvas.height/2 - 160, 300, 80);
-        const again = new Icon(assetManager.getAsset("./resources/play_again.png"), canvas.width/2 - 150, canvas.height/2 - 40, 300, 80);
+	    const end = new Icon(assetManager.getAsset("./resources/game_over.png"), this.width/2 - 150, this.height/2 - 160, 300, 80);
+        const again = new Icon(assetManager.getAsset("./resources/play_again.png"), this.width/2 - 150, this.height/2 - 40, 300, 80);
         again.z = 9;
         end.z = 9;
         gameEngine.addEntity(screen);
@@ -132,6 +132,9 @@ class SceneManager {
     }
 
     update(gameEngine) {
+        console.log(gameEngine.width);
+        console.log(gameEngine.height);
+        let scale = gameEngine.width/1210;
         switch(this.currentScene) {
             case "":
                 this.currentScene = "title";
@@ -140,8 +143,8 @@ class SceneManager {
             case "title":
                 // switch to level1 when start button is clicked
                 let click = gameEngine.click;
-                if (click && click.x > canvas.width/2 - 150 && click.x < canvas.width/2 + 150
-                    && click.y > canvas.height/2 - 40 && click.y < canvas.height/2 + 40) {
+                if (click && click.x > scale*this.width/2 - 150 && click.x < scale*this.width/2 + 150
+                    && click.y > scale*this.height/2 - 40 && click.y < scale*this.height/2 + 40) {
                     this.currentScene = "level1";
                     this.clearEntities(gameEngine);
                     this.loadLevelOne(gameEngine);
@@ -161,8 +164,8 @@ class SceneManager {
                 break;
             case "gameOver":
                 let click2 = gameEngine.click;
-                if (click2 && click2.x > canvas.width/2 - 150 && click2.x < canvas.width/2 + 150
-                    && click2.y > canvas.height/2 - 40 && click2.y < canvas.height/2 + 40) {
+                if (click2 && click2.x > scale*this.width/2 - 150 && click2.x < scale*this.width/2 + 150
+                    && click2.y > scale*this.height/2 - 40 && click2.y < scale*this.height/2 + 40) {
                     this.currentScene = "level1";
                     this.clearEntities(gameEngine);
                     this.loadLevelOne(gameEngine);
