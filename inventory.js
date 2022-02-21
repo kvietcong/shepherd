@@ -9,7 +9,7 @@ params.inventory = {
 };
 
 class Inventory {
-    constructor(gold=100, fences=5, campfires=5, fenceLevel=1, fireLevel=1, wood=100) {
+    constructor(gold=100, wood = 100, fences=5, campfires=5, fenceLevel=1, fireLevel=1) {
         this._gold = gold;
         this.fences = fences;
         this.campfires = campfires;
