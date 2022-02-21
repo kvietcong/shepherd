@@ -51,7 +51,7 @@ class SceneManager {
         const startingArea = new SpawnPoint(1200, 650, 900, 750);
         startingArea.spawnSheep(20, gameEngine);
 
-        
+        /*
         const wolfPacks = [
             [new SpawnPoint(1830, 1830, 330, 200), 2],
             [new SpawnPoint(2650, 2230, 500, 300), 4],
@@ -62,7 +62,7 @@ class SceneManager {
             const [spawnPoint, amount] = info;
             spawnPoint.spawnWolves(amount, gameEngine);
         });
-        
+        */
         const mainEnvironment = setupEnvironment(entities);
         gameEngine.addEntity(sceneManager);
 
@@ -100,6 +100,8 @@ class SceneManager {
         const woodIcon = new Icon(assetManager.getAsset("./resources/logs.png")
             , 550, 25, 50, 50);
         const woodText = new WoodText(600, 65, 85, 40);
+        const sheepIcon = new Icon(assetManager.getAsset("./resources/just1Sheep.png"), 700, 18, 60, 60);
+        const sheepText = new SheepText(760, 65, 85, 40);
         entities.push(fenceIcon);
         entities.push(fireIcon);
         //entities.push(treeIcon);
@@ -107,6 +109,8 @@ class SceneManager {
         entities.push(goldText);
         entities.push(woodIcon);
         entities.push(woodText);
+        entities.push(sheepIcon);
+        entities.push(sheepText);
 
         const miniMap = new MiniMap(mainEnvironment, camera);
         entities.push(miniMap);
