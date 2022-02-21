@@ -30,7 +30,7 @@ class SceneManager {
     loadLevelOne(gameEngine) {
         const entities = [];
 
-        //spawn points: 
+        //spawn points:
         //starting area: 1200, 1200
         //main area: 4400, 1200
         //east of bridge: 4000, 2300
@@ -49,9 +49,8 @@ class SceneManager {
         // }
 
         const startingArea = new SpawnPoint(1200, 650, 900, 750);
-        startingArea.spawnSheep(20, gameEngine);
+        startingArea.spawnEntity(Sheep, 20, gameEngine);
 
-        
         const wolfPacks = [
             [new SpawnPoint(1830, 1830, 330, 200), 2],
             [new SpawnPoint(2650, 2230, 500, 300), 4],
@@ -60,9 +59,9 @@ class SceneManager {
         ];
         wolfPacks.forEach((info) => {
             const [spawnPoint, amount] = info;
-            spawnPoint.spawnWolves(amount, gameEngine);
+            spawnPoint.spawnEntity(Wolf, amount, gameEngine);
         });
-        
+
         const mainEnvironment = setupEnvironment(entities);
         gameEngine.addEntity(sceneManager);
 
@@ -184,8 +183,6 @@ class SceneManager {
 
 class SpawnPoint {
 
-    // TODO: make a modular spawn function
-
     constructor(x, y, w, h) {
         this.x = x;
         this.y = y;
@@ -193,19 +190,13 @@ class SpawnPoint {
         this.h = h;
     }
 
-    spawnSheep(amount, gameEngine) {
-        for (let i = 0; i < amount; i++) {
-            let randX = this.x + randomInt(this.w);
-            let randY = this.y + randomInt(this.h);
-            gameEngine.addEntity(new Sheep(randX, randY));
-        }
-    }
+    spawnEntity(entity, amount, gameEngine) {
+        if (!(entity.prototype instanceof Entity)) return;
 
-    spawnWolves(amount, gameEngine) {
         for (let i = 0; i < amount; i++) {
             let randX = this.x + randomInt(this.w);
             let randY = this.y + randomInt(this.h);
-            gameEngine.addEntity(new Wolf(randX, randY));
+            gameEngine.addEntity(new entity(randX, randY));
         }
     }
 }
