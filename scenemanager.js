@@ -35,27 +35,17 @@ class SceneManager {
         //main area: 4400, 1200
         //east of bridge: 4000, 2300
         const shepherd = new Shepherd(1200, 1200);
-        //const shepherd = new Shepherd(canvas.width / 2, canvas.height / 2);
         params.debugEntities.shepherd = shepherd;
         entities.push(shepherd);
-        // for (let i = 0; i < 25; i++) {
-        //     let x = randomInt(canvas.width * 2);
-        //     let y = randomInt(canvas.height * 2);
-        //     if (i % 4 === 0) {
-        //         //entities.push(new Wolf(x, y));
-        //     } else {
-        //         entities.push(new Sheep(x, y));
-        //     }
-        // }
 
         const startingArea = new SpawnPoint(1200, 650, 900, 750);
         startingArea.spawnEntity(Sheep, 20, gameEngine);
 
         const wolfPacks = [
-            [new SpawnPoint(1830, 1830, 330, 200), 2],
-            [new SpawnPoint(2650, 2230, 500, 300), 4],
-            [new SpawnPoint(3850, 950, 650, 1650), 6],
-            [new SpawnPoint(5350, 1960, 650, 250), 3]
+            [new SpawnPoint(1830, 1830, 330, 200), 2], // rocks by first path
+            [new SpawnPoint(2650, 2230, 500, 300), 4], // bridge over water
+            [new SpawnPoint(3850, 950, 650, 1650), 6], // big open area after bridge
+            [new SpawnPoint(5350, 1960, 650, 250), 3]  // small area by barn
         ];
         wolfPacks.forEach((info) => {
             const [spawnPoint, amount] = info;
@@ -99,6 +89,8 @@ class SceneManager {
         const woodIcon = new Icon(assetManager.getAsset("./resources/logs.png")
             , 550, 25, 50, 50);
         const woodText = new WoodText(600, 65, 85, 40);
+        const sheepIcon = new Icon(assetManager.getAsset("./resources/just1Sheep.png"), 700, 18, 60, 60);
+        const sheepText = new SheepText(760, 65, 85, 40);
         entities.push(fenceIcon);
         entities.push(fireIcon);
         //entities.push(treeIcon);
@@ -106,6 +98,8 @@ class SceneManager {
         entities.push(goldText);
         entities.push(woodIcon);
         entities.push(woodText);
+        entities.push(sheepIcon);
+        entities.push(sheepText);
 
         const miniMap = new MiniMap(mainEnvironment, camera);
         entities.push(miniMap);
