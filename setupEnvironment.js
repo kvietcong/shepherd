@@ -1,9 +1,9 @@
 const setupEnvironment = entities => {
 	//starting area collision boxes
 	//west
-	entities.push(new Obstacle(950, 550, "./resources/3.png", 50, 50, 15, 200, 5));
+	entities.push(new Obstacle(970, 550, "./resources/3.png", 50, 50, 15, 200, 5));
 	//north
-	entities.push(new Obstacle(950, 550, "./resources/3.png", 50, 50, 400, 15, 5));
+	entities.push(new Obstacle(950, 490, "./resources/3.png", 50, 50, 400, 15, 5));
 	//east
 	entities.push(new Obstacle(2880, 550, "./resources/3.png", 50, 50, 15, 200, 5));
 	//there are two southern collision boxes to allow for an opening
@@ -14,12 +14,14 @@ const setupEnvironment = entities => {
 
 	//first walkway collision boxes
 	//west
-	entities.push(new Obstacle(1650, 1500, "./resources/3.png", 50, 50, 15, 220, 5));
+	entities.push(new Obstacle(1650, 1500, "./resources/3.png", 50, 50, 15, 250, 5));
 	//east
 	entities.push(new Obstacle(2200, 1500, "./resources/3.png", 50, 50, 15, 140, 5));
-	//south
-	entities.push(new Obstacle(1650, 2600, "./resources/3.png", 50, 50, 423, 15, 5));
-	//north
+	//lowersouth
+	entities.push(new Obstacle(1650, 2700, "./resources/3.png", 50, 50, 423, 15, 5));
+	//uppersouth
+	entities.push(new Obstacle(2225, 2600, "./resources/3.png", 50, 50, 306, 20, 5));
+	//lowernorth
 	entities.push(new Obstacle(2200, 2140, "./resources/3.png", 50, 50, 312, 15, 5));
 
 	//main area collision boxes
@@ -237,8 +239,8 @@ const setupEnvironment = entities => {
 	tileData["dwater"] = darkWaterTile;
 	tileData["swater"] = startWaterTile;
 	tileData["rwater"] = waterRockTile;
-	tileData["nwater"]= northShoreTile;
-	tileData["cwater"]= cornerWaterTile;
+	tileData["nwater"] = northShoreTile;
+	tileData["cwater"] = cornerWaterTile;
 
 	//find tile size
 	const tileWidth = 96;
