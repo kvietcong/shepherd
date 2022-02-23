@@ -144,7 +144,7 @@ const attachPropertiesWithCallbacks = (object, things) => {
             get: () => object[`_${property}`],
             set: newValue => {
                 object[`_${property}`] = newValue;
-                callback(newValue);
+                if (callback) callback(newValue);
             }
         };
         return acc;

@@ -36,14 +36,35 @@ const maxSpeedCallback = newValue => {
     p.textContent = `Max Speed: ${newValue}`;
 };
 
+const sheepLevels = [
+    { separation: 40, cohesion: 10, alignment: 300, shepherd: 25, wolf: 100, walkSpeed: 100, maxSpeed: 200 },
+    { separation: 40, cohesion: 20, alignment: 320, shepherd: 35, wolf: 125, walkSpeed: 100, maxSpeed: 200 },
+    { separation: 40, cohesion: 30, alignment: 340, shepherd: 45, wolf: 135, walkSpeed: 100, maxSpeed: 200 },
+    { separation: 30, cohesion: 40, alignment: 360, shepherd: 55, wolf: 145, walkSpeed: 100, maxSpeed: 210 },
+    { separation: 30, cohesion: 50, alignment: 380, shepherd: 65, wolf: 150, walkSpeed: 150, maxSpeed: 220 },
+    { separation: 30, cohesion: 60, alignment: 400, shepherd: 75, wolf: 150, walkSpeed: 150, maxSpeed: 240 },
+    { separation: 20, cohesion: 60, alignment: 400, shepherd: 85, wolf: 150, walkSpeed: 150, maxSpeed: 260 },
+];
+
+const setSheepLevelTo = level => {
+    params.sheep.separationFactor = sheepLevels[level].separation;
+    params.sheep.cohesionFactor = sheepLevels[level].cohesion;
+    params.sheep.alignmentFactor = sheepLevels[level].alignment;
+    params.sheep.shepherdFactor = sheepLevels[level].shepherd;
+    params.sheep.wolfFactor = sheepLevels[level].wolf;
+    params.sheep.walkSpeed = sheepLevels[level].walkSpeed;
+    params.sheep.maxSpeed = sheepLevels[level].maxSpeed;
+};
+
 attachPropertiesWithCallbacks(params.sheep, [
-    [ "separationFactor", 30, separationFactorCallback ],
+    [ "separationFactor", 40, separationFactorCallback ],
     [ "cohesionFactor", 10, cohesionFactorCallback ],
     [ "alignmentFactor", 300, alignmentFactorCallback ],
     [ "shepherdFactor", 25, shepherdFactorCallback ],
     [ "wolfFactor", 100, wolfFactorCallback ],
     [ "walkSpeed", 100, walkSpeedCallback ],
     [ "maxSpeed", 200, maxSpeedCallback ],
+    [ "level", 0, setSheepLevelTo ]
 ]);
 
 const makeSheepAnimator = () => {

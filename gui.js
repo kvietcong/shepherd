@@ -31,8 +31,6 @@ class Icon extends GUIElement {
         //x= 906, y = 510.
         let scaleX = ctx.canvas.width/1210;
         let scaleY = ctx.canvas.height/681;
-        console.log(scaleX);
-        console.log(scaleY);
         if (this.text) {
             ctx.fillStyle = 'tan';
             ctx.strokeStyle = 'black';
