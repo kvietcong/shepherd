@@ -132,8 +132,6 @@ class SceneManager {
     }
 
     update(gameEngine) {
-        console.log(gameEngine.width);
-        console.log(gameEngine.height);
         let scale = gameEngine.width/1210;
         switch(this.currentScene) {
             case "":
