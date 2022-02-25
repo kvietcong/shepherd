@@ -85,6 +85,11 @@
                 margin: auto;
             }
 
+            details.disabled {
+                pointer-events: none;
+                color: gray;
+            }
+
             .slider {
                 margin: 10px auto;
             }
@@ -167,13 +172,14 @@
                     </details>
                 </div>
                 <hr>
-                <div>
+                <div id="shop">
                     <details>
                         <summary>
                             <h2>The Shop</h2>
                         </summary>
+                        <p>Your Gold: 🪙 <span id="gold-amount">?</span></p>
                         <p>It costs 10 gold for each change to these parameters</p>
-                        <div class="input">
+                        <div>
                             <details>
                                 <summary>
                                     <p>Flock Separation: </p>
@@ -189,7 +195,7 @@
                                 you rather have more control?
                             </details>
                         </div>
-                        <div class="input">
+                        <div>
                             <details>
                                 <summary>
                                     <p>Flocking Ability: (</p>
@@ -215,7 +221,7 @@
                                 is to the average direction of the flock.
                             </details>
                         </div>
-                        <div class="input">
+                        <div>
                             <details>
                                 <summary>
                                     <p>Shepherd Skill: </p>
@@ -232,7 +238,7 @@
                                 you into danger!
                             </details>
                         </div>
-                        <div class="input">
+                        <div>
                             <details>
                                 <summary>
                                     <p>Wolf Fear: </p>
@@ -248,7 +254,7 @@
                                 at the sacrifice of control?
                             </details>
                         </div>
-                        <div class="input">
+                        <div>
                             <details>
                                 <summary>
                                     <p>Sheep Speed: </p>
