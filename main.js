@@ -48,6 +48,8 @@ assetManager.queueDownload("./resources/treetrunk.png");
 assetManager.queueDownload("./resources/forestground.png");
 assetManager.queueDownload("./resources/Map_tiles.png");
 assetManager.queueDownload("./resources/plants.png");
+assetManager.queueDownload("./resources/TX Tileset Grass.png");
+assetManager.queueDownload("./resources/TX Tileset Stone Ground.png");
 assetManager.queueDownload("./resources/slash.png");
 assetManager.queueDownload("./resources/fence_00.png");
 assetManager.queueDownload("./resources/fence_vertical.png");

@@ -15,6 +15,9 @@ class SceneManager {
     }
 
     loadTitle(gameEngine) {
+        const shopContainer = document.getElementById("shop");
+        shopContainer.children[0].classList.add("disabled");
+
         const screen = new Icon(
             assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
             0, 0, this.width, this.height
@@ -31,6 +34,9 @@ class SceneManager {
     }
 
     loadLevelOne(gameEngine) {
+        const shopContainer = document.getElementById("shop");
+        shopContainer.children[0].classList.remove("disabled");
+
         const entities = [];
 
         const shepherd = new Shepherd(1200, 1200);

@@ -22,8 +22,7 @@ const wolfFactorCallback = newValue => {
 };
 const maxSpeedCallback = newValue => {
     const maxSpeedContainer = document.getElementById("max-speed");
-    const p = maxSpeedContainer.children[0];
-    p.textContent = `Max Speed: ${newValue}`;
+    maxSpeedContainer.textContent = newValue;
 };
 
 attachPropertiesWithCallbacks(params.sheep, [

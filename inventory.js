@@ -10,7 +10,7 @@ params.inventory = {
 
 class Inventory {
     constructor(gold=100, wood = 100, fences=5, campfires=5, fenceLevel=1, fireLevel=1) {
-        this._gold = gold;
+        this.gold = gold;
         this.fences = fences;
         this.campfires = campfires;
         this.fenceLevel = fenceLevel;
@@ -22,6 +22,8 @@ class Inventory {
     set gold(newGold) {
         this._gold = newGold;
         if (this._gold < 0) this._gold = 0;
+        const goldAmountContainer = document.getElementById("gold-amount");
+        goldAmountContainer.textContent = this._gold;
     }
 
     attemptSpend(amount, type="gold") {
