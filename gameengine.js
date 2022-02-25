@@ -4,7 +4,7 @@ class GameEngine {
         // What you will use to draw
         // Documentation: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
         this.ctx = null;
-
+        this.ctxDark = null;
         // Everything that will be updated and drawn each frame
         this.entities = [];
         // Entities to be added at the end of each update
@@ -35,6 +35,11 @@ class GameEngine {
         this.startInput();
         this.timer = new Timer();
     };
+
+    initDark(ctxDark) {
+        this.ctxDark = ctxDark;
+        this.timerDark = new Timer();
+    }
 
     setCamera(camera) {
         this.camera = camera;

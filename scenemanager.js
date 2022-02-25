@@ -105,7 +105,7 @@ class SceneManager {
         entities.push(miniMap);
 
         gameEngine.addEntities(entities);
-        //gameEngine.addEntity(darkness);
+        gameEngine.addEntity(darkness);
     }
 
     loadCredits(gameEngine) {
