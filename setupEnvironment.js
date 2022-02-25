@@ -1,7 +1,7 @@
 const setupEnvironment = entities => {
 	//current availble map types: "Test"-original map, "Forest"-finished, "levelTwo" - under construction 
 	//create Map object with the specified level
-	let importedMap = new Map("levelTwo");
+	let importedMap = new Map("Forest");
 
 	let mainEnvironment;
 
