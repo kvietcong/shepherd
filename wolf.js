@@ -68,8 +68,6 @@ class Wolf extends Entity {
         this.stunned = true;
         this.timeSinceStunned = 0;
         if (this.healthAPI.health <= 0) {
-            inventory.addGold(params.inventory.wolfReward);
-            console.log("gold: " + inventory.gold);
             this.dead = true;
             this.animator.setAnimation("staticRight");
         }

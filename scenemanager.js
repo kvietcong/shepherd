@@ -1,7 +1,10 @@
 class SceneManager {
+            //x= 1210, y = 681.
     constructor() {
         this.scenes = ["title", "level1", "credits", "gameOver"];
         this.currentScene = "";
+        this.width = 1210;
+        this.height = 681;
     }
 
     clearEntities(gameEngine) {
@@ -12,14 +15,17 @@ class SceneManager {
     }
 
     loadTitle(gameEngine) {
+        const shopContainer = document.getElementById("shop");
+        shopContainer.children[0].classList.add("disabled");
+
         const screen = new Icon(
             assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
-            0, 0, canvas.width, canvas.height
+            0, 0, this.width, this.height
         );
         screen.z = 8;
 	    const begin = new Icon(
             assetManager.getAsset("./resources/Play.png"),
-            canvas.width/2 - 150, canvas.height/2 - 40,
+            this.width/2 - 150, this.height/2 - 40,
             300, 80
         );
         begin.z = 9;
@@ -28,41 +34,30 @@ class SceneManager {
     }
 
     loadLevelOne(gameEngine) {
+        const shopContainer = document.getElementById("shop");
+        shopContainer.children[0].classList.remove("disabled");
+
         const entities = [];
 
-        //spawn points: 
-        //starting area: 1200, 1200
-        //main area: 4400, 1200
-        //east of bridge: 4000, 2300
-        const shepherd = new Shepherd(1200, 1200);
-        //const shepherd = new Shepherd(canvas.width / 2, canvas.height / 2);
+        const shepherd = new Shepherd(1200, 800);
+        //const shepherd = new Shepherd(this.width / 2, this.height / 2);
         params.debugEntities.shepherd = shepherd;
         entities.push(shepherd);
-        // for (let i = 0; i < 25; i++) {
-        //     let x = randomInt(canvas.width * 2);
-        //     let y = randomInt(canvas.height * 2);
-        //     if (i % 4 === 0) {
-        //         //entities.push(new Wolf(x, y));
-        //     } else {
-        //         entities.push(new Sheep(x, y));
-        //     }
-        // }
 
         const startingArea = new SpawnPoint(1200, 650, 900, 750);
-        startingArea.spawnSheep(20, gameEngine);
+        startingArea.spawnEntity(Sheep, 20, gameEngine);
 
-        
         const wolfPacks = [
-            [new SpawnPoint(1830, 1830, 330, 200), 2],
-            [new SpawnPoint(2650, 2230, 500, 300), 4],
-            [new SpawnPoint(3850, 950, 650, 1650), 6],
-            [new SpawnPoint(5350, 1960, 650, 250), 3]
+            [new SpawnPoint(1830, 1830, 330, 200), 2], // rocks by first path
+            [new SpawnPoint(2650, 2230, 500, 300), 4], // bridge over water
+            [new SpawnPoint(3850, 950, 650, 1650), 6], // big open area after bridge
+            [new SpawnPoint(5350, 1960, 650, 250), 3]  // small area by barn
         ];
         wolfPacks.forEach((info) => {
             const [spawnPoint, amount] = info;
-            spawnPoint.spawnWolves(amount, gameEngine);
+            spawnPoint.spawnEntity(Wolf, amount, gameEngine);
         });
-        
+
         const mainEnvironment = setupEnvironment(entities);
         gameEngine.addEntity(sceneManager);
 
@@ -100,6 +95,8 @@ class SceneManager {
         const woodIcon = new Icon(assetManager.getAsset("./resources/logs.png")
             , 550, 25, 50, 50);
         const woodText = new WoodText(600, 65, 85, 40);
+        const sheepIcon = new Icon(assetManager.getAsset("./resources/just1Sheep.png"), 700, 18, 60, 60);
+        const sheepText = new SheepText(760, 65, 85, 40);
         entities.push(fenceIcon);
         entities.push(fireIcon);
         //entities.push(treeIcon);
@@ -107,6 +104,8 @@ class SceneManager {
         entities.push(goldText);
         entities.push(woodIcon);
         entities.push(woodText);
+        entities.push(sheepIcon);
+        entities.push(sheepText);
 
         const miniMap = new MiniMap(mainEnvironment, camera);
         entities.push(miniMap);
@@ -117,9 +116,9 @@ class SceneManager {
 
     loadCredits(gameEngine) {
         let screen = new Icon(assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
-		0, 0, canvas.width, canvas.height);
+		0, 0, this.width, this.height);
         screen.z = 8;
-	    let end = new Icon(assetManager.getAsset("./resources/level_completed.png"), canvas.width/2 - 150, canvas.height/2 - 40, 300, 80);
+	    let end = new Icon(assetManager.getAsset("./resources/level_completed.png"), this.width/2 - 150, this.height/2 - 40, 300, 80);
 	    end.z = 9;
         gameEngine.addEntity(screen);
 	    gameEngine.addEntity(end);
@@ -127,10 +126,10 @@ class SceneManager {
 
     loadGameOver(gameEngine) {
         const screen = new Icon(assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
-		0, 0, canvas.width, canvas.height);
+		0, 0, this.width, this.height);
         screen.z = 8;
-	    const end = new Icon(assetManager.getAsset("./resources/game_over.png"), canvas.width/2 - 150, canvas.height/2 - 160, 300, 80);
-        const again = new Icon(assetManager.getAsset("./resources/play_again.png"), canvas.width/2 - 150, canvas.height/2 - 40, 300, 80);
+	    const end = new Icon(assetManager.getAsset("./resources/game_over.png"), this.width/2 - 150, this.height/2 - 160, 300, 80);
+        const again = new Icon(assetManager.getAsset("./resources/play_again.png"), this.width/2 - 150, this.height/2 - 40, 300, 80);
         again.z = 9;
         end.z = 9;
         gameEngine.addEntity(screen);
@@ -139,6 +138,7 @@ class SceneManager {
     }
 
     update(gameEngine) {
+        let scale = gameEngine.width/1210;
         switch(this.currentScene) {
             case "":
                 this.currentScene = "title";
@@ -147,8 +147,8 @@ class SceneManager {
             case "title":
                 // switch to level1 when start button is clicked
                 let click = gameEngine.click;
-                if (click && click.x > canvas.width/2 - 150 && click.x < canvas.width/2 + 150
-                    && click.y > canvas.height/2 - 40 && click.y < canvas.height/2 + 40) {
+                if (click && click.x > scale*this.width/2 - 150 && click.x < scale*this.width/2 + 150
+                    && click.y > scale*this.height/2 - 40 && click.y < scale*this.height/2 + 40) {
                     this.currentScene = "level1";
                     this.clearEntities(gameEngine);
                     this.loadLevelOne(gameEngine);
@@ -168,8 +168,8 @@ class SceneManager {
                 break;
             case "gameOver":
                 let click2 = gameEngine.click;
-                if (click2 && click2.x > canvas.width/2 - 150 && click2.x < canvas.width/2 + 150
-                    && click2.y > canvas.height/2 - 40 && click2.y < canvas.height/2 + 40) {
+                if (click2 && click2.x > scale*this.width/2 - 150 && click2.x < scale*this.width/2 + 150
+                    && click2.y > scale*this.height/2 - 40 && click2.y < scale*this.height/2 + 40) {
                     this.currentScene = "level1";
                     this.clearEntities(gameEngine);
                     this.loadLevelOne(gameEngine);
@@ -184,8 +184,6 @@ class SceneManager {
 
 class SpawnPoint {
 
-    // TODO: make a modular spawn function
-
     constructor(x, y, w, h) {
         this.x = x;
         this.y = y;
@@ -193,19 +191,13 @@ class SpawnPoint {
         this.h = h;
     }
 
-    spawnSheep(amount, gameEngine) {
-        for (let i = 0; i < amount; i++) {
-            let randX = this.x + randomInt(this.w);
-            let randY = this.y + randomInt(this.h);
-            gameEngine.addEntity(new Sheep(randX, randY));
-        }
-    }
+    spawnEntity(entity, amount, gameEngine) {
+        if (!(entity.prototype instanceof Entity)) return;
 
-    spawnWolves(amount, gameEngine) {
         for (let i = 0; i < amount; i++) {
             let randX = this.x + randomInt(this.w);
             let randY = this.y + randomInt(this.h);
-            gameEngine.addEntity(new Wolf(randX, randY));
+            gameEngine.addEntity(new entity(randX, randY));
         }
     }
 }

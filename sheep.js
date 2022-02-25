@@ -2,47 +2,36 @@ params.sheep = {};
 const testPrinter = newValue => console.log(`Inserted ${newValue}`);
 const separationFactorCallback = newValue => {
     const separationContainer = document.getElementById("separation");
-    const p = separationContainer.children[0];
-    p.textContent = `Separation Factor: ${newValue}`;
+    separationContainer.textContent = newValue;
 };
 const cohesionFactorCallback = newValue => {
     const cohesionContainer = document.getElementById("cohesion");
-    const p = cohesionContainer.children[0];
-    p.textContent = `Cohesion Factor: ${newValue}`;
+    cohesionContainer.textContent = newValue;
 };
 const alignmentFactorCallback = newValue => {
     const alignmentContainer = document.getElementById("alignment");
-    const p = alignmentContainer.children[0];
-    p.textContent = `Alignment Factor: ${newValue}`;
+    alignmentContainer.textContent = newValue;
 };
 const shepherdFactorCallback = newValue => {
     const shepherdContainer = document.getElementById("shepherd");
-    const p = shepherdContainer.children[0];
-    p.textContent = `Shepherd Factor: ${newValue}`;
+    shepherdContainer.textContent = newValue;
 };
 const wolfFactorCallback = newValue => {
     const wolfContainer = document.getElementById("wolf");
-    const p = wolfContainer.children[0];
-    p.textContent = `Wolf Factor: ${newValue}`;
-};
-const walkSpeedCallback = newValue => {
-    const walkSpeedContainer = document.getElementById("walk-speed");
-    const p = walkSpeedContainer.children[0];
-    p.textContent = `Walk Speed: ${newValue}`;
+    wolfContainer.textContent = newValue;
 };
 const maxSpeedCallback = newValue => {
     const maxSpeedContainer = document.getElementById("max-speed");
-    const p = maxSpeedContainer.children[0];
-    p.textContent = `Max Speed: ${newValue}`;
+    maxSpeedContainer.textContent = newValue;
 };
 
 attachPropertiesWithCallbacks(params.sheep, [
-    [ "separationFactor", 30, separationFactorCallback ],
+    [ "separationFactor", 40, separationFactorCallback ],
     [ "cohesionFactor", 10, cohesionFactorCallback ],
     [ "alignmentFactor", 300, alignmentFactorCallback ],
     [ "shepherdFactor", 25, shepherdFactorCallback ],
     [ "wolfFactor", 100, wolfFactorCallback ],
-    [ "walkSpeed", 100, walkSpeedCallback ],
+    [ "walkSpeed", 100 ],
     [ "maxSpeed", 200, maxSpeedCallback ],
 ]);
 

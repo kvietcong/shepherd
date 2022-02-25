@@ -22,7 +22,7 @@ const initializeCanvas = () => {
 
 const canvas = initializeCanvas();
 const sceneManager = new SceneManager();
-const inventory = new Inventory(100, 5, 5, 1);
+const inventory = new Inventory(10, 10, 5, 5, 1);
 const darkness = new Darkness();
 console.log("gold: " + inventory.gold);
 
@@ -57,6 +57,7 @@ assetManager.queueDownload("./resources/fence_horizontal.png");
 assetManager.queueDownload("./resources/fireicon.png");
 assetManager.queueDownload("./resources/campfire.png");
 assetManager.queueDownload("./resources/pinetree.png");
+assetManager.queueDownload("./resources/just1Sheep.png");
 assetManager.queueDownload("./resources/No Worries.mp3");
 assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3");
 assetManager.queueDownload("./resources/sheep_baa.mp3");
@@ -79,12 +80,19 @@ assetManager.downloadAll(() => {
 // Event Hooks
 window.addEventListener("resize", () => { resizeCanvas(canvas) });
 
-const upgradeCost = 10;
-const changeSheepFactor = (factor, change) => {
+const defaultUpgradeCost = 10;
+const changeSheepFactor = (factor, change, cost = defaultUpgradeCost) => {
 	if (params.sheep[factor] + change < 0) { return; }
-	const successful = inventory.attemptSpend(upgradeCost);
+	const successful = inventory.attemptSpend(cost);
 	if (successful) params.sheep[factor] += change;
 };
+const changeSheepFactors = (changes, cost = defaultUpgradeCost) => {
+	const successful = inventory.attemptSpend(cost);
+	if (successful)
+		changes.forEach(change =>
+			changeSheepFactor(change[0], change[1], 0));
+};
+
 
 const debugInput = document.getElementById("debug");
 debugInput.checked = params.isDebugging;
@@ -97,4 +105,4 @@ const pausePlayButton = document.getElementById("pause-play");
 setInterval(() => {
 	const { isPaused } = gameEngine;
 	pausePlayButton.innerText = `${isPaused ? "Play" : "Pause"} Game`;
-}, 1000);
+}, 200);
