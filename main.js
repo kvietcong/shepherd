@@ -89,7 +89,7 @@ const changeSheepFactors = (changes, cost = defaultUpgradeCost) => {
 	if (successful)
 		changes.forEach(change =>
 			changeSheepFactor(change[0], change[1], 0));
-}
+};
 
 
 const debugInput = document.getElementById("debug");
