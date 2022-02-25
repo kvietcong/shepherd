@@ -36,7 +36,7 @@
                 font-family: "VT323", monospace;
             }
 
-            .input > p, summary > h2 {
+            .input > p, summary > * {
                 display: inline-block
             }
 
@@ -85,6 +85,10 @@
                 margin: auto;
             }
 
+            .slider {
+                margin: 10px auto;
+            }
+
             #gui {
                 background-color: silver;
                 border-radius: 10px;
@@ -92,6 +96,20 @@
                 border-color: black;
                 border-style: solid;
                 border-width: 2px;
+                overflow-y: auto;
+                max-height: 500px;
+                min-width: 300px;
+            }
+
+            #gui::-webkit-scrollbar {
+                width: 10px;               /* width of the entire scrollbar */
+                border-radius: 20px;
+            }
+
+            #gui::-webkit-scrollbar-thumb {
+                background-color: greenyellow;    /* color of the scroll thumb */
+                border-radius: 20px;
+                border: 2px solid gray;
             }
 
             #canvas-container > canvas {
@@ -105,41 +123,49 @@
             <section id="canvas-container"></section>
             <section id="gui">
                 <div>
-                    <h2>Instructions</h2>
-                    <p>
-                        Try to make it to the barn with your sheep! When you make
-                        the amount reach what is specified on the top of your
-                        screen, you win!
-                    </p>
-                    <p>
-                        WASD keys move and refocus the camera on the Shepherd.
-                        Space and Q let you attack wolves. P or the button below
-                        lets you pause the game.
-                    </p>
-                    <p>
-                        You receive gold when killing wolves and you receive wood
-                        when you destroy trees. Gold allows you to by upgrades in
-                        the shop while wood allows you to place items like the
-                        fence or the campfire. You can place items using the
-                        number row keys (1, 2, etc).
-                    </p>
-                    <p>
-                        The Shop allows you to adjust the behavior of various things
-                        within the game.
-                        The campfire scares off wolves while the fence is a simple
-                        man-made obstacle.
-                    </p>
-                    <p>
-                        There is also a free-cam system.
-                        Arrow Keys to move camera freely.
-                        Ctrl+⬆️/⬇️ or Scroll to zoom Camera.
-                        Shift+⬆️/⬇️ or Shift+Scroll to zoom MiniMap.
-                    </p>
-                    <button id="pause-play" onclick="pausePlay()">Play/Pause Game</button>
-                    <div class="slider">
-                        <h2><label for="volume-slider">Volume</label></h2>
-                        <input type="range" min="0" max="1" step="0.01" value="0.1" id="volume-slider">
-                    </div>
+                    <details>
+                        <summary><h2>Instructions</h2></summary>
+                        <p>
+                            Try to make it to the barn with your sheep! When you make
+                            the amount reach what is specified on the top of your
+                            screen, you win!
+                        </p>
+                        <p>
+                            WASD keys move and refocus the camera on the Shepherd.
+                            Space and Q let you attack wolves. P or the button below
+                            lets you pause the game.
+                        </p>
+                        <p>
+                            You receive gold when killing wolves and you receive wood
+                            when you destroy trees. Gold allows you to by upgrades in
+                            the shop while wood allows you to place items like the
+                            fence or the campfire. You can place items using the
+                            number row keys (1, 2, etc).
+                        </p>
+                        <p>
+                            The Shop allows you to adjust the behavior of various things
+                            within the game.
+                            The campfire scares off wolves while the fence is a simple
+                            man-made obstacle.
+                        </p>
+                        <p>
+                            There is also a free-cam system.
+                            Arrow Keys to move camera freely.
+                            Ctrl+⬆️/⬇️ or Scroll to zoom Camera.
+                            Shift+⬆️/⬇️ or Shift+Scroll to zoom MiniMap.
+                        </p>
+                    </details>
+                </div>
+                <hr>
+                <div>
+                    <details>
+                        <summary><h2>Settings</h2></summary>
+                        <button id="pause-play" onclick="pausePlay()">Play/Pause Game</button>
+                        <div class="slider">
+                            <label for="volume-slider">Volume</label>
+                            <input type="range" min="0" max="1" step="0.01" value="0.1" id="volume-slider">
+                        </div>
+                    </details>
                 </div>
                 <hr>
                 <div>
@@ -148,40 +174,94 @@
                             <h2>The Shop</h2>
                         </summary>
                         <p>It costs 10 gold for each change to these parameters</p>
-                        <div class="input" id="separation">
-                            <p>Separation: </p>
-                            <button onClick="changeSheepFactor('separationFactor', -10)">-10</button>
-                            <button onClick="changeSheepFactor('separationFactor', +10)">+10</button>
+                        <div class="input">
+                            <details>
+                                <summary>
+                                    <p>Flock Separation: </p>
+                                    <p id="separation">10</p>
+                                    <button
+                                        onClick="changeSheepFactor('separationFactor', -10)"
+                                    >⬇️</button>
+                                    <button onClick="changeSheepFactor('separationFactor', +10)"
+                                    >⬆️</button>
+                                </summary>
+                                Determine how separated your flock is. Do you want your
+                                flock to be separated to prevent easy pickings? Or would
+                                you rather have more control?
+                            </details>
                         </div>
-                        <div class="input" id="cohesion">
-                            <p>Cohesion: </p>
-                            <button onClick="changeSheepFactor('cohesionFactor', -10)">-10</button>
-                            <button onClick="changeSheepFactor('cohesionFactor', +10)">+10</button>
+                        <div class="input">
+                            <details>
+                                <summary>
+                                    <p>Flocking Ability: (</p>
+                                    <p id="cohesion">10</p>
+                                    <p id="alignment">10</p>
+                                    <p>)</p>
+                                    <button onClick="changeSheepFactors([
+                                        ['cohesionFactor', -10],
+                                        ['alignmentFactor', -10],
+                                    ])">⬇️</button>
+                                    <button onClick="changeSheepFactors([
+                                        ['cohesionFactor', 10],
+                                        ['alignmentFactor', 10],
+                                    ])">⬆️</button>
+                                </summary>
+                                There are two factors that impact the flock's ability to be together.
+                                Cohesion and Alignment respectively.
+
+                                Cohesion being how close every sheep is to
+                                the average position of the flock.
+
+                                Alignment being how close every sheep's direction
+                                is to the average direction of the flock.
+                            </details>
                         </div>
-                        <div class="input" id="alignment">
-                            <p>Alignment: </p>
-                            <button onClick="changeSheepFactor('alignmentFactor', -10)">-10</button>
-                            <button onClick="changeSheepFactor('alignmentFactor', +10)">+10</button>
+                        <div class="input">
+                            <details>
+                                <summary>
+                                    <p>Shepherd Skill: </p>
+                                    <p id="shepherd">10</p>
+                                    <button
+                                        onClick="changeSheepFactor('shepherdFactor', -10)"
+                                    >⬇️</button>
+                                    <button onClick="changeSheepFactor('shepherdFactor', +10)"
+                                    >⬆️</button>
+                                </summary>
+                                Determine how attached the sheep are to the shepherd.
+                                The higher the shepherd skill, the more attached the sheep are.
+                                However, be careful making this too high. It can make sheep follow
+                                you into danger!
+                            </details>
                         </div>
-                        <div class="input" id="shepherd">
-                            <p>Shepherd: </p>
-                            <button onClick="changeSheepFactor('shepherdFactor', -10)">-10</button>
-                            <button onClick="changeSheepFactor('shepherdFactor', +10)">+10</button>
+                        <div class="input">
+                            <details>
+                                <summary>
+                                    <p>Wolf Fear: </p>
+                                    <p id="wolf">10</p>
+                                    <button
+                                        onClick="changeSheepFactor('wolf', -10)"
+                                    >⬇️</button>
+                                    <button onClick="changeSheepFactor('wolf', +10)"
+                                    >⬆️</button>
+                                </summary>
+                                Determine how scared your sheep are of wolves.
+                                Do you want your flock to avoid danger at all costs
+                                at the sacrifice of control?
+                            </details>
                         </div>
-                        <div class="input" id="wolf">
-                            <p>Wolf: </p>
-                            <button onClick="changeSheepFactor('wolfFactor', -10)">-10</button>
-                            <button onClick="changeSheepFactor('wolfFactor', +10)">+10</button>
-                        </div>
-                        <div class="input" id="walk-speed">
-                            <p>Walk Speed: </p>
-                            <button onClick="changeSheepFactor('walkSpeed', -10)">-10</button>
-                            <button onClick="changeSheepFactor('walkSpeed', +10)">+10</button>
-                        </div>
-                        <div class="input" id="max-speed">
-                            <p>Max Speed: </p>
-                            <button onClick="changeSheepFactor('maxSpeed', -10)">-10</button>
-                            <button onClick="changeSheepFactor('maxSpeed', +10)">+10</button>
+                        <div class="input">
+                            <details>
+                                <summary>
+                                    <p>Sheep Speed: </p>
+                                    <p id="max-speed">10</p>
+                                    <button
+                                        onClick="changeSheepFactor('maxSpeed', -5)"
+                                    >⬇️</button>
+                                    <button onClick="changeSheepFactor('maxSpeed', +5)"
+                                    >⬆️</button>
+                                </summary>
+                                Want some fast sheep? (Broken Stat 🤣)
+                            </details>
                         </div>
                     </details>
                 </div>
@@ -189,10 +269,10 @@
                 <div>
                     <details>
                         <summary><h2>Debug Tools</h2></summary>
-                        <h3>
+                        <div>
                             <label for="debug">Debug Enabled</label>
                             <input type="checkbox" name="debug" id="debug">
-                        </h3>
+                        </div>
                     </details>
                 </div>
             </section>
