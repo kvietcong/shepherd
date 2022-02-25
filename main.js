@@ -20,20 +20,7 @@ const initializeCanvas = () => {
 	return canvas;
 };
 
-const initializeCanvasDark = () => {
-	const canvas = document.getElementById("canvasDark");
-	//document.getElementById("canvas-container").appendChild(canvas);
-	canvas.style.border = "1px solid black";
-	//canvas.style.background = "url('./resources/forestTile.png')";
-	canvas.style.backgroundSize = "100%";
-	canvas.autofocus = true;
-	canvas.tabIndex = 0;
-	resizeCanvas(canvas);
-	return canvas;
-};
-
 const canvas = initializeCanvas();
-const canvasDark = initializeCanvasDark();
 const sceneManager = new SceneManager();
 const inventory = new Inventory(10, 10, 5, 5, 1);
 const darkness = new Darkness();
@@ -83,16 +70,15 @@ assetManager.queueDownload("./resources/logs.png");
 
 assetManager.downloadAll(() => {
 	const ctx = canvas.getContext("2d");
-	const ctxDark = canvasDark.getContext("2d");
+	//const ctxDark = canvasDark.getContext("2d");
 	gameEngine.init(ctx);
-	gameEngine.initDark(ctxDark);
+	//gameEngine.initDark(ctxDark);
 	gameEngine.addEntity(sceneManager);
 	gameEngine.start();
 });
 
 // Event Hooks
 window.addEventListener("resize", () => { resizeCanvas(canvas) });
-window.addEventListener("resize", () => { resizeCanvas(canvasDark) });
 
 const defaultUpgradeCost = 10;
 const changeSheepFactor = (factor, change, cost = defaultUpgradeCost) => {
