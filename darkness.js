@@ -15,7 +15,6 @@ class Darkness {
     draw(ctx, gameEngine) {
         let scale = gameEngine.width/1210;
         this.ctx = gameEngine.ctxDark;
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         // Shepherd Light
         this.addLight(scale*620, scale*330, scale*this.radius);
         // Map Light
