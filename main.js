@@ -78,12 +78,19 @@ assetManager.downloadAll(() => {
 // Event Hooks
 window.addEventListener("resize", () => { resizeCanvas(canvas) });
 
-const upgradeCost = 10;
-const changeSheepFactor = (factor, change) => {
+const defaultUpgradeCost = 10;
+const changeSheepFactor = (factor, change, cost = defaultUpgradeCost) => {
 	if (params.sheep[factor] + change < 0) { return; }
-	const successful = inventory.attemptSpend(upgradeCost);
+	const successful = inventory.attemptSpend(cost);
 	if (successful) params.sheep[factor] += change;
 };
+const changeSheepFactors = (changes, cost = defaultUpgradeCost) => {
+	const successful = inventory.attemptSpend(cost);
+	if (successful)
+		changes.forEach(change =>
+			changeSheepFactor(change[0], change[1], 0));
+};
+
 
 const debugInput = document.getElementById("debug");
 debugInput.checked = params.isDebugging;
@@ -96,4 +103,4 @@ const pausePlayButton = document.getElementById("pause-play");
 setInterval(() => {
 	const { isPaused } = gameEngine;
 	pausePlayButton.innerText = `${isPaused ? "Play" : "Pause"} Game`;
-}, 1000);
+}, 200);

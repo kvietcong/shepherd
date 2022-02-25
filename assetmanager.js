@@ -1,5 +1,5 @@
-params.supportedImageTypes = [ "png", "jpg", "jpeg", "gif" ];
-params.supportedAudioTypes = [ "mp3", "ogg", "wav" ];
+params.supportedImageTypes = ["png", "jpg", "jpeg", "gif"];
+params.supportedAudioTypes = ["mp3", "ogg", "wav"];
 
 class AssetManager {
     constructor() {
@@ -34,22 +34,22 @@ class AssetManager {
     };
 
     downloadImage(path, callback) {
-            const image = new Image();
+        const image = new Image();
 
-            image.addEventListener("load", () => {
-                if (params.isDebugging) console.log("Loaded " + path);
-                this.successCount++;
-                if (this.isDone()) callback();
-            });
+        image.addEventListener("load", () => {
+            if (params.isDebugging) console.log("Loaded " + path);
+            this.successCount++;
+            if (this.isDone()) callback();
+        });
 
-            image.addEventListener("error", () => {
-                console.log("Error loading " + path);
-                this.errorCount++;
-                if (this.isDone()) callback();
-            });
+        image.addEventListener("error", () => {
+            console.log("Error loading " + path);
+            this.errorCount++;
+            if (this.isDone()) callback();
+        });
 
-            image.src = path;
-            this.cache[path] = image;
+        image.src = path;
+        this.cache[path] = image;
     }
 
     downloadAudio(path, callback) {
@@ -82,4 +82,3 @@ class AssetManager {
         return this.cache[path];
     };
 };
-
