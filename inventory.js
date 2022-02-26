@@ -9,58 +9,39 @@ params.inventory = {
 };
 
 class Inventory {
-    constructor(gold=100, wood = 100, fences=5, campfires=5, fenceLevel=1, fireLevel=1) {
+    constructor(gold, wood, fences, campfires, fenceLevel=1, fireLevel=1) {
+        this.resources = { gold, wood, fences, campfires, };
         this.gold = gold;
-        this.fences = fences;
-        this.campfires = campfires;
         this.fenceLevel = fenceLevel;
         this.fireLevel = fireLevel;
-        this.wood = wood;
     }
 
-    get gold() { return this._gold; }
-    set gold(newGold) {
-        this._gold = newGold;
-        if (this._gold < 0) this._gold = 0;
-        const goldAmountContainer = document.getElementById("gold-amount");
-        goldAmountContainer.textContent = this._gold;
-    }
+    // Ex: inventory.get("gold"); or inventory.set("wood", 100);
+    get(resourceType) { return this.resources[resourceType]; }
+    set(resourceType, amount) {
+        this.resources[resourceType] = amount;
+        if (this.resources[resourceType] < 0) this.resources[resourceType] = 0;
 
-    attemptSpend(amount, type="gold") {
-        if (type === "gold") {
-            if (this.gold >= amount) {
-                this.gold -= amount;
-                return true;
-            }
-            return false;
-        } else if (type === "wood") {
-            if (this.wood >= amount) {
-                this.wood -= amount;
-                return true;
-            }
-            return false;
+        if (resourceType === "gold") {
+            const goldAmountContainer = document.getElementById("gold-amount");
+            goldAmountContainer.textContent = this.gold;
         }
     }
 
-    addGold(amount) { this.gold += amount; }
-    addWood(amount) { this.wood += amount; }
-    removeGold(amount) {
-        this.gold -= amount;
-        if (this.gold < 0) this.gold = 0;
-    }
+    get gold() { return this.resources.gold; }
+    set gold(newGold) { this.set("gold", newGold); }
 
-    addFences(amount) { this.fences -= amount; }
+    get wood() { return this.resources.wood; }
+    set wood(newWood) { this.set("wood", newWood); }
 
-    removeFences(amount) {
-        this.fences += amount;
-        if (this.gold < 0) this.gold = 0;
-    }
-
-    addCampfires(amount) { this.campfires -= amount; }
-
-    removeCampfires(amount) {
-        this.campfires += amount;
-        if (this.gold < 0) this.gold = 0;
+    attemptSpend(charge, resourceType = "gold", callback = null) {
+        const resourceAmount = this.get(resourceType);
+        if (resourceAmount >= charge) {
+            this.set(resourceType, resourceAmount - charge);
+            if (callback) callback(this.resources[resourceType]);
+            return true;
+        }
+        return false;
     }
 
     upgradeCampfires() { this.fireLevel += 1; }

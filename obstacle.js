@@ -40,11 +40,8 @@ class Obstacle extends Entity {
     }
 
     attacked(damage) {
-        //console.log("obstacle is dealt damage");
         this.healthAPI.damage(damage);
         if (this.healthAPI.health <= 0) {
-            //inventory.addGold(params.inventory.obstacleReward);
-            //console.log("gold: " + inventory.gold);
             this.dead = true;
         }
     }
@@ -62,7 +59,7 @@ class Obstacle extends Entity {
             this.xCenter, this.y - 35,
             75, 10,
             ctx, gameEngine);
-    }    
+    }
 }
 
 class Barn extends Obstacle {

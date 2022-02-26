@@ -289,7 +289,7 @@ class Coin extends Entity {
     }
     taken() {
         if (!this.removeFromWorld) {
-            inventory.addGold(this.value);
+            inventory.gold += this.value;
             this.removeFromWorld = true;
         }
     }
@@ -307,7 +307,7 @@ class Log extends Obstacle {
     }
     taken() {
         if (!this.removeFromWorld) {
-            inventory.addWood(10);
+            inventory.wood += 10;
             this.removeFromWorld = true;
         }
     }
