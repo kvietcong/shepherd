@@ -1,7 +1,7 @@
 const setupEnvironment = entities => {
 	//current availble map types: "Test"-original map, "Forest"-finished, "levelTwo" - under construction 
 	//create Map object with the specified level
-	let importedMap = new Map("Forest");
+	let importedMap = new Map("levelTwo");
 
 	let mainEnvironment;
 
@@ -56,16 +56,16 @@ const setupEnvironment = entities => {
 		well.z = 1;
 		entities.push(well);
 		//trees
-		entities.push(new Tree(1200, 1000));
-		entities.push(new Tree(1300, 1000));
-		entities.push(new Tree(1400, 900));
-		entities.push(new Tree(1450, 900));
-		entities.push(new Tree(1500, 900));
-		entities.push(new Tree(1900, 700));
-		entities.push(new Tree(2000, 700));
-		entities.push(new Tree(1550, 1300));
-		entities.push(new Tree(1600, 1300));
-		entities.push(new Tree(1650, 1300));
+		entities.push(new Tree(1200, 1000, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
+		entities.push(new Tree(1300, 1000, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
+		entities.push(new Tree(1400, 900, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
+		entities.push(new Tree(1450, 900, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
+		entities.push(new Tree(1500, 900, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
+		entities.push(new Tree(1900, 700, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
+		entities.push(new Tree(2000, 700, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
+		entities.push(new Tree(1550, 1300, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
+		entities.push(new Tree(1600, 1300, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
+		entities.push(new Tree(1650, 1300, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
 		
 
 		//first walkway area
@@ -95,8 +95,8 @@ const setupEnvironment = entities => {
 		//type 3
 		entities.push(new Obstacle(4150, 2170, "./resources/forestground.png", 518, 90, 31, 35, 1.5));
 		//trees
-		entities.push(new Tree(4400, 2400));
-		entities.push(new Tree(4500, 2200));
+		entities.push(new Tree(4400, 2400, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
+		entities.push(new Tree(4500, 2200, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
 
 		//ending/barn area
 		//barn
@@ -260,8 +260,160 @@ const setupEnvironment = entities => {
 
 	if(importedMap.mapType == "levelTwo"){
 
-		//obstacles
-		entities.push(new Obstacle(700, 230, "./resources/big_tree.png", 0, 0, 281, 255, 3));
+		//COLLISION BOXES
+		//STARTING AREA
+		//upper north
+		entities.push(new Obstacle(1350, 1740, "./resources/3.png", 50, 50, 174, 19, 5));
+		//lower north
+		entities.push(new Obstacle(775, 1837, "./resources/3.png", 50, 50, 250, 19, 5));
+
+		//OBSTACLES
+		//STARTING AREA
+		//big tree
+		entities.push(new Obstacle(1500, 2400, "./resources/big_tree.png", 26, 31, 281, 255, 3));
+		//tress
+		entities.push(new Tree(1200, 1900, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
+		entities.push(new Tree(900, 1950, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
+		entities.push(new Tree(950, 1900, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
+		entities.push(new Tree(1000, 1950, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
+		entities.push(new Tree(1050, 1900, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
+		entities.push(new Tree(1100, 1950, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
+		//trees outside the map
+		//tree type1
+		entities.push(new Tree(1300, 2600, "./resources/TX Plant.png", 24, 14, 112, 138, 2, 20, 10));
+		entities.push(new Tree(1000, 2590, "./resources/TX Plant.png", 24, 14, 112, 138, 2, 20, 10));
+		entities.push(new Tree(1400, 2600, "./resources/TX Plant.png", 24, 14, 112, 138, 2, 20, 10));
+		entities.push(new Tree(500, 2700, "./resources/TX Plant.png", 24, 14, 112, 138, 2, 20, 10));
+		entities.push(new Tree(690, 2740, "./resources/TX Plant.png", 24, 14, 112, 138, 2, 20, 10));
+		entities.push(new Tree(1060, 2866, "./resources/TX Plant.png", 24, 14, 112, 138, 2, 20, 10));
+		//tree type2
+		entities.push(new Tree(1100, 2590, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(921, 2900, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(653, 2590, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(1353, 2590, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(777, 2700, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		//tree type3
+		entities.push(new Tree(318, 2708, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(1180, 2779, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(1170, 2633, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(890, 2670, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(577, 2817, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+
+
+		//FIRST PATHWAY
+		//south facing bench
+		entities.push(new Obstacle(2748 ,1270, "./resources/TX Props.png", 292, 19, 56, 40, 2));
+		//horizontal coffin grave
+		entities.push(new Obstacle(3025 ,2030, "./resources/TX Props.png", 288, 87, 64, 36, 2));
+		//grave site
+		//column
+		entities.push(new Obstacle(3695, 2050, "./resources/TX Props.png", 352, 174, 32, 77, 2, 64, 56, false));
+		//crumbled column
+		entities.push(new Obstacle(4345, 2050, "./resources/TX Props.png", 416, 194, 32, 57, 2, 64, 56, false));
+		entities.push(new Obstacle(5420, 2050, "./resources/TX Props.png", 416, 194, 32, 57, 2, 64, 56, false));
+		//grave stones
+		//cross
+		entities.push(new Obstacle(3925, 2250, "./resources/TX Props.png", 227, 303, 26, 40, 2, 64, 56, false));
+		//rip
+		entities.push(new Obstacle(4025, 2250, "./resources/TX Props.png", 225, 239, 30, 41, 2, 64, 56, false));
+		//small
+		entities.push(new Obstacle(4125, 2250, "./resources/TX Props.png", 289, 251, 30, 29, 2, 64, 56, false));
+		//werid ring
+		entities.push(new Obstacle(2150, 1370, "./resources/TX Props.png", 420, 359, 55, 49, 3));
+		//ancient stone
+		entities.push(new Obstacle(3690, 1435, "./resources/TX Props.png", 227, 91, 26, 66, 3, 78, 52, false));
+		//crumbled ancient stone
+		entities.push(new Obstacle(3800, 1435, "./resources/TX Props.png", 227, 183, 26, 38, 3, 78, 52, false));
+		//west side trees
+		entities.push(new Tree(2600, 1400, "./resources/TX Plant.png", 24, 14, 112, 138, 2, 20, 10));
+		entities.push(new Tree(2400, 1500, "./resources/TX Plant.png", 24, 14, 112, 138, 2, 20, 10));
+		entities.push(new Tree(2200, 1600, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(3600, 1420, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(4300, 1510, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(3680, 1600, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(4030, 1490, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		//werid cricle
+		entities.push(new Obstacle(6580, 1710, "./resources/TX Props.png", 353, 269, 94, 72, 3));
+		//west facing bench
+		entities.push(new Obstacle(7060, 1480, "./resources/TX Props.png", 387, 2, 27, 61, 2));
+
+
+		//SECOND PATHWAY
+		//weird ring
+		entities.push(new Obstacle(6940, 600, "./resources/TX Props.png", 420, 359, 55, 49, 3));
+		//trees type 2
+		entities.push(new Tree(1800, 1000, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(3200, 900, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(3500, 1100, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(2700, 600, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(4100, 700, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+
+		entities.push(new Tree(3900, 1090, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(3400, 934, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(5000, 1100, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(5400, 670, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(6000, 740, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+
+		entities.push(new Tree(6890, 900, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(6400, 830, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(5500, 1150, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(6045, 940, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(5689, 760, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+
+		//type one trees
+		entities.push(new Tree(6641, 1084, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(2974, 847, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(5254, 824, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(3991, 993, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(5892, 956, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		
+		entities.push(new Tree(2651, 1012, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(4187, 857, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(2064, 765, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(2409, 1018, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(4347, 917, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		
+		entities.push(new Tree(6461, 1032, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(5457, 791, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(2122, 971, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(4610, 884, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		entities.push(new Tree(3896, 750, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+
+		//type 3 trees
+		entities.push(new Tree(1938, 2708, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(1180, 2779, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(1170, 2633, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(890, 2670, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(577, 2817, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+
+		entities.push(new Tree(3630, 2708, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(1180, 2779, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(1170, 2633, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(890, 2670, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(3001, 2817, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+
+		entities.push(new Tree(815, 818, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(859, 1007, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(3501, 829, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(1062, 864, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+		entities.push(new Tree(1838, 736, "./resources/TX Plant.png", 295, 31, 76, 119, 2, 30, 12));
+
+
+
+
+		//ENDING/BARN AREA
+		//barn
+		//entities.push(new Barn(820, 1500, "./resources/starDewBuildings.png", 130, 0, 111, 104, 3, 10));
+		//statue
+		entities.push(new Obstacle(1700, 1690, "./resources/TX Props.png", 445, 21, 36, 74, 2, 70, 50, false));
+		entities.push(new Obstacle(1940, 1690, "./resources/TX Props.png", 445, 21, 36, 74, 2, 70, 50, false));
+		//chest
+		entities.push(new Obstacle(1830, 1682, "./resources/TX Props.png", 96, 30, 31, 30, 2, 50, 50, false));
+		//trees
+		entities.push(new Tree(1600, 1710, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
+		//hidden block
+		entities.push(new Obstacle(1448, 1350, "./resources/TX Tileset Stone Ground.png", 160, 0, 96, 96, 1, 96, 96, true));
+
 
 		let tx = new Image(256, 256);
 		tx.src = "./resources/TX Tileset Grass.png";
@@ -272,19 +424,68 @@ const setupEnvironment = entities => {
 		let grassTx = {
 			x: 0,
 			y: 0,
-			width: 256,
+			width: 96,
+			image: tx
+		}
+		let grassf = {
+			x: 128,
+			y: 0,
+			width: 128,
+			image: tx
+		}
+		let grassRoad = {
+			x: 0,
+			y: 128,
+			width: 128,
+			image: tx
+		}
+		let grassRoad2 = {
+			x: 128,
+			y: 128,
+			width: 128,
 			image: tx
 		}
 		let stoneTx = {
 			x: 0,
 			y: 0,
-			width: 256,
+			width: 96,
+			image: txStone
+		}
+		let stoneDot = {
+			x: 160,
+			y: 0,
+			width: 96,
+			image: txStone
+		}
+		let stonePallet = {
+			x: 128,
+			y: 192,
+			width: 64,
+			image: txStone
+		}
+		let stoneX = {
+			x: 0,
+			y: 0,
+			width: 128,
+			image: txStone
+		}
+		let stoneY = {
+			x: 192,
+			y: 192,
+			width: 64,
 			image: txStone
 		}
 		let tileData = [];
 		tileData["default"] = grassTx;
 		tileData["g"] = grassTx;
+		tileData["f"] = grassf;
+		tileData["v"] = grassRoad;
+		tileData["h"] = grassRoad2;
 		tileData["s"] = stoneTx;
+		tileData["d"] = stoneDot;
+		tileData["p"] = stonePallet;
+		tileData["x"] = stoneX;
+		tileData["y"] = stoneY;
 
 		//tiles needed to cover the play area with current tile width - no longer used to determine size of map
 		let xTile = 25; //canvas.width*2 / tileWidth - 1;

@@ -12,6 +12,7 @@ const initializeCanvas = () => {
 	const canvas = document.createElement("canvas");
 	document.getElementById("canvas-container").appendChild(canvas);
 	canvas.style.border = "1px solid black";
+	//canvas.style.background = "Green";
 	canvas.style.background = "url('./resources/forestTile.png')";
 	canvas.style.backgroundSize = "100%";
 	canvas.autofocus = true;
@@ -50,6 +51,8 @@ assetManager.queueDownload("./resources/Map_tiles.png");
 assetManager.queueDownload("./resources/plants.png");
 assetManager.queueDownload("./resources/TX Tileset Grass.png");
 assetManager.queueDownload("./resources/TX Tileset Stone Ground.png");
+assetManager.queueDownload("./resources/TX Plant.png");
+assetManager.queueDownload("./resources/TX Props.png");
 assetManager.queueDownload("./resources/slash.png");
 assetManager.queueDownload("./resources/fence_00.png");
 assetManager.queueDownload("./resources/fence_vertical.png");

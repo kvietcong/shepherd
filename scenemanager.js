@@ -39,14 +39,15 @@ class SceneManager {
 
         const entities = [];
 
-        const shepherd = new Shepherd(1200, 1200);
+        const shepherd = new Shepherd(1000, 2200);
         //const shepherd = new Shepherd(this.width / 2, this.height / 2);
         params.debugEntities.shepherd = shepherd;
         entities.push(shepherd);
 
         const startingArea = new SpawnPoint(1200, 650, 900, 750);
-        startingArea.spawnEntity(Sheep, 20, gameEngine);
+        startingArea.spawnEntity(Sheep, 10, gameEngine);
         
+        /*
         const wolfPacks = [
             [new SpawnPoint(1830, 1830, 330, 200), 2], // rocks by first path
             [new SpawnPoint(2650, 2230, 500, 300), 4], // bridge over water
@@ -57,7 +58,7 @@ class SceneManager {
             const [spawnPoint, amount] = info;
             spawnPoint.spawnEntity(Wolf, amount, gameEngine);
         });
-        
+        */
         const mainEnvironment = setupEnvironment(entities);
         gameEngine.addEntity(sceneManager);
 
