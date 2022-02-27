@@ -62,7 +62,7 @@ class Obstacle extends Entity {
             this.xCenter, this.y - 35,
             75, 10,
             ctx, gameEngine);
-    }    
+    }
 }
 
 class Barn extends Obstacle {
