@@ -1,6 +1,6 @@
 /** Global Parameters Object */
 const params = {
-    isDebugging: false,
+    isDebugging: true,
     volume: 0.1,
     debugEntities: {}, // Easy debug access
 };
