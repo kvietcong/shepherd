@@ -40,6 +40,10 @@ const makeSheepAnimator = () => {
     const sheepAnimations = {
         staticE: {frameAmount: 1, startX: 0, startY: 0},
         staticW: {frameAmount: 1, startX: 0, startY: size},
+        staticNE: {frameAmount: 1, startX: 0, startY: 2 * size},
+        staticNW: {frameAmount: 1, startX: 0, startY: 3 * size},
+        staticSE: {frameAmount: 1, startX: 0, startY: 4 * size},
+        staticSW: {frameAmount: 1, startX: 0, startY: 5 * size},
         staticN: {frameAmount: 1, startX: 0, startY: 6 * size},
         staticS: {frameAmount: 1, startX: 0, startY: 7 * size},
 
@@ -97,7 +101,17 @@ class Sheep extends Entity {
         if (this.healthAPI.health <= 0) {
             this.dead = true;
             Sheep.count--;
-            this.animator.setAnimation("staticE");
+            const staticFrames = {
+                "walkE": "staticE",
+                "walkW": "staticW",
+                "walkN": "staticN",
+                "walkS": "staticS",
+                "walkNE": "staticNE",
+                "walkNW": "staticNW",
+                "walkSE": "staticSE",
+                "walkSW": "staticSW"
+            }
+            this.animator.setAnimation(staticFrames[this.animator.currentAnimationKey]);
         }
     }
 
