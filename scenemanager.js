@@ -191,6 +191,11 @@ class SpawnPoint {
         this.h = h;
     }
 
+    /**
+     * @param {Class} entity Class of entity to spawn
+     * @param {Number} amount Number of objects of the given class to spawn
+     * @param {Object} gameEngine Game engine to use
+     */
     spawnEntity(entity, amount, gameEngine) {
         if (!(entity.prototype instanceof Entity)) return;
 

@@ -36,27 +36,33 @@ attachPropertiesWithCallbacks(params.sheep, [
 ]);
 
 const makeSheepAnimator = () => {
-    const size = 64;
+    const size = 128;
     const sheepAnimations = {
         staticE: {frameAmount: 1, startX: 0, startY: 0},
         staticW: {frameAmount: 1, startX: 0, startY: size},
-        staticN: {frameAmount: 1, startX: 0, startY: 2 * size},
-        staticS: {frameAmount: 1, startX: 0, startY: 3 * size},
+        staticNE: {frameAmount: 1, startX: 0, startY: 2 * size},
+        staticNW: {frameAmount: 1, startX: 0, startY: 3 * size},
+        staticSE: {frameAmount: 1, startX: 0, startY: 4 * size},
+        staticSW: {frameAmount: 1, startX: 0, startY: 5 * size},
+        staticN: {frameAmount: 1, startX: 0, startY: 6 * size},
+        staticS: {frameAmount: 1, startX: 0, startY: 7 * size},
 
         walkE: {frameAmount: 7, startX: 0, startY: 0},
         walkW: {frameAmount: 7, startX: 0, startY: size},
-        walkN: {frameAmount: 7, startX: 0, startY: 2 * size},
-        walkS: {frameAmount: 7, startX: 0, startY: 3 * size},
 
-        walkNW: {frameAmount: 7, startX: 0, startY: 2 * size},
         walkNE: {frameAmount: 7, startX: 0, startY: 2 * size},
-        walkSW: {frameAmount: 7, startX: 0, startY: 3 * size},
-        walkSE: {frameAmount: 7, startX: 0, startY: 3 * size}
+        walkNW: {frameAmount: 7, startX: 0, startY: 3 * size},
+
+        walkSE: {frameAmount: 7, startX: 0, startY: 4 * size},
+        walkSW: {frameAmount: 7, startX: 0, startY: 5 * size},
+
+        walkN: {frameAmount: 7, startX: 0, startY: 6 * size},
+        walkS: {frameAmount: 7, startX: 0, startY: 7 * size}
     };
 
     const sheep = assetManager.getAsset("./resources/sheep.png");
     return new Animator(
-        sheep, "walkS", sheepAnimations, size, size, 1/15
+        sheep, "walkSE", sheepAnimations, size, size, 1/15, scale=0.5
     );
 };
 
@@ -95,7 +101,17 @@ class Sheep extends Entity {
         if (this.healthAPI.health <= 0) {
             this.dead = true;
             Sheep.count--;
-            this.animator.setAnimation("staticE");
+            const staticFrames = {
+                "walkE": "staticE",
+                "walkW": "staticW",
+                "walkN": "staticN",
+                "walkS": "staticS",
+                "walkNE": "staticNE",
+                "walkNW": "staticNW",
+                "walkSE": "staticSE",
+                "walkSW": "staticSW"
+            }
+            this.animator.setAnimation(staticFrames[this.animator.currentAnimationKey]);
         }
     }
 
