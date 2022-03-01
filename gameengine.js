@@ -24,7 +24,7 @@ class GameEngine {
         // Options and the Details
         this.options = options || {
             prevent: {
-                contextMenu: false,
+                contextMenu: true,
                 scrolling: true,
             },
         };
@@ -122,6 +122,17 @@ class GameEngine {
                 this.keys[key.toLowerCase()] = false;
                 this.keys[key.toUpperCase()] = false;
             }
+        });
+
+        this.ctx.canvas.addEventListener("mousedown", event => {
+            const { button } = event;
+            const key = button === 0 ? "click" : button === 1 ? "middle" : "rightclick";
+            this.keys[key] = true;
+         });
+        this.ctx.canvas.addEventListener("mouseup", event => {
+            const { button } = event;
+            const key = button === 0 ? "click" : button === 1 ? "middle" : "rightclick";
+            this.keys[key] = false;
         });
 
         this.ctx.canvas.addEventListener("focusout", _ => this.keys = {})
