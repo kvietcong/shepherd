@@ -84,7 +84,7 @@ Barn.sheepRequired = 10;
 
 class Tree extends Obstacle {
     constructor(x, y) {
-        super(x, y, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2, true);
+        super(x, y, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40, 75, true);
     }
     update(gameEngine) {
         super.update(gameEngine);

@@ -93,8 +93,28 @@ class SheepText extends GUIElement {
         let scaleY = ctx.canvas.height/510;
         ctx.fillStyle = 'gold';
         ctx.font = scaleX*this.size + 'px impact';
-        ctx.strokeText(Barn.sheepRequired - Barn.sheepCount, scaleX*this.x, scaleY*this.y, scaleX*this.width);
-        ctx.fillText(Barn.sheepRequired - Barn.sheepCount, scaleX*this.x, scaleY*this.y, scaleX*this.width);
+        const text = `${Barn.sheepCount}/${Barn.sheepRequired}`;
+        ctx.strokeText(text, scaleX*this.x, scaleY*this.y, scaleX*this.width);
+        ctx.fillText(text, scaleX*this.x, scaleY*this.y, scaleX*this.width);
+    }
+}
+
+class Text extends GUIElement {
+    constructor(x, y, width, size, text) {
+        super(x, y);
+        this.width = width;
+        this.size = size;
+        this.text = text;
+    }
+
+    draw(ctx, gameEngine) {
+        let scaleX = ctx.canvas.width/1210;
+        let scaleY = ctx.canvas.height/510;
+        ctx.fillStyle = 'gold';
+        ctx.font = scaleX*this.size + 'px impact';
+        const text = this.text instanceof Function ? this.text(gameEngine) : this.text;
+        ctx.strokeText(text, scaleX*this.x, scaleY*this.y, scaleX*this.width);
+        ctx.fillText(text, scaleX*this.x, scaleY*this.y, scaleX*this.width);
     }
 }
 
@@ -179,9 +199,11 @@ class MiniMap extends GUIElement {
                     ? "cyan"
                     : entity instanceof Shepherd
                         ? "salmon"
-                        : entity.isDestructible
-                            ? "gray"
-                            : rgba(0, 0, 0, 0);
+                        : entity instanceof Barn
+                            ? "gold"
+                            : entity.isDestructible
+                                ? "gray"
+                                : rgba(0, 0, 0, 0);
             offscreenContext.fillRect(x, y, width, height);
         });
 

@@ -1,5 +1,5 @@
 const setupEnvironment = entities => {
-	//current availble map types: "Test"-original map, "Forest"-finished, "levelTwo" - under construction 
+	//current availble map types: "Test"-original map, "Forest"-finished, "levelTwo" - under construction
 	//create Map object with the specified level
 	let importedMap = new Map("Forest");
 
@@ -66,7 +66,6 @@ const setupEnvironment = entities => {
 		entities.push(new Tree(1550, 1300));
 		entities.push(new Tree(1600, 1300));
 		entities.push(new Tree(1650, 1300));
-		
 
 		//first walkway area
 		//rocks
@@ -293,12 +292,12 @@ const setupEnvironment = entities => {
 	}
 
 
-	
+
 	/*
 	let importedMap = new Map("Forest");
 	const mainEnvironment = new Environment(xTile, yTile, tileData, -1, importedMap);
 	*/
-	
+
 	//const mainEnvironment = new Environment(xTile, yTile, tileData, -1, importedMap);
 	entities.push(mainEnvironment);
 
