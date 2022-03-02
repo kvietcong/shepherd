@@ -49,13 +49,10 @@ const makeSheepAnimator = () => {
 
         walkE: {frameAmount: 7, startX: 0, startY: 0},
         walkW: {frameAmount: 7, startX: 0, startY: size},
-
         walkNE: {frameAmount: 7, startX: 0, startY: 2 * size},
         walkNW: {frameAmount: 7, startX: 0, startY: 3 * size},
-
         walkSE: {frameAmount: 7, startX: 0, startY: 4 * size},
         walkSW: {frameAmount: 7, startX: 0, startY: 5 * size},
-
         walkN: {frameAmount: 7, startX: 0, startY: 6 * size},
         walkS: {frameAmount: 7, startX: 0, startY: 7 * size}
     };
@@ -96,7 +93,7 @@ class Sheep extends Entity {
         this.healthAPI.damage(damage);
         this.animator.untint();
         this.animator.tint("red", this.deathLength, 0.5);
-        this.sheepBaa.volume = params.volume;
+        this.sheepBaa.volume = 0 * params.volume;
         this.sheepBaa.play();
         if (this.healthAPI.health <= 0) {
             this.dead = true;
