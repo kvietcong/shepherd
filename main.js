@@ -51,6 +51,7 @@ assetManager.queueDownload("./resources/Map_tiles.png");
 assetManager.queueDownload("./resources/plants.png");
 assetManager.queueDownload("./resources/TX Tileset Grass.png");
 assetManager.queueDownload("./resources/TX Tileset Stone Ground.png");
+assetManager.queueDownload("./resources/TX Wall.png");
 assetManager.queueDownload("./resources/TX Plant.png");
 assetManager.queueDownload("./resources/TX Props.png");
 assetManager.queueDownload("./resources/slash.png");

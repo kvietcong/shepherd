@@ -1,11 +1,11 @@
 const setupEnvironment = entities => {
 	//current availble map types: "Test"-original map, "Forest"-finished, "levelTwo" - under construction 
 	//create Map object with the specified level
-	let importedMap = new Map("levelTwo");
+	let importedMap = new Map("levelOne");
 
 	let mainEnvironment;
 
-	if(importedMap.mapType == "Forest" || importedMap.mapType == "Test"){
+	if(importedMap.mapType == "Alpha" || importedMap.mapType == "preAlpha"){
 		//starting area collision boxes
 		//west
 		//starting area collision boxes
@@ -258,7 +258,7 @@ const setupEnvironment = entities => {
 		mainEnvironment = new Environment(xTile, yTile, tileData, -1, importedMap);
 	}
 
-	if(importedMap.mapType == "levelTwo"){
+	if(importedMap.mapType == "levelOne"){
 
 		//COLLISION BOXES
 		//STARTING AREA
@@ -554,6 +554,107 @@ const setupEnvironment = entities => {
 		tileData["p"] = stonePallet;
 		tileData["x"] = stoneX;
 		tileData["y"] = stoneY;
+
+		//tiles needed to cover the play area with current tile width - no longer used to determine size of map
+		let xTile = 25; //canvas.width*2 / tileWidth - 1;
+		let yTile = 25; //canvas.height*2 / tileWidth;
+		mainEnvironment = new Environment(xTile, yTile, tileData, -1, importedMap);
+	}
+
+	if(importedMap.mapType == "levelTwo") {
+
+		//COLLISION
+
+		//OBSTACLES
+		// east vWall (shadow)
+		entities.push(new Obstacle(4000, 1690, "./resources/TX Wall.png", 290, 113, 10, 96, 2));
+		
+		//STARTING AREA
+		
+
+		//tileset
+		let tx = new Image(256, 256);
+		tx.src = "./resources/TX Tileset Grass.png";
+
+		let txStone = new Image(256, 256);
+		txStone.src = "./resources/TX Tileset Stone Ground.png";
+
+		let txWall = new Image(512, 512);
+		txWall.src = "./resources/TX Wall.png";
+
+		//new tiles for a new map
+		let grassTx = {
+			x: 0,
+			y: 0,
+			width: 96,
+			image: tx
+		}
+		let grassf = {
+			x: 128,
+			y: 0,
+			width: 128,
+			image: tx
+		}
+		let grassRoad = {
+			x: 0,
+			y: 128,
+			width: 128,
+			image: tx
+		}
+		let grassRoad2 = {
+			x: 128,
+			y: 128,
+			width: 128,
+			image: tx
+		}
+		let stoneTx = {
+			x: 0,
+			y: 0,
+			width: 96,
+			image: txStone
+		}
+		let stoneDot = {
+			x: 160,
+			y: 0,
+			width: 96,
+			image: txStone
+		}
+		let stonePallet = {
+			x: 128,
+			y: 192,
+			width: 64,
+			image: txStone
+		}
+		let stoneX = {
+			x: 0,
+			y: 0,
+			width: 128,
+			image: txStone
+		}
+		let stoneY = {
+			x: 192,
+			y: 192,
+			width: 64,
+			image: txStone
+		}
+		let hWall = {
+			x: 32,
+			y: 288,
+			width: 64,
+			image: txWall
+		}
+		let tileData = [];
+		tileData["default"] = grassTx;
+		tileData["g"] = grassTx;
+		tileData["f"] = grassf;
+		tileData["v"] = grassRoad;
+		tileData["h"] = grassRoad2;
+		tileData["s"] = stoneTx;
+		tileData["d"] = stoneDot;
+		tileData["p"] = stonePallet;
+		tileData["x"] = stoneX;
+		tileData["y"] = stoneY;
+		tileData["w"] = hWall;
 
 		//tiles needed to cover the play area with current tile width - no longer used to determine size of map
 		let xTile = 25; //canvas.width*2 / tileWidth - 1;
