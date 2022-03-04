@@ -90,7 +90,8 @@ class Shepherd extends Entity {
         const {
             w, a, s, d, W, A, S, D, q, e,
             ArrowRight: right, ArrowLeft: left, ArrowUp: up, ArrowDown: down,
-            Shift, Control, Z
+            Shift, Control, Z,
+            click, rightclick
         } = gameEngine.keys;
         const space = gameEngine.keys[" "];
         const one = gameEngine.keys["1"];
@@ -118,15 +119,13 @@ class Shepherd extends Entity {
         }
 
         let isAttacking = false;
-        if (space || one || q) {
+        if (space || one || q || click || rightclick) {
             if (one) {
                 this.state = 2;
                 this.animator.tint("cyan")
             }
-            if (space) this.state = 4;
-            if (q) {
-                this.state = 3;
-            }
+            if (space || click) this.state = 4;
+            if (q || rightclick) this.state = 3;
             isAttacking = true;
         }
         gameEngine.entities.forEach(entity => {
@@ -179,7 +178,7 @@ class Shepherd extends Entity {
                 this.actionTimeElapsed.action2 = 0;
             }
         }
-        if (space && !q) {
+        if ((click || space) && !(q || rightclick)) {
             if (this.actionTimeElapsed.attack >= params.shepherd.attackCooldown) {
                 //x - 40, y - 30, left; x + 10, y - 30, right; x - 10, y + 10, down; x - 10, y - 60, up.
                 const attackAnimator = makeAttackAnimator();
@@ -190,7 +189,7 @@ class Shepherd extends Entity {
                 this.actionTimeElapsed.attack = 0;
             }
         }
-        if (!space && q) {
+        if (!(space || click) && (q || rightclick)) {
             if (this.actionTimeElapsed.attack >= params.shepherd.attackCooldown) {
                 //x - 40, y - 30, left; x + 10, y - 30, right; x - 10, y + 10, down; x - 10, y - 60, up.
                 if (this.facing == 0) gameEngine.addEntity(new Attack(this.x - 10, this.y - 60, this.jabDamage, 3, new Vector(0, -100)));
@@ -289,7 +288,7 @@ class Coin extends Entity {
     }
     taken() {
         if (!this.removeFromWorld) {
-            inventory.addGold(this.value);
+            inventory.gold += this.value;
             this.removeFromWorld = true;
         }
     }
@@ -307,7 +306,7 @@ class Log extends Obstacle {
     }
     taken() {
         if (!this.removeFromWorld) {
-            inventory.addWood(10);
+            inventory.wood += 10;
             this.removeFromWorld = true;
         }
     }

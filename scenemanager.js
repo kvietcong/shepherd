@@ -47,9 +47,8 @@ class SceneManager {
         entities.push(shepherd);
 
         const startingArea = new SpawnPoint(1200, 650, 900, 750);
-        startingArea.spawnEntity(Sheep, 10, gameEngine);
-        
-        /*
+        startingArea.spawnEntity(Sheep, 20, gameEngine);
+
         const wolfPacks = [
             [new SpawnPoint(1830, 1830, 330, 200), 2], // rocks by first path
             [new SpawnPoint(2650, 2230, 500, 300), 4], // bridge over water
@@ -60,7 +59,6 @@ class SceneManager {
             const [spawnPoint, amount] = info;
             spawnPoint.spawnEntity(Wolf, amount, gameEngine);
         });
-        */
         const mainEnvironment = setupEnvironment(entities);
         gameEngine.addEntity(sceneManager);
 
@@ -99,7 +97,8 @@ class SceneManager {
             , 550, 25, 50, 50);
         const woodText = new WoodText(600, 65, 85, 40);
         const sheepIcon = new Icon(assetManager.getAsset("./resources/just1Sheep.png"), 700, 18, 60, 60);
-        const sheepText = new SheepText(760, 65, 85, 40);
+        const sheepText = new SheepText(760, 65, 100, 40);
+        const sheepLeftText = new Text(10, 500, 400, 40, () => `${Sheep.count} Sheep Left`);
         entities.push(fenceIcon);
         entities.push(fireIcon);
         //entities.push(treeIcon);
@@ -109,6 +108,7 @@ class SceneManager {
         entities.push(woodText);
         entities.push(sheepIcon);
         entities.push(sheepText);
+        entities.push(sheepLeftText)
 
         const miniMap = new MiniMap(mainEnvironment, camera);
         entities.push(miniMap);
@@ -194,6 +194,11 @@ class SpawnPoint {
         this.h = h;
     }
 
+    /**
+     * @param {Class} entity Class of entity to spawn
+     * @param {Number} amount Number of objects of the given class to spawn
+     * @param {Object} gameEngine Game engine to use
+     */
     spawnEntity(entity, amount, gameEngine) {
         if (!(entity.prototype instanceof Entity)) return;
 

@@ -1,5 +1,5 @@
 const setupEnvironment = entities => {
-	//current availble map types: "Test"-original map, "Forest"-finished, "levelTwo" - under construction 
+	//current availble map types: "Test"-original map, "Forest"-finished, "levelTwo" - under construction
 	//create Map object with the specified level
 	let importedMap = new Map("levelOne");
 
@@ -663,12 +663,12 @@ const setupEnvironment = entities => {
 	}
 
 
-	
+
 	/*
 	let importedMap = new Map("Forest");
 	const mainEnvironment = new Environment(xTile, yTile, tileData, -1, importedMap);
 	*/
-	
+
 	//const mainEnvironment = new Environment(xTile, yTile, tileData, -1, importedMap);
 	entities.push(mainEnvironment);
 

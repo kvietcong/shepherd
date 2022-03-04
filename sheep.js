@@ -1,62 +1,57 @@
 params.sheep = {};
-const testPrinter = newValue => console.log(`Inserted ${newValue}`);
-const separationFactorCallback = newValue => {
-    const separationContainer = document.getElementById("separation");
-    separationContainer.textContent = newValue;
-};
-const cohesionFactorCallback = newValue => {
-    const cohesionContainer = document.getElementById("cohesion");
-    cohesionContainer.textContent = newValue;
-};
-const alignmentFactorCallback = newValue => {
-    const alignmentContainer = document.getElementById("alignment");
-    alignmentContainer.textContent = newValue;
-};
-const shepherdFactorCallback = newValue => {
-    const shepherdContainer = document.getElementById("shepherd");
-    shepherdContainer.textContent = newValue;
-};
-const wolfFactorCallback = newValue => {
-    const wolfContainer = document.getElementById("wolf");
-    wolfContainer.textContent = newValue;
-};
-const maxSpeedCallback = newValue => {
-    const maxSpeedContainer = document.getElementById("max-speed");
-    maxSpeedContainer.textContent = newValue;
-};
 
 attachPropertiesWithCallbacks(params.sheep, [
-    [ "separationFactor", 40, separationFactorCallback ],
-    [ "cohesionFactor", 10, cohesionFactorCallback ],
-    [ "alignmentFactor", 300, alignmentFactorCallback ],
-    [ "shepherdFactor", 25, shepherdFactorCallback ],
-    [ "wolfFactor", 100, wolfFactorCallback ],
+    [ "separationFactor", 40 ],
+    [ "cohesionFactor", 10 ],
+    [ "alignmentFactor", 300 ],
+    [ "shepherdFactor", 25 ],
+    [ "wolfFactor", 100 ],
     [ "walkSpeed", 100 ],
-    [ "maxSpeed", 200, maxSpeedCallback ],
+    [ "maxSpeed", 200 ],
+    [ "modifications", {} ]
+]);
+
+const changeLevelCallback = (level, id) => {
+    const element = document.getElementById(id);
+    if (element) element.innerText = level;
+};
+attachPropertiesWithCallbacks(params.sheep.modifications, [
+    [ "maxSpeed", 0, changeLevelCallback ],
+    [ "separationFactor", 0, changeLevelCallback ],
+    [ "cohesionFactor", 0, changeLevelCallback ],
+    [ "alignmentFactor", 0, changeLevelCallback ],
+    [ "wolfFactor", 0, changeLevelCallback ],
+    [ "shepherdFactor", 0, changeLevelCallback ],
 ]);
 
 const makeSheepAnimator = () => {
-    const size = 64;
+    const size = 128;
     const sheepAnimations = {
         staticE: {frameAmount: 1, startX: 0, startY: 0},
         staticW: {frameAmount: 1, startX: 0, startY: size},
-        staticN: {frameAmount: 1, startX: 0, startY: 2 * size},
-        staticS: {frameAmount: 1, startX: 0, startY: 3 * size},
+        staticNE: {frameAmount: 1, startX: 0, startY: 2 * size},
+        staticNW: {frameAmount: 1, startX: 0, startY: 3 * size},
+        staticSE: {frameAmount: 1, startX: 0, startY: 4 * size},
+        staticSW: {frameAmount: 1, startX: 0, startY: 5 * size},
+        staticN: {frameAmount: 1, startX: 0, startY: 6 * size},
+        staticS: {frameAmount: 1, startX: 0, startY: 7 * size},
 
         walkE: {frameAmount: 7, startX: 0, startY: 0},
         walkW: {frameAmount: 7, startX: 0, startY: size},
-        walkN: {frameAmount: 7, startX: 0, startY: 2 * size},
-        walkS: {frameAmount: 7, startX: 0, startY: 3 * size},
 
-        walkNW: {frameAmount: 7, startX: 0, startY: 2 * size},
         walkNE: {frameAmount: 7, startX: 0, startY: 2 * size},
-        walkSW: {frameAmount: 7, startX: 0, startY: 3 * size},
-        walkSE: {frameAmount: 7, startX: 0, startY: 3 * size}
+        walkNW: {frameAmount: 7, startX: 0, startY: 3 * size},
+
+        walkSE: {frameAmount: 7, startX: 0, startY: 4 * size},
+        walkSW: {frameAmount: 7, startX: 0, startY: 5 * size},
+
+        walkN: {frameAmount: 7, startX: 0, startY: 6 * size},
+        walkS: {frameAmount: 7, startX: 0, startY: 7 * size}
     };
 
     const sheep = assetManager.getAsset("./resources/sheep.png");
     return new Animator(
-        sheep, "walkS", sheepAnimations, size, size, 1/15
+        sheep, "walkSE", sheepAnimations, size, size, 1/15, scale=0.5
     );
 };
 
@@ -95,7 +90,17 @@ class Sheep extends Entity {
         if (this.healthAPI.health <= 0) {
             this.dead = true;
             Sheep.count--;
-            this.animator.setAnimation("staticE");
+            const staticFrames = {
+                "walkE": "staticE",
+                "walkW": "staticW",
+                "walkN": "staticN",
+                "walkS": "staticS",
+                "walkNE": "staticNE",
+                "walkNW": "staticNW",
+                "walkSE": "staticSE",
+                "walkSW": "staticSW"
+            }
+            this.animator.setAnimation(staticFrames[this.animator.currentAnimationKey]);
         }
     }
 
@@ -184,8 +189,7 @@ class Sheep extends Entity {
                 if (entity instanceof Barn) {
                     this.removeFromWorld = true;
                     Barn.sheepCount++;
-                    inventory.addGold(params.inventory.sheepReward);
-                    console.log("gold: " + inventory.gold);
+                    inventory.gold += params.inventory.sheepReward;
                 } else if (entity instanceof Obstacle && entity.isCollidable) {
                     if (this.y - 10 > entity.y - this.height && this.y + 10 < entity.y + entity.height) {
                         if (this.x < entity.x) this.x = entity.x - this.width;
@@ -217,35 +221,37 @@ class Sheep extends Entity {
         } = params.sheep;
 
         //const speed = this.maxSpeed * distToShep / 100
-        const speed = (distToShep.magnitude < this.detectionRadius * 5) ? params.sheep.maxSpeed : params.sheep.walkSpeed;
+        const speed = (distToShep.magnitude < this.detectionRadius * 5)
+            ? (params.sheep.maxSpeed + params.sheep.modifications.maxSpeed * 5)
+            : params.sheep.walkSpeed;
 
         // Separation
         this.velocity.lerpToInPlace(
-            separation.scale(speed * separationFactor),
+            separation.scale(speed * (separationFactor + params.sheep.modifications.separationFactor * 10)),
             1 * gameEngine.deltaTime
         );
 
         // Cohesion
         this.velocity.lerpToInPlace(
-            cohesion.scale(speed * cohesionFactor),
+            cohesion.scale(speed * (cohesionFactor + params.sheep.modifications.cohesionFactor * 10)),
             1 * gameEngine.deltaTime
         );
 
         // Alignment
         this.velocity.lerpToInPlace(
-            alignment.scale(speed * alignmentFactor),
+            alignment.scale(speed * (alignmentFactor + params.sheep.modifications.alignmentFactor * 10)),
             1 * gameEngine.deltaTime
         );
 
         // Align to shepherd
         this.velocity.lerpToInPlace(
-            shepAlignment.scale(speed * shepherdFactor),
+            shepAlignment.scale(speed * (shepherdFactor + params.sheep.modifications.shepherdFactor * 10)),
             1 * gameEngine.deltaTime
         );
 
         // Repel from Wolf
         this.velocity.lerpToInPlace(
-            wolfRepel.scale(speed * wolfFactor),
+            wolfRepel.scale(speed * (wolfFactor + params.sheep.modifications.wolfFactor * 10)),
             1 * gameEngine.deltaTime
         );
 

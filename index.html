@@ -155,8 +155,8 @@
                         <p>
                             There is also a free-cam system.
                             Arrow Keys to move camera freely.
-                            Ctrl+⬆️/⬇️ or Scroll to zoom Camera.
-                            Shift+⬆️/⬇️ or Shift+Scroll to zoom MiniMap.
+                            Ctrl+🔼/🔽 or Scroll to zoom Camera.
+                            Shift+🔼/🔽 or Shift+Scroll to zoom MiniMap.
                         </p>
                     </details>
                 </div>
@@ -178,17 +178,24 @@
                             <h2>The Shop</h2>
                         </summary>
                         <p>Your Gold: 🪙 <span id="gold-amount">?</span></p>
-                        <p>It costs 10 gold for each change to these parameters</p>
+                        <p>It costs 10 gold for a modification point</p>
+                        <p>
+                            Your Modification Points: 🌟
+                            <span id="modificationPoints-amount">?</span>
+                            <button
+                                onClick="buyMods()"
+                            >🔼</button>
+                        </p>
                         <div>
                             <details>
                                 <summary>
                                     <p>Flock Separation: </p>
-                                    <p id="separation">10</p>
+                                    <p id="separationFactor">?</p>
                                     <button
-                                        onClick="changeSheepFactor('separationFactor', -10)"
-                                    >⬇️</button>
-                                    <button onClick="changeSheepFactor('separationFactor', +10)"
-                                    >⬆️</button>
+                                        onClick="modifySheepFactor('separationFactor', -1)"
+                                    >🔽</button>
+                                    <button onClick="modifySheepFactor('separationFactor', +1)"
+                                    >🔼</button>
                                 </summary>
                                 Determine how separated your flock is. Do you want your
                                 flock to be separated to prevent easy pickings? Or would
@@ -198,18 +205,16 @@
                         <div>
                             <details>
                                 <summary>
-                                    <p>Flocking Ability: (</p>
-                                    <p id="cohesion">10</p>
-                                    <p id="alignment">10</p>
-                                    <p>)</p>
-                                    <button onClick="changeSheepFactors([
-                                        ['cohesionFactor', -10],
-                                        ['alignmentFactor', -10],
-                                    ])">⬇️</button>
-                                    <button onClick="changeSheepFactors([
-                                        ['cohesionFactor', 10],
-                                        ['alignmentFactor', 10],
-                                    ])">⬆️</button>
+                                    <p>Flocking Ability:</p>
+                                    <p id="cohesionFactor">?</p>
+                                    <button onClick="modifySheepFactors([
+                                        ['cohesionFactor', -1],
+                                        ['alignmentFactor', -1],
+                                    ])">🔽</button>
+                                    <button onClick="modifySheepFactors([
+                                        ['cohesionFactor', +1],
+                                        ['alignmentFactor', +1],
+                                    ])">🔼</button>
                                 </summary>
                                 There are two factors that impact the flock's ability to be together.
                                 Cohesion and Alignment respectively.
@@ -225,12 +230,12 @@
                             <details>
                                 <summary>
                                     <p>Shepherd Skill: </p>
-                                    <p id="shepherd">10</p>
+                                    <p id="shepherdFactor">?</p>
                                     <button
-                                        onClick="changeSheepFactor('shepherdFactor', -10)"
-                                    >⬇️</button>
-                                    <button onClick="changeSheepFactor('shepherdFactor', +10)"
-                                    >⬆️</button>
+                                        onClick="modifySheepFactor('shepherdFactor', -1)"
+                                    >🔽</button>
+                                    <button onClick="modifySheepFactor('shepherdFactor', +1)"
+                                    >🔼</button>
                                 </summary>
                                 Determine how attached the sheep are to the shepherd.
                                 The higher the shepherd skill, the more attached the sheep are.
@@ -242,12 +247,12 @@
                             <details>
                                 <summary>
                                     <p>Wolf Fear: </p>
-                                    <p id="wolf">10</p>
+                                    <p id="wolfFactor">?</p>
                                     <button
-                                        onClick="changeSheepFactor('wolf', -10)"
-                                    >⬇️</button>
-                                    <button onClick="changeSheepFactor('wolf', +10)"
-                                    >⬆️</button>
+                                        onClick="modifySheepFactor('wolfFactor', -1)"
+                                    >🔽</button>
+                                    <button onClick="modifySheepFactor('wolfFactor', +1)"
+                                    >🔼</button>
                                 </summary>
                                 Determine how scared your sheep are of wolves.
                                 Do you want your flock to avoid danger at all costs
@@ -258,14 +263,14 @@
                             <details>
                                 <summary>
                                     <p>Sheep Speed: </p>
-                                    <p id="max-speed">10</p>
+                                    <p id="maxSpeed">?</p>
                                     <button
-                                        onClick="changeSheepFactor('maxSpeed', -5)"
-                                    >⬇️</button>
-                                    <button onClick="changeSheepFactor('maxSpeed', +5)"
-                                    >⬆️</button>
+                                        onClick="modifySheepFactor('maxSpeed', -1)"
+                                    >🔽</button>
+                                    <button onClick="modifySheepFactor('maxSpeed', +1)"
+                                    >🔼</button>
                                 </summary>
-                                Want some fast sheep? (Broken Stat 🤣)
+                                Want some fast sheep?
                             </details>
                         </div>
                     </details>
