@@ -5,7 +5,7 @@ const setupEnvironment = entities => {
 
 	let mainEnvironment;
 
-	if(importedMap.mapType == "Alpha" || importedMap.mapType == "preAlpha"){
+	if(importedMap.mapType == "alpha" || importedMap.mapType == "preAlpha"){
 		//starting area collision boxes
 		//west
 		//starting area collision boxes
