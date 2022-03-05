@@ -1,8 +1,8 @@
 params.inventory = {
     wolfReward: 20,
     sheepReward: 10,
-    sheepCost: 50,
-    fireCost: 10,
+    sheepCost: 10,
+    fireCost: 20,
     fireUpgradeCost: 50,
     fenceCost: 5,
     fenceUpgradeCost: 50
