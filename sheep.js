@@ -4,7 +4,7 @@ attachPropertiesWithCallbacks(params.sheep, [
     [ "separationFactor", 40 ],
     [ "cohesionFactor", 10 ],
     [ "alignmentFactor", 300 ],
-    [ "shepherdFactor", 25 ],
+    [ "shepherdFactor", 30 ],
     [ "wolfFactor", 100 ],
     [ "walkSpeed", 100 ],
     [ "maxSpeed", 200 ],
