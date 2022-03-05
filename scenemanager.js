@@ -5,6 +5,7 @@ class SceneManager {
         this.currentScene = "";
         this.width = 1210;
         this.height = 681;
+        this.runs = 0;
     }
 
     resetGameEngine(gameEngine) {
@@ -33,7 +34,7 @@ class SceneManager {
             this.loadLevelOne(gameEngine);
         };
 
-        const instructions = new ScaledRelativeButton(0.5, 0.6, 0.2, 0.1, "Instructions", 0.1);
+        const instructions = new ScaledRelativeButton(0.5, 0.6, 0.2, 0.1, "Instructions", 0.05);
         gameEngine.addEntity(instructions);
         instructions.onClick = () => {
             const instructionsElement = document.getElementById("instructions");
@@ -41,7 +42,7 @@ class SceneManager {
             instructionsElement.scrollIntoView({ behavior: "smooth" });
         };
 
-        const settings = new ScaledRelativeButton(0.5, 0.73, 0.15, 0.1, "Settings", 0.125);
+        const settings = new ScaledRelativeButton(0.5, 0.73, 0.2, 0.1, "Settings", 0.2);
         gameEngine.addEntity(settings);
         settings.onClick = () => {
             const settingsElement = document.getElementById("settings");
@@ -49,7 +50,7 @@ class SceneManager {
             settingsElement.scrollIntoView({ behavior: "smooth" });
         };
 
-        const credits = new ScaledRelativeButton(0.5, 0.85, 0.12, 0.08, "Credits", 0.15);
+        const credits = new ScaledRelativeButton(0.5, 0.85, 0.2, 0.1, "Credits", 0.225);
         gameEngine.addEntity(credits);
         credits.onClick = () => {
             const creditsElement = document.getElementById("credits");
@@ -61,6 +62,7 @@ class SceneManager {
     }
 
     loadLevelAlpha(gameEngine) {
+        this.runs++;
         const shopContainer = document.getElementById("shop");
         shopContainer.classList.remove("disabled");
 
@@ -150,6 +152,7 @@ class SceneManager {
 
 
     loadLevelOne(gameEngine) {
+        this.runs++;
         const shopContainer = document.getElementById("shop");
         shopContainer.classList.remove("disabled");
 
@@ -210,14 +213,15 @@ class SceneManager {
         const goldIcon = new Icon(assetManager.getAsset("./resources/coin_01.png")
             , 400, 25, 50, 50);
         const goldText = new GoldText(
-            450, 65, 85, 40);
+            450, 50, 85, 40);
         const woodIcon = new Icon(assetManager.getAsset("./resources/logs.png")
             , 550, 25, 50, 50);
-        const woodText = new WoodText(600, 65, 85, 40);
+        const woodText = new WoodText(600, 50, 85, 40);
         const sheepIcon = new Icon(assetManager.getAsset("./resources/just1Sheep.png"), 700, 18, 60, 60);
-        const sheepText = new SheepText(760, 65, 100, 40);
+        const sheepText = new SheepText(760, 50, 100, 40);
         const sheepLeftText = new ScaledRelativeText(
             [0.0, 10], [1.0, -10], 0.2, () => `${Sheep.count} Sheep Left`);
+
         entities.push(fenceIcon);
         entities.push(fireIcon);
         //entities.push(treeIcon);
@@ -254,9 +258,11 @@ class SceneManager {
         const playAgainButton = new ScaledRelativeButton(0.5, 0.7, 0.25, 0.2, "Go Again", 0.1);
         gameEngine.addEntity(playAgainButton);
         playAgainButton.onClick = () => {
-            this.currentScene = "level1";
+            this.currentScene = (this.runs % 2) ? "level1" : "alpha";
+            console.log(this.runs)
             this.resetGameEngine(gameEngine);
-            this.loadLevelOne(gameEngine);
+            if (this.currentScene === "level1") this.loadLevelAlpha(gameEngine);
+            else this.loadLevelOne(gameEngine);
             Barn.sheepRequired = min(Barn.sheepRequired + 1, 20);
         };
         playAgainButton.z = 10;
@@ -291,6 +297,7 @@ class SceneManager {
         switch(this.currentScene) {
             case "title":
                 break;
+            case "alpha":
             case "level1":
                 if (gameOver()) {
                     this.currentScene = "gameOver";

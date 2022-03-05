@@ -3,7 +3,7 @@ const assetManager = new AssetManager();
 
 const resizeCanvas = canvas => {
 	const main = document.getElementsByTagName("main")[0];
-	canvas.width = round(main.clientWidth * 0.65);
+	canvas.width = round(main.clientWidth * 0.7);
 	canvas.height = round(canvas.width / (16 / 9));
 	return canvas;
 };
