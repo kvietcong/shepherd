@@ -6,6 +6,24 @@ const setupEnvironment = (entities, currMap) => {
 	let mainEnvironment;
 
 	if(importedMap.mapType == "alpha" || importedMap.mapType == "preAlpha"){
+        const shepherd = new Shepherd(1200, 1200);
+        params.debugEntities.shepherd = shepherd;
+        entities.push(shepherd);
+
+        const startingArea = new SpawnPoint(1200, 650, 900, 750);
+        startingArea.addToList(entities, Sheep, 20);
+
+        const wolfPacks = [
+            [new SpawnPoint(1830, 1830, 330, 200), 2], // rocks by first path
+            [new SpawnPoint(2650, 2230, 500, 300), 4], // bridge over water
+            [new SpawnPoint(3850, 950, 650, 1650), 6], // big open area after bridge
+            [new SpawnPoint(5350, 1960, 650, 250), 3]  // small area by barn
+        ];
+        wolfPacks.forEach((info) => {
+            const [spawnPoint, amount] = info;
+            spawnPoint.spawnEntity(entities, Wolf, amount);
+        });
+
 		//starting area collision boxes
 		//west
 		//starting area collision boxes
@@ -258,6 +276,25 @@ const setupEnvironment = (entities, currMap) => {
 	}
 
 	if(importedMap.mapType == "levelOne"){
+        const shepherd = new Shepherd(1000, 2200);
+        params.debugEntities.shepherd = shepherd;
+        entities.push(shepherd);
+
+        const startingArea = new SpawnPoint(900, 2100, 200, 200);
+        startingArea.addToList(entities, Sheep, 15);
+
+        const wolfPacks = [
+            [new SpawnPoint(2600, 1500, 330, 300), 3], // rocks by first path
+            [new SpawnPoint(5650, 1500, 300, 300), 2], // bridge over water
+            [new SpawnPoint(4650, 800, 450, 450), 2], // big open area after bridge
+            [new SpawnPoint(2600, 800, 450, 350), 3]  // small area by barn
+        ];
+
+        wolfPacks.forEach((info) => {
+            const [spawnPoint, amount] = info;
+            spawnPoint.spawnEntity(Wolf, amount, gameEngine);
+        });
+
 
 		//COLLISION BOXES
 		//STARTING AREA
