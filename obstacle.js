@@ -116,8 +116,8 @@ const makeCampfireAnimator = () => {
 
 class Fire extends Obstacle {
 
-    constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH) {
-        super(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH);
+    constructor(x, y) {
+        super(Math.floor(x/50)*50, Math.floor(y/50)*50, "./resources/campfire_2.png", 0, 0, 33, 38, 2, 50, 30, true);
         this.setAnimator(makeCampfireAnimator());
         this.animator.setIsLooping();
         this.animator.play();
@@ -126,5 +126,31 @@ class Fire extends Obstacle {
     update(gameEngine){
         super.update(gameEngine);
         this.animator.update(gameEngine);
+    }
+}
+
+class Fence extends Obstacle {
+    constructor(x, y, facing) {
+        if (facing == 0) 
+            super(Math.floor((x-25)/55)*55, Math.floor((y-60)/55)*55, 
+                "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true);
+        if (facing == 1)
+            super(Math.floor((x-40)/55)*55, Math.floor((y - 30)/55)*55, 
+                "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true);
+        if (facing == 2) 
+            super(Math.floor((x - 25)/55)*55, Math.floor((y - 10)/55)*55, 
+                "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true);
+        if (facing == 3)
+            super(Math.floor((x + 10)/55)*55, Math.floor((y - 30)/55)*55, 
+                "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true);
+      
+    }
+    update(gameEngine) {
+        super.update(gameEngine);
+        this.healthAPI.update(gameEngine);
+        if (this.dead) {
+            this.removeFromWorld = true;
+            gameEngine.addEntity(new Log(this.x, this.y + 100));
+        }
     }
 }
