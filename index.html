@@ -7,6 +7,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
         <script type="text/javascript" src="./util.js"></script>
         <script type="text/javascript" src="./assetmanager.js"></script>
@@ -128,7 +129,7 @@
             <section id="canvas-container"></section>
             <section id="gui">
                 <div>
-                    <details>
+                    <details id="instructions">
                         <summary><h2>Instructions</h2></summary>
                         <p>
                             Try to make it to the barn with your sheep! When you make
@@ -137,7 +138,7 @@
                         </p>
                         <p>
                             WASD keys move and refocus the camera on the Shepherd.
-                            Space and Q let you attack wolves. P lets you pause the game.
+                            Space/Click and Q/Right-Click let you attack wolves. P allows you pause the game.
                         </p>
                         <p>
                             You receive gold when killing wolves and you receive wood
@@ -153,16 +154,16 @@
                             man-made obstacle.
                         </p>
                         <p>
-                            There is also a free-cam system.
-                            Arrow Keys to move camera freely.
+                            There is also a free-cam system!
+                            Arrow Keys or Alt+WASD to move camera freely.
                             Ctrl+🔼/🔽 or Scroll to zoom Camera.
-                            Shift+🔼/🔽 or Shift+Scroll to zoom MiniMap.
+                            Alt+🔼/🔽 or Alt+Scroll to zoom MiniMap.
                         </p>
                     </details>
                 </div>
                 <hr>
                 <div>
-                    <details>
+                    <details id="settings">
                         <summary><h2>Settings</h2></summary>
                         <button id="pause-play" onclick="pausePlay()">Play/Pause Game</button>
                         <div class="slider">
@@ -178,7 +179,10 @@
                             <h2>The Shop</h2>
                         </summary>
                         <p>Your Gold: 🪙 <span id="gold-amount">?</span></p>
-                        <p>It costs 10 gold for a modification point</p>
+                        <p>
+                            Modification Points allow you to change the behavior of
+                            your flock! Each Modification point costs 10 gold.
+                        </p>
                         <p>
                             Your Modification Points: 🌟
                             <span id="modificationPoints-amount">?</span>
