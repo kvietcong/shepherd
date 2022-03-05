@@ -162,17 +162,6 @@
                     </details>
                 </div>
                 <hr>
-                <div>
-                    <details id="settings">
-                        <summary><h2>Settings</h2></summary>
-                        <button id="pause-play" onclick="pausePlay()">Play/Pause Game</button>
-                        <div class="slider">
-                            <label for="volume-slider">Volume</label>
-                            <input type="range" min="0" max="1" step="0.01" value="0.1" id="volume-slider">
-                        </div>
-                    </details>
-                </div>
-                <hr>
                 <div id="shop">
                     <details>
                         <summary>
@@ -281,8 +270,13 @@
                 </div>
                 <hr>
                 <div>
-                    <details>
-                        <summary><h2>Debug Tools</h2></summary>
+                    <details id="settings">
+                        <summary><h2>Settings</h2></summary>
+                        <button id="pause-play" onclick="pausePlay()">Play/Pause Game</button>
+                        <div class="slider">
+                            <label for="volume-slider">Volume</label>
+                            <input type="range" min="0" max="1" step="0.01" value="0.1" id="volume-slider">
+                        </div>
                         <div>
                             <label for="debug">Debug Enabled</label>
                             <input type="checkbox" name="debug" id="debug">
