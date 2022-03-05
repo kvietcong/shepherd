@@ -23,7 +23,7 @@ const setupEnvironment = (entities, currMap) => {
         wolfPacks.forEach((info) => {
             const [spawnPoint, amount] = info;
 			entities.push(spawnPoint);
-            spawnPoint.spawnEntity(entities, Wolf, amount);
+            spawnPoint.addToList(entities, Wolf, amount);
         });
 
 		//starting area collision boxes
@@ -296,7 +296,7 @@ const setupEnvironment = (entities, currMap) => {
         wolfPacks.forEach((info) => {
             const [spawnPoint, amount] = info;
 			entities.push(spawnPoint);
-            spawnPoint.spawnEntity(Wolf, amount, gameEngine);
+            spawnPoint.addToList(entities, Wolf, amount);
         });
 
 

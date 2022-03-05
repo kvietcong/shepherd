@@ -5,7 +5,7 @@ class SceneManager {
         this.currentScene = "";
         this.width = 1210;
         this.height = 681;
-        this.runs = 0;
+        this.successfulRuns = 0;
     }
 
     resetGameEngine(gameEngine) {
@@ -61,7 +61,7 @@ class SceneManager {
     }
 
     loadLevel() {
-        this.currentScene = (this.runs++ % 2) ? "alpha" : "levelOne";
+        this.currentScene = ["levelOne", "alpha"][this.successfulRuns++ % 2];
 
         const shopContainer = document.getElementById("shop");
         shopContainer.classList.remove("disabled");
@@ -127,6 +127,8 @@ class SceneManager {
         playAgainButton.onClick = () => {
             this.resetGameEngine(gameEngine);
             Barn.sheepRequired = min(Barn.sheepRequired + 1, 20);
+            inventory.gold = floor(inventory.gold / 2);
+            inventory.wood = floor(inventory.wood / 2);
             this.loadLevel();
         };
         playAgainButton.z = 10;
@@ -149,6 +151,7 @@ class SceneManager {
         gameEngine.addEntity(playAgainButton);
         playAgainButton.onClick = () => {
             this.resetGameEngine(gameEngine);
+            this.successfulRuns--;
             this.loadLevel();
         };
         playAgainButton.z = 10;
