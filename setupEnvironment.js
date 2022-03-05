@@ -1,7 +1,7 @@
-const setupEnvironment = entities => {
+const setupEnvironment = (entities, currMap) => {
 	//current availble map types: "Test"-original map, "Forest"-finished, "levelTwo" - under construction
 	//create Map object with the specified level
-	let importedMap = new Map("levelOne");
+	let importedMap = new Map(currMap);
 
 	let mainEnvironment;
 
@@ -471,7 +471,7 @@ const setupEnvironment = entities => {
 
 		//ENDING/BARN AREA
 		//barn
-		//entities.push(new Barn(820, 1500, "./resources/starDewBuildings.png", 130, 0, 111, 104, 3, 10));
+		entities.push(new Barn(820, 1500, "./resources/starDewBuildings.png", 130, 0, 111, 104, 3, 10));
 		//statue
 		entities.push(new Obstacle(1700, 1690, "./resources/TX Props.png", 445, 21, 36, 74, 2, 70, 50, false));
 		entities.push(new Obstacle(1940, 1690, "./resources/TX Props.png", 445, 21, 36, 74, 2, 70, 50, false));
