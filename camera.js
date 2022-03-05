@@ -59,19 +59,21 @@ class Camera {
         const {
             w, a, s, d, q, e,
             ArrowRight: right, ArrowLeft: left, ArrowUp: up, ArrowDown: down,
-            Shift, Control, Alt,
+            Shift, Control, Alt, click, rightclick
         } = gameEngine.keys;
         const space = gameEngine.keys[" "];
 
-        if ((right || left || up || down) && !Control && !Shift) {
-            this.unfollow();
-            if (right) this.targetX += 8;
-            if (left) this.targetX -= 8;
-            if (up) this.targetY -= 8;
-            if (down) this.targetY += 8;
-        }
+        if (w || a || s || d || space || click || rightclick) this.follow(this.following);
 
-        if (w || a || s || d || space) this.follow(this.following);
+        if (((right || left || up || down) && !Control && !Shift && !Alt)
+            || ((w || a || s || d) && Alt)
+        ) {
+            this.unfollow();
+            if (right || d) this.targetX += 8;
+            if (left || a) this.targetX -= 8;
+            if (up || w) this.targetY -= 8;
+            if (down || s) this.targetY += 8;
+        }
 
         if (this.isFollowing && this.follow) {
             this.targetX = this.following.xCenter;
@@ -92,7 +94,7 @@ class Camera {
             if (down) this.zoom -= 0.01;
         }
 
-        if (gameEngine.wheel && !Shift) {
+        if (gameEngine.wheel && !Alt) {
             if (gameEngine.wheel.deltaY < 0) {
                 this.zoom += 0.05;
             } else if (gameEngine.wheel.deltaY > 0) {

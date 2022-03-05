@@ -90,43 +90,43 @@ class Shepherd extends Entity {
         const {
             w, a, s, d, W, A, S, D, q, e,
             ArrowRight: right, ArrowLeft: left, ArrowUp: up, ArrowDown: down,
-            Shift, Control, Z
+            Shift, Control, Z, Alt,
+            click, rightclick
         } = gameEngine.keys;
         const space = gameEngine.keys[" "];
         const one = gameEngine.keys["1"];
         const two = gameEngine.keys["2"];
-        const three = gameEngine.keys["3"];
-        if (w) {
-            this.velocity.y -= 1;
-            this.state = 1;
-            this.facing = 0;
-        }
-        if (a) {
-            this.velocity.x -= 1;
-            this.state = 1;
-            this.facing = 1;
-        }
-        if (s) {
-            this.velocity.y += 1;
-            this.state = 1;
-            this.facing = 2;
-        }
-        if (d) {
-            this.velocity.x += 1;
-            this.state = 1;
-            this.facing = 3;
+        if (!Alt) {
+            if (w) {
+                this.velocity.y -= 1;
+                this.state = 1;
+                this.facing = 0;
+            }
+            if (a) {
+                this.velocity.x -= 1;
+                this.state = 1;
+                this.facing = 1;
+            }
+            if (s) {
+                this.velocity.y += 1;
+                this.state = 1;
+                this.facing = 2;
+            }
+            if (d) {
+                this.velocity.x += 1;
+                this.state = 1;
+                this.facing = 3;
+            }
         }
 
         let isAttacking = false;
-        if (space || one || q) {
+        if (space || one || q || click || rightclick) {
             if (one) {
                 this.state = 2;
                 this.animator.tint("cyan")
             }
-            if (space) this.state = 4;
-            if (q) {
-                this.state = 3;
-            }
+            if (space || click) this.state = 4;
+            if (q || rightclick) this.state = 3;
             isAttacking = true;
         }
         gameEngine.entities.forEach(entity => {
@@ -134,10 +134,11 @@ class Shepherd extends Entity {
             if (this.collidesWith(entity)) {
                 if (entity.isCollidable) {
                     if (entity instanceof Sheep) return;
-                    if (this.y - 15 > entity.y - this.height && this.y + 15 < entity.y + entity.height) {
+                    const collisionTolerance = 10;
+                    if (this.y - collisionTolerance > entity.y - this.height && this.y + collisionTolerance < entity.y + entity.height) {
                         if (this.x < entity.x) this.x = entity.x - this.width;
                         if (this.x > entity.x) this.x = entity.x + entity.width;
-                    } if (this.x - 15 > entity.x - this.width && this.x + 15 < entity.x + entity.width) {
+                    } if (this.x - collisionTolerance > entity.x - this.width && this.x + collisionTolerance < entity.x + entity.width) {
                         if (this.y < entity.y) this.y = entity.y - this.height;
                         if (this.y > entity.y) this.y = entity.y + entity.height;
                     }
@@ -148,6 +149,10 @@ class Shepherd extends Entity {
                 // } else
                 if (entity instanceof Coin || entity instanceof Log) {
                     entity.taken();
+                }
+                if (entity instanceof Chest) {
+                    inventory.gold += 100;
+                    entity.removeFromWorld = true;
                 }
             }
         });
@@ -207,7 +212,7 @@ class Shepherd extends Entity {
                 }
             }
         }
-        if (space && !q) {
+        if ((click || space) && !(q || rightclick)) {
             if (this.actionTimeElapsed.attack >= params.shepherd.attackCooldown) {
                 //x - 40, y - 30, left; x + 10, y - 30, right; x - 10, y + 10, down; x - 10, y - 60, up.
                 const attackAnimator = makeAttackAnimator();
@@ -218,7 +223,7 @@ class Shepherd extends Entity {
                 this.actionTimeElapsed.attack = 0;
             }
         }
-        if (!space && q) {
+        if (!(space || click) && (q || rightclick)) {
             if (this.actionTimeElapsed.attack >= params.shepherd.attackCooldown) {
                 //x - 40, y - 30, left; x + 10, y - 30, right; x - 10, y + 10, down; x - 10, y - 60, up.
                 if (this.facing == 0) gameEngine.addEntity(new Attack(this.x - 10, this.y - 60, this.jabDamage, 3, new Vector(0, -100)));
@@ -317,7 +322,7 @@ class Coin extends Entity {
     }
     taken() {
         if (!this.removeFromWorld) {
-            inventory.addGold(this.value);
+            inventory.gold += this.value;
             this.removeFromWorld = true;
         }
     }
@@ -335,7 +340,7 @@ class Log extends Obstacle {
     }
     taken() {
         if (!this.removeFromWorld) {
-            inventory.addWood(10);
+            inventory.wood += 10;
             this.removeFromWorld = true;
         }
     }

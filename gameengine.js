@@ -24,7 +24,7 @@ class GameEngine {
         // Options and the Details
         this.options = options || {
             prevent: {
-                contextMenu: false,
+                contextMenu: true,
                 scrolling: true,
             },
         };
@@ -89,6 +89,7 @@ class GameEngine {
         });
 
         this.ctx.canvas.addEventListener("keydown",  event => {
+            event.preventDefault();
             const { key } = event;
             if (params.isDebugging) console.log(event);
 
@@ -127,6 +128,17 @@ class GameEngine {
                 this.keys[key.toLowerCase()] = false;
                 this.keys[key.toUpperCase()] = false;
             }
+        });
+
+        this.ctx.canvas.addEventListener("mousedown", event => {
+            const { button } = event;
+            const key = button === 0 ? "click" : button === 1 ? "middle" : "rightclick";
+            this.keys[key] = true;
+         });
+        this.ctx.canvas.addEventListener("mouseup", event => {
+            const { button } = event;
+            const key = button === 0 ? "click" : button === 1 ? "middle" : "rightclick";
+            this.keys[key] = false;
         });
 
         this.ctx.canvas.addEventListener("focusout", _ => this.keys = {})
@@ -172,6 +184,7 @@ class GameEngine {
         // Draw latest things first
         for (let i = this.entities.length - 1; i >= 0; i--) {
             const entity = this.entities[i];
+            if (entity.noDraw) continue;
             this.drawEffects(entity, () => entity.draw(this.ctx, this));
         }
 
@@ -194,6 +207,9 @@ class GameEngine {
     update() {
         if (this.isPaused) return;
 
+        // Remove dead things
+        this.entities = this.entities.filter(entity => !entity.removeFromWorld);
+
         // Update Entities
         this.entities.forEach(entity => {
             entity.update(this);
@@ -214,18 +230,9 @@ class GameEngine {
         };
         this.entities.sort(comparator);
 
-        // Remove dead things
-        // const lengthBeforeRemovingDead = this.entities.length;
-        this.entities = this.entities.filter(entity => !entity.removeFromWorld);
-        // if (lengthBeforeRemovingDead !== this.entities.length)
-        //     insertionSort(this.entities, (a, b) => a.z - b.z);
-
         // Add new things
-        // const lengthBeforeAddingEntities = this.entities.length;
         this.entities = this.entities.concat(this.entitiesToAdd);
         this.entitiesToAdd = [];
-        // if (lengthBeforeAddingEntities !== this.entities.length)
-        //     insertionSort(this.entities, (a, b) => a.z - b.z);
 
         // Reset the inputs
         this.rightclick = null;

@@ -42,12 +42,12 @@ class Icon extends GUIElement {
             ctx.drawImage(this.source, scaleX*this.x, scaleY*this.y, scaleX*this.width, scaleY*this.height);
         }
         if (this.text) {
-            ctx.fillStyle = 'white';
-            ctx.font = scaleX*20 + "px impact";
-            ctx.strokeText(this.text, scaleX*this.x + scaleX*.4*this.width,
-                scaleY*(this.y + .8*this.height), scaleX*this.width);
-            ctx.fillText(this.text, scaleX*(this.x + .4*this.width),
-                scaleY*(this.y + .8*this.height), scaleX*this.width);
+            ctx.fillStyle = "white";
+            ctx.font = "bold " + scaleX*30 + "px VT323";
+            ctx.strokeStyle = "black";
+            const textWidth = ctx.measureText(this.text).width;
+            ctx.fillText(this.text, scaleX*(this.x + .5*this.width) - textWidth / 2,
+                scaleY*(this.y + 20), scaleX*this.width);
         }
     }
 }
@@ -61,7 +61,8 @@ class GoldText extends GUIElement {
         let scaleX = ctx.canvas.width/1210;
         let scaleY = ctx.canvas.height/510;
         ctx.fillStyle = 'gold';
-        ctx.font = scaleX*this.size + 'px impact';
+        ctx.strokeStyle = "black";
+        ctx.font = "bold " + scaleX*this.size + 'px VT323';
         ctx.strokeText(inventory.gold, scaleX*this.x, scaleY*this.y, scaleX*this.width);
         ctx.fillText(inventory.gold, scaleX*this.x, scaleY*this.y, scaleX*this.width);
     }
@@ -76,7 +77,8 @@ class WoodText extends GUIElement {
         let scaleX = ctx.canvas.width/1210;
         let scaleY = ctx.canvas.height/510;
         ctx.fillStyle = 'gold';
-        ctx.font = scaleX*this.size + 'px impact';
+        ctx.strokeStyle = "black";
+        ctx.font = "bold " + scaleX*this.size + 'px VT323';
         ctx.strokeText(inventory.wood, scaleX*this.x, scaleY*this.y, scaleX*this.width);
         ctx.fillText(inventory.wood, scaleX*this.x, scaleY*this.y, scaleX*this.width);
     }
@@ -92,9 +94,138 @@ class SheepText extends GUIElement {
         let scaleX = ctx.canvas.width/1210;
         let scaleY = ctx.canvas.height/510;
         ctx.fillStyle = 'gold';
-        ctx.font = scaleX*this.size + 'px impact';
-        ctx.strokeText(Barn.sheepRequired - Barn.sheepCount, scaleX*this.x, scaleY*this.y, scaleX*this.width);
-        ctx.fillText(Barn.sheepRequired - Barn.sheepCount, scaleX*this.x, scaleY*this.y, scaleX*this.width);
+        ctx.strokeStyle = "black";
+        ctx.font = "bold " + scaleX*this.size + 'px VT323';
+        const text = `${Barn.sheepCount}/${Barn.sheepRequired}`;
+        ctx.strokeText(text, scaleX*this.x, scaleY*this.y, scaleX*this.width);
+        ctx.fillText(text, scaleX*this.x, scaleY*this.y, scaleX*this.width);
+    }
+}
+
+class ScaledRelativeText extends GUIElement {
+    constructor(xInfo, yInfo, width, text, color = "gold", font = "VT323") {
+        super(NaN, NaN);
+        this.xInfo = xInfo; this.yInfo = yInfo;
+        this.width = width;
+        this.text = text;
+        this.font = font;
+        this.color = color;
+    }
+
+    draw(ctx, gameEngine) {
+        const { width, height } = gameEngine;
+        const maxTextWidth = width * this.width;
+
+        ctx.save();
+        {
+            ctx.fillStyle = this.color;
+            ctx.font = `bold 1px ${this.font}`;
+            const text = this.text instanceof Function
+                ? this.text(gameEngine)
+                : this.text;
+            const textWidth = ctx.measureText(text).width;
+            ctx.font = `bold ${maxTextWidth / textWidth}px ${this.font}`;
+            const x = (this.xInfo instanceof Array)
+                ? width * this.xInfo[0] + this.xInfo[1]
+                : width * this.xInfo;
+            const y = (this.yInfo instanceof Array)
+                ? height * this.yInfo[0] + this.yInfo[1]
+                : height * this.yInfo;
+            ctx.fillText(text, x, y, maxTextWidth);
+        }
+        ctx.restore();
+    }
+}
+
+class ScaledRelativeButton extends GUIElement {
+    constructor(
+        xInfo, yInfo, width, height, text,
+        padding, colors, font,
+    ) {
+        super(NaN, NaN);
+        this.xInfo = xInfo; this.yInfo = yInfo;
+        this.width = width; this.height = height;
+
+        this.text = text;
+        this.font = font || "VT323";
+        this.padding = padding || 30;
+
+        this.state = "normal";
+        this.colors = colors || {
+            normal: { background: "DodgerBlue", text: "White", border: "Black" },
+            hover: {  background: "DodgerBlue", text: "Gold", border: "Black" },
+        };
+        this.onClick = console.log;
+        this.onHover = () => {};
+    }
+
+    update(gameEngine) {
+        const { width, height } = gameEngine;
+        const buttonWidth = width * this.width;
+        const buttonHeight = height * this.height;
+        const preX = (this.xInfo instanceof Array)
+            ? width * this.xInfo[0] + this.xInfo[1]
+            : width * this.xInfo;
+        const preY = (this.yInfo instanceof Array)
+            ? height * this.yInfo[0] + this.yInfo[1]
+            : height * this.yInfo;
+        const x = preX - buttonWidth / 2;
+        const y = preY - buttonHeight / 2;
+        if (!gameEngine.mouse) return;
+        const { x: mouseX, y: mouseY } = gameEngine.mouse;
+        const withinButton =
+            mouseX >= x && mouseX <= x + buttonWidth
+            && mouseY >= y && mouseY <= y + buttonHeight;
+        if (withinButton) {
+            this.state = "hover";
+            this.onHover(this, gameEngine);
+        } else this.state = "normal";
+
+
+        const isClicked = withinButton && gameEngine.click;
+        if (isClicked) this.onClick(this, gameEngine);
+    }
+
+    draw(ctx, gameEngine) {
+        ctx.save();
+        {
+            const { width, height } = gameEngine;
+            const buttonWidth = width * this.width;
+            const buttonHeight = height * this.height;
+            const padding = this.padding < 1
+                ? buttonWidth * this.padding
+                : this.padding;
+            const maxTextWidth = width * this.width - padding * 2;
+
+            ctx.font = `bold 1px ${this.font}`;
+            const text = this.text instanceof Function
+                ? this.text(gameEngine)
+                : this.text;
+            const unitTextWidth = ctx.measureText(text).width;
+            ctx.font = `bold ${maxTextWidth / unitTextWidth}px ${this.font}`;
+            const x = (this.xInfo instanceof Array)
+                ? width * this.xInfo[0] + this.xInfo[1]
+                : width * this.xInfo;
+            const y = (this.yInfo instanceof Array)
+                ? height * this.yInfo[0] + this.yInfo[1]
+                : height * this.yInfo;
+
+            const metrics = ctx.measureText(text);
+            const textHeight =
+                metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+
+            ctx.fillStyle = this.colors[this.state].background;
+            const roundRect = ctx.roundRect(
+                x - buttonWidth / 2, y - buttonHeight / 2,
+                buttonWidth, buttonHeight, 10);
+            roundRect.fill();
+            ctx.strokeStyle = this.colors[this.state].border;
+            roundRect.stroke();
+
+            ctx.fillStyle = this.colors[this.state].text;
+            ctx.fillText(text, x + padding - buttonWidth / 2, y + textHeight / 2);
+        }
+        ctx.restore();
     }
 }
 
@@ -173,15 +304,14 @@ class MiniMap extends GUIElement {
 
             const { x, y, width, height } = entity;
             offscreenContext.beginPath();
-            offscreenContext.fillStyle = entity instanceof Wolf
-                ? "red"
-                : entity instanceof Sheep
-                    ? "cyan"
-                    : entity instanceof Shepherd
-                        ? "salmon"
-                        : entity.isDestructible
-                            ? "gray"
-                            : rgba(0, 0, 0, 0);
+            offscreenContext.fillStyle =
+                entity instanceof Wolf ? "red"
+                : entity instanceof Sheep ? "cyan"
+                : entity instanceof Shepherd ? "salmon"
+                : entity instanceof Barn || entity instanceof Chest ? "gold"
+                : entity instanceof Tree ? "brown"
+                : entity.isDestructible ? "gray"
+                : rgba(0, 0, 0, 0.05);
             offscreenContext.fillRect(x, y, width, height);
         });
 
@@ -212,8 +342,8 @@ class MiniMap extends GUIElement {
     }
 
     update(gameEngine) {
-        const { Shift, ArrowUp: Up, ArrowDown: Down } = gameEngine.keys;
-        if (Shift) {
+        const { Alt, ArrowUp: Up, ArrowDown: Down } = gameEngine.keys;
+        if (Alt) {
             if (Up) this.zoom += 0.0025;
             if (Down) this.zoom -= 0.0025;
             if (gameEngine.wheel?.deltaY < 0) this.zoom += 0.025;

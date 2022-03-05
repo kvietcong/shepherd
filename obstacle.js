@@ -40,11 +40,8 @@ class Obstacle extends Entity {
     }
 
     attacked(damage) {
-        //console.log("obstacle is dealt damage");
         this.healthAPI.damage(damage);
         if (this.healthAPI.health <= 0) {
-            //inventory.addGold(params.inventory.obstacleReward);
-            //console.log("gold: " + inventory.gold);
             this.dead = true;
         }
     }
@@ -62,7 +59,7 @@ class Obstacle extends Entity {
             this.xCenter, this.y - 35,
             75, 10,
             ctx, gameEngine);
-    }    
+    }
 }
 
 class Barn extends Obstacle {
@@ -86,16 +83,23 @@ Barn.sheepCount = 0;
 Barn.sheepRequired = 10;
 
 class Tree extends Obstacle {
-    constructor(x, y) {
-        super(x, y, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2, true);
+    constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH) {
+        super(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH, true);
     }
     update(gameEngine) {
         super.update(gameEngine);
         this.healthAPI.update(gameEngine);
         if (this.dead) {
             this.removeFromWorld = true;
-            gameEngine.addEntity(new Log(this.x, this.y + 100));
+            console.log("tree destroyed: x = " + this.x + " y = " + this.y)
+            gameEngine.addEntity(new Log(this.xCenter, this.yCenter));
         }
+    }
+}
+
+class Chest extends Obstacle {
+    constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH) {
+        super(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH);
     }
 }
 
@@ -126,6 +130,13 @@ class Fire extends Obstacle {
     update(gameEngine){
         super.update(gameEngine);
         this.animator.update(gameEngine);
+        gameEngine.entities.forEach(entity => {
+            const distance = this.distanceTo(entity);
+            if (!entity.healthAPI
+                || entity instanceof Wolf
+                || distance > 200) return;
+            entity.heal(5 * gameEngine.deltaTime);
+        });
     }
 }
 

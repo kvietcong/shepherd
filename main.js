@@ -3,7 +3,7 @@ const assetManager = new AssetManager();
 
 const resizeCanvas = canvas => {
 	const main = document.getElementsByTagName("main")[0];
-	canvas.width = round(main.clientWidth * 0.65);
+	canvas.width = round(main.clientWidth * 0.7);
 	canvas.height = round(canvas.width / (16 / 9));
 	return canvas;
 };
@@ -12,6 +12,7 @@ const initializeCanvas = () => {
 	const canvas = document.createElement("canvas");
 	document.getElementById("canvas-container").appendChild(canvas);
 	canvas.style.border = "1px solid black";
+	//canvas.style.background = "Green";
 	canvas.style.background = "url('./resources/forestTile.png')";
 	canvas.style.backgroundSize = "100%";
 	canvas.autofocus = true;
@@ -24,7 +25,6 @@ const canvas = initializeCanvas();
 const sceneManager = new SceneManager();
 const inventory = new Inventory(10, 10, 5, 5, 1);
 const darkness = new Darkness();
-console.log("gold: " + inventory.gold);
 
 const gameOver = () => {
 	return (Barn.sheepRequired - Barn.sheepCount) > Sheep.count;
@@ -48,6 +48,11 @@ assetManager.queueDownload("./resources/treetrunk.png");
 assetManager.queueDownload("./resources/forestground.png");
 assetManager.queueDownload("./resources/Map_tiles.png");
 assetManager.queueDownload("./resources/plants.png");
+assetManager.queueDownload("./resources/TX Tileset Grass.png");
+assetManager.queueDownload("./resources/TX Tileset Stone Ground.png");
+assetManager.queueDownload("./resources/TX Wall.png");
+assetManager.queueDownload("./resources/TX Plant.png");
+assetManager.queueDownload("./resources/TX Props.png");
 assetManager.queueDownload("./resources/slash.png");
 assetManager.queueDownload("./resources/fence_00.png");
 assetManager.queueDownload("./resources/fence_vertical.png");
@@ -80,19 +85,32 @@ assetManager.downloadAll(() => {
 // Event Hooks
 window.addEventListener("resize", () => { resizeCanvas(canvas) });
 
-const defaultUpgradeCost = 10;
-const changeSheepFactor = (factor, change, cost = defaultUpgradeCost) => {
-	if (params.sheep[factor] + change < 0) { return; }
-	const successful = inventory.attemptSpend(cost);
-	if (successful) params.sheep[factor] += change;
-};
-const changeSheepFactors = (changes, cost = defaultUpgradeCost) => {
-	const successful = inventory.attemptSpend(cost);
-	if (successful)
-		changes.forEach(change =>
-			changeSheepFactor(change[0], change[1], 0));
+const modifySheepFactor = (factor, change, cost = 1) => {
+	const finalModification = params.sheep.modifications[factor] + change;
+	if (abs(finalModification) > abs(params.sheep.modifications[factor])) {
+		const successful = inventory.attemptSpend(cost, "modificationPoints");
+		if (successful) params.sheep.modifications[factor] = finalModification;
+		return successful;
+	} else if (abs(finalModification) < abs(params.sheep.modifications[factor])) {
+		inventory.modificationPoints += cost;
+		params.sheep.modifications[factor] = finalModification;
+		return true;
+	}
+	return false;
 };
 
+const modifySheepFactors = (changes, change) => {
+	for (let i = 0; i < changes.length; i++) {
+		const [factor, change] = changes[i];
+		let cost = i === 0 ? 1 : 0;
+		if (!modifySheepFactor(factor, change, cost)) return;
+	}
+}
+
+const buyMods = (cost = 10) => {
+	const successful = inventory.attemptSpend(cost);
+	if (successful) inventory.modificationPoints += 1;
+}
 
 const debugInput = document.getElementById("debug");
 debugInput.checked = params.isDebugging;
@@ -106,3 +124,39 @@ setInterval(() => {
 	const { isPaused } = gameEngine;
 	pausePlayButton.innerText = `${isPaused ? "Play" : "Pause"} Game`;
 }, 200);
+
+const killAllWolves = () => gameEngine.entities.forEach(entity => {
+	if (entity instanceof Wolf) entity.removeFromWorld = true;
+});
+
+const killGUI = () => gameEngine.entities.forEach(entity => {
+	if (entity instanceof GUIElement) entity.removeFromWorld = true;
+});
+
+const toggleGUI = () => {
+	gameEngine.entities.forEach(entity => {
+		if (entity instanceof GUIElement) entity.noDraw = !entity.noDraw;
+	});
+}
+
+const commandsElement = document.getElementById("commands");
+commandsElement.addEventListener("change", event => {
+	const { value } = event.target;
+	let commanded = true;
+	switch(value) {
+		case "Kill All Wolves":
+			killAllWolves();
+			break;
+		case "greedisgood":
+			inventory.gold += 100;
+			inventory.wood += 100;
+			break;
+		case "Save The Trees":
+			inventory.wood += 100;
+			break;
+		case "I Want Mods":
+			inventory.modificationPoints += 100;
+			break;
+	}
+	if (commanded) event.target.value = "";
+});
