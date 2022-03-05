@@ -18,7 +18,7 @@ class SceneManager {
 
     loadTitle(gameEngine) {
         const shopContainer = document.getElementById("shop");
-        shopContainer.children[0].classList.add("disabled");
+        shopContainer.classList.add("disabled");
 
         const screen = new Icon(
             assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
@@ -41,12 +41,20 @@ class SceneManager {
             instructionsElement.scrollIntoView({ behavior: "smooth" });
         };
 
-        const settings = new ScaledRelativeButton(0.5, 0.73, 0.1, 0.08, "Settings", 20);
+        const settings = new ScaledRelativeButton(0.5, 0.73, 0.15, 0.1, "Settings", 20);
         gameEngine.addEntity(settings);
         settings.onClick = () => {
             const settingsElement = document.getElementById("settings");
             settingsElement.open = true;
             settingsElement.scrollIntoView({ behavior: "smooth" });
+        };
+
+        const credits = new ScaledRelativeButton(0.5, 0.85, 0.12, 0.08, "Credits", 20);
+        gameEngine.addEntity(credits);
+        credits.onClick = () => {
+            const creditsElement = document.getElementById("credits");
+            creditsElement.open = true;
+            creditsElement.scrollIntoView({ behavior: "smooth" });
         };
 
 	    gameEngine.addEntity(screen);

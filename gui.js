@@ -216,7 +216,7 @@ class ScaledRelativeButton extends GUIElement {
             ctx.fillStyle = this.colors[this.state].background;
             const roundRect = ctx.roundRect(
                 x - buttonWidth / 2, y - buttonHeight / 2,
-                buttonWidth, buttonHeight, 20);
+                buttonWidth, buttonHeight, 10);
             roundRect.fill();
             ctx.strokeStyle = this.colors[this.state].border;
             roundRect.stroke();

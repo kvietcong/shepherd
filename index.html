@@ -1,289 +1,324 @@
 ﻿<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Shepherd</title>
 
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<head>
+    <meta charset="utf-8">
+    <title>Shepherd</title>
 
-        <script type="text/javascript" src="./util.js"></script>
-        <script type="text/javascript" src="./assetmanager.js"></script>
-        <script type="text/javascript" src="./timer.js"></script>
-        <script type="text/javascript" src="./gameengine.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
-        <script type="text/javascript" src="./inventory.js"></script>
-        <script type="text/javascript" src="./camera.js"></script>
-        <script type="text/javascript" src="./gui.js"></script>
-        <script type="text/javascript" src="./health.js"></script>
-        <script type="text/javascript" src="./darkness.js"></script>
+    <script type="text/javascript" src="./util.js"></script>
+    <script type="text/javascript" src="./assetmanager.js"></script>
+    <script type="text/javascript" src="./timer.js"></script>
+    <script type="text/javascript" src="./gameengine.js"></script>
 
-        <script type="text/javascript" src="./animator.js"></script>
-        <script type="text/javascript" src="./entity.js"></script>
-        <script type="text/javascript" src="./scenemanager.js"></script>
-        <script type="text/javascript" src="./obstacle.js"></script>
-        <script type="text/javascript" src="./shepherd.js"></script>
-        <script type="text/javascript" src="./sheep.js" defer></script>
-        <script type="text/javascript" src="./wolf.js"></script>
-        <script type="text/javascript" src="./map.js"></script>
-        <script type="text/javascript" src="./environment.js"></script>
-        <script type="text/javascript" src="./setupEnvironment.js" defer></script>
-        <script type="text/javascript" src="./main.js" defer></script>
-        <style>
-            * {
-                box-sizing: border-box;
-                font-family: "VT323", monospace;
-            }
+    <script type="text/javascript" src="./inventory.js"></script>
+    <script type="text/javascript" src="./camera.js"></script>
+    <script type="text/javascript" src="./gui.js"></script>
+    <script type="text/javascript" src="./health.js"></script>
+    <script type="text/javascript" src="./darkness.js"></script>
 
-            .input > p, summary > * {
-                display: inline-block
-            }
+    <script type="text/javascript" src="./animator.js"></script>
+    <script type="text/javascript" src="./entity.js"></script>
+    <script type="text/javascript" src="./scenemanager.js"></script>
+    <script type="text/javascript" src="./obstacle.js"></script>
+    <script type="text/javascript" src="./shepherd.js"></script>
+    <script type="text/javascript" src="./sheep.js" defer></script>
+    <script type="text/javascript" src="./wolf.js"></script>
+    <script type="text/javascript" src="./map.js"></script>
+    <script type="text/javascript" src="./environment.js"></script>
+    <script type="text/javascript" src="./setupEnvironment.js" defer></script>
+    <script type="text/javascript" src="./main.js" defer></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "VT323", monospace;
+        }
 
-            h2, h2 > label {
-                font-size: 2rem;
-            }
+        .input>p,
+        summary>* {
+            display: inline-block
+        }
 
-            h3 {
-                font-size: 1.5rem;
-            }
+        h2,
+        h2>label {
+            font-size: 2rem;
+        }
 
-            label, input, button, p {
-                font-size: 1.3rem;
-            }
+        h3 {
+            font-size: 1.5rem;
+        }
 
-            body {
-                background-image: url("./resources/pixel_landscape_2.jpg");
-                background-repeat: no-repeat;
-                background-size: cover;
-                background-color: greenyellow;
-            }
+        label,
+        input,
+        button,
+        p {
+            font-size: 1.3rem;
+        }
 
-            main {
-                padding: 10px;
-                display: flex;
-                flex-direction: row;
-                margin: auto;
-                width: 95%;
-                align-items: center;
-            }
+        body {
+            background-image: url("./resources/pixel_landscape_2.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-color: greenyellow;
+        }
 
-            main > section {
-                padding: 0 10px;
-            }
+        main {
+            padding: 10px;
+            display: flex;
+            flex-direction: row;
+            margin: auto;
+            width: 95%;
+            align-items: center;
+        }
 
-            h1 {
-                text-align: center;
-                color: white;
-                padding: 5px 0;
-                margin: 0;
-                font-size: 4rem;
-                font-family: "VT323", monospace;
-                background-color: rgba(0, 0, 0, 0.5);
-                border-radius: 10px;
-                width: 600px;
-                margin: auto;
-            }
+        main>section {
+            padding: 0 10px;
+        }
 
-            details.disabled {
-                pointer-events: none;
-                color: gray;
-            }
+        h1 {
+            text-align: center;
+            color: white;
+            padding: 5px 0;
+            margin: 0;
+            font-size: 4rem;
+            font-family: "VT323", monospace;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            width: 600px;
+            margin: auto;
+        }
 
-            .slider {
-                margin: 10px auto;
-            }
+        details.disabled {
+            pointer-events: none;
+            color: gray;
+        }
 
-            #gui {
-                background-color: silver;
-                border-radius: 10px;
-                padding: 0 10px 20px 10px;
-                border-color: black;
-                border-style: solid;
-                border-width: 2px;
-                overflow-y: auto;
-                max-height: 500px;
-                min-width: 300px;
-            }
+        .slider {
+            margin: 10px auto;
+        }
 
-            #gui::-webkit-scrollbar {
-                width: 10px;
-                border-radius: 20px;
-            }
+        #gui {
+            background-color: silver;
+            border-radius: 10px;
+            padding: 0 10px 20px 10px;
+            border-color: black;
+            border-style: solid;
+            border-width: 2px;
+            overflow-y: auto;
+            max-height: 500px;
+            min-width: 300px;
+        }
 
-            #gui::-webkit-scrollbar-thumb {
-                background-color: greenyellow;
-                border-radius: 20px;
-                border: 2px solid gray;
-            }
+        #gui::-webkit-scrollbar {
+            width: 10px;
+            border-radius: 20px;
+        }
 
-            #canvas-container > canvas {
-                border-radius: 10px;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>Shepherd</h1>
-        <main>
-            <section id="canvas-container"></section>
-            <section id="gui">
+        #gui::-webkit-scrollbar-thumb {
+            background-color: greenyellow;
+            border-radius: 20px;
+            border: 2px solid gray;
+        }
+
+        #canvas-container>canvas {
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Shepherd</h1>
+    <main>
+        <section id="canvas-container"></section>
+        <section id="gui">
+
+            <details id="instructions">
+                <summary>
+                    <h2>Instructions</h2>
+                </summary>
+                <p>
+                    Try to make it to the barn with your sheep! When you make
+                    the amount reach what is specified on the top of your
+                    screen, you win!
+                </p>
+                <p>
+                    WASD keys move and refocus the camera on the Shepherd.
+                    Space/Click and Q/Right-Click let you attack wolves. P allows you pause the game.
+                </p>
+                <p>
+                    You receive gold when killing wolves and you receive wood
+                    when you destroy trees. Gold allows you to by upgrades in
+                    the shop while wood allows you to place items like the
+                    fence or the campfire. You can place items using the
+                    number row keys (1, 2, etc).
+                </p>
+                <p>
+                    The Shop allows you to adjust the behavior of various things
+                    within the game.
+                    The campfire scares off wolves while the fence is a simple
+                    man-made obstacle.
+                </p>
+                <p>
+                    There is also a free-cam system!
+                    Arrow Keys or Alt+WASD to move camera freely.
+                    Ctrl+🔼/🔽 or Scroll to zoom Camera.
+                    Alt+🔼/🔽 or Alt+Scroll to zoom MiniMap.
+                </p>
+            </details>
+
+            <hr>
+
+            <details id="shop">
+                <summary>
+                    <h2>The Shop</h2>
+                </summary>
+                <p>Your Gold: 🪙 <span id="gold-amount">?</span></p>
+                <p>
+                    Modification Points allow you to change the behavior of
+                    your flock! Each Modification point costs 10 gold.
+                </p>
+                <p>
+                    Your Modification Points: 🌟
+                    <span id="modificationPoints-amount">?</span>
+                    <button onClick="buyMods()">🔼</button>
+                </p>
                 <div>
-                    <details id="instructions">
-                        <summary><h2>Instructions</h2></summary>
-                        <p>
-                            Try to make it to the barn with your sheep! When you make
-                            the amount reach what is specified on the top of your
-                            screen, you win!
-                        </p>
-                        <p>
-                            WASD keys move and refocus the camera on the Shepherd.
-                            Space/Click and Q/Right-Click let you attack wolves. P allows you pause the game.
-                        </p>
-                        <p>
-                            You receive gold when killing wolves and you receive wood
-                            when you destroy trees. Gold allows you to by upgrades in
-                            the shop while wood allows you to place items like the
-                            fence or the campfire. You can place items using the
-                            number row keys (1, 2, etc).
-                        </p>
-                        <p>
-                            The Shop allows you to adjust the behavior of various things
-                            within the game.
-                            The campfire scares off wolves while the fence is a simple
-                            man-made obstacle.
-                        </p>
-                        <p>
-                            There is also a free-cam system!
-                            Arrow Keys or Alt+WASD to move camera freely.
-                            Ctrl+🔼/🔽 or Scroll to zoom Camera.
-                            Alt+🔼/🔽 or Alt+Scroll to zoom MiniMap.
-                        </p>
-                    </details>
-                </div>
-                <hr>
-                <div id="shop">
                     <details>
                         <summary>
-                            <h2>The Shop</h2>
+                            <p>Flock Separation: </p>
+                            <p id="separationFactor">?</p>
+                            <button onClick="modifySheepFactor('separationFactor', -1)">🔽</button>
+                            <button onClick="modifySheepFactor('separationFactor', +1)">🔼</button>
                         </summary>
-                        <p>Your Gold: 🪙 <span id="gold-amount">?</span></p>
-                        <p>
-                            Modification Points allow you to change the behavior of
-                            your flock! Each Modification point costs 10 gold.
-                        </p>
-                        <p>
-                            Your Modification Points: 🌟
-                            <span id="modificationPoints-amount">?</span>
-                            <button
-                                onClick="buyMods()"
-                            >🔼</button>
-                        </p>
-                        <div>
-                            <details>
-                                <summary>
-                                    <p>Flock Separation: </p>
-                                    <p id="separationFactor">?</p>
-                                    <button
-                                        onClick="modifySheepFactor('separationFactor', -1)"
-                                    >🔽</button>
-                                    <button onClick="modifySheepFactor('separationFactor', +1)"
-                                    >🔼</button>
-                                </summary>
-                                Determine how separated your flock is. Do you want your
-                                flock to be separated to prevent easy pickings? Or would
-                                you rather have more control?
-                            </details>
-                        </div>
-                        <div>
-                            <details>
-                                <summary>
-                                    <p>Flocking Ability:</p>
-                                    <p id="cohesionFactor">?</p>
-                                    <button onClick="modifySheepFactors([
+                        Determine how separated your flock is. Do you want your
+                        flock to be separated to prevent easy pickings? Or would
+                        you rather have more control?
+                    </details>
+                </div>
+                <div>
+                    <details>
+                        <summary>
+                            <p>Flocking Ability:</p>
+                            <p id="cohesionFactor">?</p>
+                            <button onClick="modifySheepFactors([
                                         ['cohesionFactor', -1],
                                         ['alignmentFactor', -1],
                                     ])">🔽</button>
-                                    <button onClick="modifySheepFactors([
+                            <button onClick="modifySheepFactors([
                                         ['cohesionFactor', +1],
                                         ['alignmentFactor', +1],
                                     ])">🔼</button>
-                                </summary>
-                                There are two factors that impact the flock's ability to be together.
-                                Cohesion and Alignment respectively.
+                        </summary>
+                        There are two factors that impact the flock's ability to be together.
+                        Cohesion and Alignment respectively.
 
-                                Cohesion being how close every sheep is to
-                                the average position of the flock.
+                        Cohesion being how close every sheep is to
+                        the average position of the flock.
 
-                                Alignment being how close every sheep's direction
-                                is to the average direction of the flock.
-                            </details>
-                        </div>
-                        <div>
-                            <details>
-                                <summary>
-                                    <p>Shepherd Skill: </p>
-                                    <p id="shepherdFactor">?</p>
-                                    <button
-                                        onClick="modifySheepFactor('shepherdFactor', -1)"
-                                    >🔽</button>
-                                    <button onClick="modifySheepFactor('shepherdFactor', +1)"
-                                    >🔼</button>
-                                </summary>
-                                Determine how attached the sheep are to the shepherd.
-                                The higher the shepherd skill, the more attached the sheep are.
-                                However, be careful making this too high. It can make sheep follow
-                                you into danger!
-                            </details>
-                        </div>
-                        <div>
-                            <details>
-                                <summary>
-                                    <p>Wolf Fear: </p>
-                                    <p id="wolfFactor">?</p>
-                                    <button
-                                        onClick="modifySheepFactor('wolfFactor', -1)"
-                                    >🔽</button>
-                                    <button onClick="modifySheepFactor('wolfFactor', +1)"
-                                    >🔼</button>
-                                </summary>
-                                Determine how scared your sheep are of wolves.
-                                Do you want your flock to avoid danger at all costs
-                                at the sacrifice of control?
-                            </details>
-                        </div>
-                        <div>
-                            <details>
-                                <summary>
-                                    <p>Sheep Speed: </p>
-                                    <p id="maxSpeed">?</p>
-                                    <button
-                                        onClick="modifySheepFactor('maxSpeed', -1)"
-                                    >🔽</button>
-                                    <button onClick="modifySheepFactor('maxSpeed', +1)"
-                                    >🔼</button>
-                                </summary>
-                                Want some fast sheep?
-                            </details>
-                        </div>
+                        Alignment being how close every sheep's direction
+                        is to the average direction of the flock.
                     </details>
                 </div>
-                <hr>
                 <div>
-                    <details id="settings">
-                        <summary><h2>Settings</h2></summary>
-                        <button id="pause-play" onclick="pausePlay()">Play/Pause Game</button>
-                        <div class="slider">
-                            <label for="volume-slider">Volume</label>
-                            <input type="range" min="0" max="1" step="0.01" value="0.1" id="volume-slider">
-                        </div>
-                        <div>
-                            <label for="debug">Debug Enabled</label>
-                            <input type="checkbox" name="debug" id="debug">
-                        </div>
+                    <details>
+                        <summary>
+                            <p>Shepherd Skill: </p>
+                            <p id="shepherdFactor">?</p>
+                            <button onClick="modifySheepFactor('shepherdFactor', -1)">🔽</button>
+                            <button onClick="modifySheepFactor('shepherdFactor', +1)">🔼</button>
+                        </summary>
+                        Determine how attached the sheep are to the shepherd.
+                        The higher the shepherd skill, the more attached the sheep are.
+                        However, be careful making this too high. It can make sheep follow
+                        you into danger!
                     </details>
                 </div>
-            </section>
-        </main>
-    </body>
+                <div>
+                    <details>
+                        <summary>
+                            <p>Wolf Fear: </p>
+                            <p id="wolfFactor">?</p>
+                            <button onClick="modifySheepFactor('wolfFactor', -1)">🔽</button>
+                            <button onClick="modifySheepFactor('wolfFactor', +1)">🔼</button>
+                        </summary>
+                        Determine how scared your sheep are of wolves.
+                        Do you want your flock to avoid danger at all costs
+                        at the sacrifice of control?
+                    </details>
+                </div>
+                <div>
+                    <details>
+                        <summary>
+                            <p>Sheep Speed: </p>
+                            <p id="maxSpeed">?</p>
+                            <button onClick="modifySheepFactor('maxSpeed', -1)">🔽</button>
+                            <button onClick="modifySheepFactor('maxSpeed', +1)">🔼</button>
+                        </summary>
+                        Want some fast sheep?
+                    </details>
+                </div>
+            </details>
+
+            <hr>
+
+            <details id="settings">
+                <summary>
+                    <h2>Settings</h2>
+                </summary>
+                <button id="pause-play" onclick="pausePlay()">Play/Pause Game</button>
+                <div class="slider">
+                    <label for="volume-slider">Volume</label>
+                    <input type="range" min="0" max="1" step="0.01" value="0.1" id="volume-slider">
+                </div>
+                <div>
+                    <label for="debug">Debug Enabled</label>
+                    <input type="checkbox" name="debug" id="debug">
+                </div>
+            </details>
+
+            <hr>
+
+            <details id="credits">
+                <summary>
+                    <h2>Credits</h2>
+                </summary>
+                Take a look at the GitHub repository for more information!
+                <a href="https://github.com/kvietcong/shepherd" target="blank" referrerpolicy="no-referer">Repository</a>
+                <h3 style="margin-top: 5px;">Main Contributions</h3>
+                <ul style="margin-top: 0;">
+                    <li>
+                        <details>
+                            <summary>KV</summary>
+                            Stuff.
+                        </details>
+                    </li>
+                    <li>
+                        <details>
+                            <summary>Brandon</summary>
+                            Sheep and Wolf Interactions/Flocking.
+                        </details>
+                    </li>
+                    <li>
+                        <details>
+                            <summary>Cordel</summary>
+                            Shepherd Controls and Interactions.
+                        </details>
+                    </li>
+                    <li>
+                        <details>
+                            <summary>Mason</summary>
+                            Map Design and Creation.
+                        </details>
+                    </li>
+                </ul>
+            </details>
+
+        </section>
+    </main>
+</body>
+
 </html>
