@@ -90,32 +90,33 @@ class Shepherd extends Entity {
         const {
             w, a, s, d, W, A, S, D, q, e,
             ArrowRight: right, ArrowLeft: left, ArrowUp: up, ArrowDown: down,
-            Shift, Control, Z,
+            Shift, Control, Z, Alt,
             click, rightclick
         } = gameEngine.keys;
         const space = gameEngine.keys[" "];
         const one = gameEngine.keys["1"];
         const two = gameEngine.keys["2"];
-        const three = gameEngine.keys["3"];
-        if (w) {
-            this.velocity.y -= 1;
-            this.state = 1;
-            this.facing = 0;
-        }
-        if (a) {
-            this.velocity.x -= 1;
-            this.state = 1;
-            this.facing = 1;
-        }
-        if (s) {
-            this.velocity.y += 1;
-            this.state = 1;
-            this.facing = 2;
-        }
-        if (d) {
-            this.velocity.x += 1;
-            this.state = 1;
-            this.facing = 3;
+        if (!Alt) {
+            if (w) {
+                this.velocity.y -= 1;
+                this.state = 1;
+                this.facing = 0;
+            }
+            if (a) {
+                this.velocity.x -= 1;
+                this.state = 1;
+                this.facing = 1;
+            }
+            if (s) {
+                this.velocity.y += 1;
+                this.state = 1;
+                this.facing = 2;
+            }
+            if (d) {
+                this.velocity.x += 1;
+                this.state = 1;
+                this.facing = 3;
+            }
         }
 
         let isAttacking = false;

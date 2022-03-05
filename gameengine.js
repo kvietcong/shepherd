@@ -84,6 +84,7 @@ class GameEngine {
         });
 
         this.ctx.canvas.addEventListener("keydown",  event => {
+            event.preventDefault();
             const { key } = event;
             if (params.isDebugging) console.log(event);
 
@@ -200,6 +201,9 @@ class GameEngine {
     update() {
         if (this.isPaused) return;
 
+        // Remove dead things
+        this.entities = this.entities.filter(entity => !entity.removeFromWorld);
+
         // Update Entities
         this.entities.forEach(entity => {
             entity.update(this);
@@ -220,18 +224,9 @@ class GameEngine {
         };
         this.entities.sort(comparator);
 
-        // Remove dead things
-        // const lengthBeforeRemovingDead = this.entities.length;
-        this.entities = this.entities.filter(entity => !entity.removeFromWorld);
-        // if (lengthBeforeRemovingDead !== this.entities.length)
-        //     insertionSort(this.entities, (a, b) => a.z - b.z);
-
         // Add new things
-        // const lengthBeforeAddingEntities = this.entities.length;
         this.entities = this.entities.concat(this.entitiesToAdd);
         this.entitiesToAdd = [];
-        // if (lengthBeforeAddingEntities !== this.entities.length)
-        //     insertionSort(this.entities, (a, b) => a.z - b.z);
 
         // Reset the inputs
         this.rightclick = null;
