@@ -182,13 +182,20 @@ class SceneManager {
     draw(ctx, gameEngine) {}
 }
 
-class SpawnPoint {
+class SpawnPoint extends Entity {
+    constructor(x, y, width, height) {
+        super(x, y, width, height);
+        this.isCollidable = false;
+    }
 
-    constructor(x, y, w, h) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
+    draw(ctx) {
+        if (params.isDebugging) {
+            ctx.fillStyle = rgba(100, 100, 255, 0.2);
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+
+            ctx.strokeStyle = "cyan";
+            ctx.strokeRect(this.x, this.y, this.width, this.height);
+        }
     }
 
     /**
@@ -200,16 +207,16 @@ class SpawnPoint {
         if (!(entity.prototype instanceof Entity)) return;
 
         for (let i = 0; i < amount; i++) {
-            let randX = this.x + randomInt(this.w);
-            let randY = this.y + randomInt(this.h);
+            let randX = this.x + randomInt(this.width);
+            let randY = this.y + randomInt(this.height);
             gameEngine.addEntity(new entity(randX, randY));
         }
     }
 
     addToList(entities, entity, amount) {
         for (let i = 0; i < amount; i++) {
-            let randX = this.x + randomInt(this.w);
-            let randY = this.y + randomInt(this.h);
+            let randX = this.x + randomInt(this.width);
+            let randY = this.y + randomInt(this.height);
             entities.push(new entity(randX, randY));
         }
     }

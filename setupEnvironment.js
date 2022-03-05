@@ -11,6 +11,7 @@ const setupEnvironment = (entities, currMap) => {
         entities.push(shepherd);
 
         const startingArea = new SpawnPoint(1200, 650, 900, 750);
+		entities.push(startingArea);
         startingArea.addToList(entities, Sheep, 20);
 
         const wolfPacks = [
@@ -21,6 +22,7 @@ const setupEnvironment = (entities, currMap) => {
         ];
         wolfPacks.forEach((info) => {
             const [spawnPoint, amount] = info;
+			entities.push(spawnPoint);
             spawnPoint.spawnEntity(entities, Wolf, amount);
         });
 
@@ -282,6 +284,7 @@ const setupEnvironment = (entities, currMap) => {
 
         const startingArea = new SpawnPoint(900, 2100, 200, 200);
         startingArea.addToList(entities, Sheep, 20);
+		entities.push(startingArea);
 
         const wolfPacks = [
             [new SpawnPoint(2600, 1500, 330, 300), 3], // rocks by first path
@@ -292,6 +295,7 @@ const setupEnvironment = (entities, currMap) => {
 
         wolfPacks.forEach((info) => {
             const [spawnPoint, amount] = info;
+			entities.push(spawnPoint);
             spawnPoint.spawnEntity(Wolf, amount, gameEngine);
         });
 
