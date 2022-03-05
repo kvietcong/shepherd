@@ -24,7 +24,7 @@ const initializeCanvas = () => {
 const canvas = initializeCanvas();
 const sceneManager = new SceneManager();
 const inventory = new Inventory(10, 10, 5, 5, 1);
-const darkness = new Darkness();
+
 
 const gameOver = () => {
 	return (Barn.sheepRequired - Barn.sheepCount) > Sheep.count;
@@ -75,7 +75,9 @@ assetManager.queueDownload("./resources/logs.png");
 
 assetManager.downloadAll(() => {
 	const ctx = canvas.getContext("2d");
+	//const ctxDark = canvasDark.getContext("2d");
 	gameEngine.init(ctx);
+	//gameEngine.initDark(ctxDark);
 	gameEngine.addEntity(sceneManager);
 	gameEngine.start();
 });

@@ -2,7 +2,7 @@ params.shepherd = {
     energyLossRate: 20,
     energyRegenRate: 10,
     fenceCooldown: 0.25,
-    action2Cooldown: 1,
+    fireCooldown: 1,
     action3Cooldown: 2,
     attackCooldown: 0.7
 };
@@ -56,7 +56,7 @@ class Shepherd extends Entity {
         // shepherds's fire state variables
         this.actionTimeElapsed = {
             fence1: params.shepherd.fenceCooldown,
-            action2: params.shepherd.action2Cooldown,
+            fire2: params.shepherd.fireCooldown,
             action3: params.shepherd.action3Cooldown,
             attack: params.shepherd.attackCooldown
         };
@@ -151,8 +151,8 @@ class Shepherd extends Entity {
                     entity.taken();
                 }
                 if (entity instanceof Chest) {
-                    inventory.gold += 100;
-                    entity.removeFromWorld = true;
+                    //inventory.gold += 100;
+                    entity.dead = true;
                 }
             }
         });
@@ -164,24 +164,52 @@ class Shepherd extends Entity {
         if (one) {
             if (this.actionTimeElapsed.fence1 >= params.shepherd.fenceCooldown &&
                     inventory.attemptSpend(params.inventory.fenceCost, "wood")) {
-                if (this.facing == 0) gameEngine.addEntity(new Obstacle(Math.floor((this.x - 25)/50)*50, Math.floor((this.y - 60)/50)*50, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true));
-                if (this.facing == 1) gameEngine.addEntity(new Obstacle(Math.floor((this.x - 40)/50)*50, Math.floor((this.y - 30)/50)*50, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true));
-                if (this.facing == 2) gameEngine.addEntity(new Obstacle(Math.floor((this.x - 25)/50)*50, Math.floor((this.y - 10)/50)*50, "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true));
-                if (this.facing == 3) gameEngine.addEntity(new Obstacle(Math.floor((this.x + 10)/50)*50, Math.floor((this.y - 30)/50)*50, "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true));
-                gameEngine.addEntity(new CooldownTimer(50, 25, 50, 50, params.shepherd.fenceCooldown));
-                this.actionTimeElapsed.fence1 = 0;
+                let fence = new Fence(this.x, this.y, this.facing);
+                gameEngine.addEntity(fence);
+                let flag = true;
+                gameEngine.entities.forEach(entity => {
+                    if (entity === fence) return;
+                    if (fence.collidesWith(entity)) {
+                        if (entity instanceof Fence) {
+                            fence.removeFromWorld = true;
+                            if (flag)
+                                inventory.wood += params.inventory.fenceCost;
+                            flag = false;
+                        }
+                    }
+                });
+                if (flag) {
+                    gameEngine.addEntity(new CooldownTimer(50, 25, 50, 50, params.shepherd.fenceCooldown));
+                    this.actionTimeElapsed.fence1 = 0;
+                }
+                
             }
         }
         if (two) {
-            if (this.actionTimeElapsed.action2 >= 1 &&
+            if (this.actionTimeElapsed.fire2 >= params.shepherd.fireCooldown &&
                     inventory.attemptSpend(params.inventory.fireCost, "wood")) {
-                if (this.facing == 0) gameEngine.addEntity(new Fire(this.x, this.y - 50, "./resources/campfire_2.png", 0, 0, 33, 38, 2, 50, 30, true));
-                if (this.facing == 1) gameEngine.addEntity(new Fire(this.x - 50, this.y, "./resources/campfire_2.png", 0, 0, 33, 38, 2, 50, 30, true));
-                if (this.facing == 2) gameEngine.addEntity(new Fire(this.x, this.y + 50, "./resources/campfire_2.png", 0, 0, 33, 38, 2, 50, 30, true));
-                if (this.facing == 3) gameEngine.addEntity(new Fire(this.x + 50, this.y, "./resources/campfire_2.png", 0, 0, 33, 38, 2, 50, 30, true));
-
-                gameEngine.addEntity(new CooldownTimer(100, 25, 50, 50, 1));
-                this.actionTimeElapsed.action2 = 0;
+                let fire;
+                if (this.facing == 0) fire = new Fire(this.x, this.y - 50);
+                if (this.facing == 1) fire = new Fire(this.x - 50, this.y);
+                if (this.facing == 2) fire = new Fire(this.x, this.y + 50);
+                if (this.facing == 3) fire = new Fire(this.x + 50, this.y);
+                gameEngine.addEntity(fire);
+                let flag = true;
+                gameEngine.entities.forEach(entity => {
+                    if (entity === fire) return;
+                    if (fire.collidesWith(entity)) {
+                        if (entity instanceof Fire) {
+                            fire.removeFromWorld = true;
+                            if (flag)
+                                inventory.wood += params.inventory.fireCost;
+                            flag = false;
+                        }
+                    }
+                });
+                if (flag) {
+                    gameEngine.addEntity(new CooldownTimer(100, 25, 50, 50, params.inventory.fireCooldown));
+                    this.actionTimeElapsed.fire2 = 0;
+                }
             }
         }
         if ((click || space) && !(q || rightclick)) {

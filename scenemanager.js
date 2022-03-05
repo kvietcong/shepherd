@@ -1,7 +1,6 @@
-const allLevelNames = ["levelOne", "alpha", "levelTwo"];
+const allLevelNames = ["levelOne", "alpha"];
 
 class SceneManager {
-            //x= 1210, y = 681.
     constructor() {
         this.scenes = ["title", "level1", "credits", "gameOver"];
         this.currentScene = "";
@@ -109,6 +108,13 @@ class SceneManager {
 
         const miniMap = new MiniMap(mainEnvironment, camera);
         entities.push(miniMap);
+
+        if (this.successfulRuns > allLevelNames.length) {
+            const darkness = new Darkness();
+            entities.push(darkness);
+            // Make Darkness Scale With Level
+            // darkness.radius -= (this.successfulRuns)
+        }
 
         gameEngine.addEntities(entities);
     }

@@ -1,38 +1,54 @@
 class Darkness {
-    constructor(ctx,) {
-        this.ambientLight = .1;
-        this.intensity = 1;
-        this.radius = 100;
+    constructor() {
+        //the lower the darker.
+        this.ambientLight = .01;
+        this.radius = 200;
         this.amb = 'rgba(0,0,0,' + (1-this.ambientLight) + ')';
+        this.z = 4;
+        this.isZoomable = true;
+        this.isRelative = true;
     }
-    
+    addLight(x, y, radius, following) {
+        const { offscreenContext } = Darkness;
+
+        let newX =  x;
+        let newY =  y;
+        var g = offscreenContext.createRadialGradient(newX, newY, 0, newX, newY, radius);
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        g.addColorStop(0, this.amb);
+        offscreenContext.fillStyle = g;
+        offscreenContext.fillRect(newX - radius, newY - radius, newX + radius, newY + radius);
+    }
     draw(ctx, gameEngine) {
-        // First circle
-        var g = ctx.createRadialGradient(200, 200, 0, 200, 200, this.radius);
-        g.addColorStop(1, 'rgba(0,0,0,' + (1-this.intensity) + ')');
-        g.addColorStop(0, this.amb);
-        ctx.fillStyle = g;
-        ctx.fillRect(200-this.radius, 200-this.radius, 200+this.radius, 200+this.radius);
+        const { offscreenContext, offscreenCanvas } = Darkness;
+        const { width, height } = gameEngine;
+        offscreenContext.save();
+        offscreenCanvas.width = width*2;
+        offscreenCanvas.height = height*2;
 
-        // Second circle
-        var g = ctx.createRadialGradient(250, 270, 0, 250, 270, this.radius);
-        g.addColorStop(1, 'rgba(0,0,0,' + (1-this.intensity) + ')');
-        g.addColorStop(0, this.amb);
-        ctx.fillStyle = g;
-        ctx.fillRect(250-this.radius, 270-this.radius, 250+this.radius, 270+this.radius);
+        // Shepherd Light
+        this.addLight(width, height, this.radius);
+        gameEngine.entities.forEach(entity => {
+            if (entity === this) return;
+            if (entity instanceof Fire) {
+                this.addLight(entity.xCenter - (gameEngine.camera.x - width), entity.yCenter - (gameEngine.camera.y - height), this.radius);
+            }
+        });
 
-        // Third!
-        var g = ctx.createRadialGradient(50, 370, 0, 50, 370, this.radius);
-        g.addColorStop(1, 'rgba(0,0,0,' + (1-this.intensity) + ')');
-        g.addColorStop(0, this.amb);
-        ctx.fillStyle = g;
-        ctx.fillRect(0, 370-this.radius, 50+this.radius, 370+this.radius);
+        offscreenContext.fillStyle = this.amb;
+        offscreenContext.globalCompositeOperation = 'xor';
+        offscreenContext.fillRect(0, 0, width*2, height*2);
 
-        ctx.fillStyle = this.amb;
-        //ctx.globalCompositeOperation = 'xor';
-        //ctx.fillRect(0,0,500,500);
-    }   
+        ctx.drawImage(offscreenContext.canvas, gameEngine.camera.x - width, gameEngine.camera.y - height);
+        offscreenContext.restore();
+
+        offscreenContext.clearRect(0, 0, width*2, height*2);
+    }
+
     update() {
-        
+
     }
 }
+// Shared Offscreen Canvas to manipulate images with.
+Darkness.offscreenCanvas = document.createElement("canvas");
+Darkness.offscreenContext = Darkness.offscreenCanvas.getContext("2d");
