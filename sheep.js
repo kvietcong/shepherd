@@ -85,7 +85,7 @@ class Sheep extends Entity {
         this.healthAPI.damage(damage);
         this.animator.untint();
         this.animator.tint("red", this.deathLength, 0.5);
-        this.sheepBaa.volume = params.volume;
+        this.sheepBaa.volume = params.volume * 0.7;
         this.sheepBaa.play();
         if (this.healthAPI.health <= 0) {
             this.dead = true;
