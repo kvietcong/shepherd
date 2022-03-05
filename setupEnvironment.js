@@ -281,7 +281,7 @@ const setupEnvironment = (entities, currMap) => {
         entities.push(shepherd);
 
         const startingArea = new SpawnPoint(900, 2100, 200, 200);
-        startingArea.addToList(entities, Sheep, 15);
+        startingArea.addToList(entities, Sheep, 20);
 
         const wolfPacks = [
             [new SpawnPoint(2600, 1500, 330, 300), 3], // rocks by first path
