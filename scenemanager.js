@@ -56,7 +56,9 @@ class SceneManager {
 
         const entities = [];
 
-        const shepherd = new Shepherd(1200, 1200);
+        //Alpha: 1200, 1200
+        //LevelOne: 1000, 2200
+        const shepherd = new Shepherd(1000, 2200);
         //const shepherd = new Shepherd(this.width / 2, this.height / 2);
         params.debugEntities.shepherd = shepherd;
         entities.push(shepherd);
@@ -74,7 +76,6 @@ class SceneManager {
             const [spawnPoint, amount] = info;
             spawnPoint.spawnEntity(Wolf, amount, gameEngine);
         });
-
         const mainEnvironment = setupEnvironment(entities);
         gameEngine.addEntity(sceneManager);
 
