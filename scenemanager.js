@@ -145,6 +145,7 @@ class SceneManager {
         entities.push(miniMap);
 
         gameEngine.addEntities(entities);
+        //const darkness = new Darkness();
         //gameEngine.addEntity(darkness);
     }
 
@@ -237,6 +238,7 @@ class SceneManager {
         entities.push(miniMap);
 
         gameEngine.addEntities(entities);
+        const darkness = new Darkness();
         gameEngine.addEntity(darkness);
     }
 

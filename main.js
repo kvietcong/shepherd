@@ -24,7 +24,7 @@ const initializeCanvas = () => {
 const canvas = initializeCanvas();
 const sceneManager = new SceneManager();
 const inventory = new Inventory(10, 10, 5, 5, 1);
-const darkness = new Darkness();
+
 
 const gameOver = () => {
 	return (Barn.sheepRequired - Barn.sheepCount) > Sheep.count;
