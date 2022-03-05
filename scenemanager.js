@@ -163,12 +163,12 @@ class SceneManager {
             [new SpawnPoint(4650, 800, 450, 450), 2], // big open area after bridge
             [new SpawnPoint(2600, 800, 450, 350), 3]  // small area by barn
         ];
-        
+
         wolfPacks.forEach((info) => {
             const [spawnPoint, amount] = info;
             spawnPoint.spawnEntity(Wolf, amount, gameEngine);
         });
-        
+
         const mainEnvironment = setupEnvironment(entities, "levelOne");
         gameEngine.addEntity(sceneManager);
 
@@ -208,7 +208,8 @@ class SceneManager {
         const woodText = new WoodText(600, 65, 85, 40);
         const sheepIcon = new Icon(assetManager.getAsset("./resources/just1Sheep.png"), 700, 18, 60, 60);
         const sheepText = new SheepText(760, 65, 100, 40);
-        const sheepLeftText = new Text(10, 500, 400, 40, () => `${Sheep.count} Sheep Left`);
+        const sheepLeftText = new ScaledRelativeText(
+            [0.0, 10], [1.0, -10], 0.2, () => `${Sheep.count} Sheep Left`);
         entities.push(fenceIcon);
         entities.push(fireIcon);
         //entities.push(treeIcon);
@@ -229,7 +230,7 @@ class SceneManager {
 
 
 
-    
+
 
     loadCredits(gameEngine) {
         let screen = new Icon(assetManager.getAsset("./resources/pixel_landscape_1.jpg"), 0, 0, this.width, this.height);

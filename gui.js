@@ -305,17 +305,14 @@ class MiniMap extends GUIElement {
 
             const { x, y, width, height } = entity;
             offscreenContext.beginPath();
-            offscreenContext.fillStyle = entity instanceof Wolf
-                ? "red"
-                : entity instanceof Sheep
-                    ? "cyan"
-                    : entity instanceof Shepherd
-                        ? "salmon"
-                        : entity instanceof Barn
-                            ? "gold"
-                            : entity.isDestructible
-                                ? "gray"
-                                : rgba(0, 0, 0, 0);
+            offscreenContext.fillStyle =
+                entity instanceof Wolf ? "red"
+                : entity instanceof Sheep ? "cyan"
+                : entity instanceof Shepherd ? "salmon"
+                : entity instanceof Barn || entity instanceof Chest ? "gold"
+                : entity instanceof Tree ? "brown"
+                : entity.isDestructible ? "gray"
+                : rgba(0, 0, 0, 0.05);
             offscreenContext.fillRect(x, y, width, height);
         });
 

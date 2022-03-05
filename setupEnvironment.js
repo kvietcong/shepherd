@@ -66,7 +66,6 @@ const setupEnvironment = (entities, currMap) => {
 		entities.push(new Tree(1550, 1300, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
 		entities.push(new Tree(1600, 1300, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
 		entities.push(new Tree(1650, 1300, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2));
-		
 
 		//first walkway area
 		//rocks
@@ -276,7 +275,7 @@ const setupEnvironment = (entities, currMap) => {
 
 		//FIRST WALKWAY
 		//west
-		entities.push(new Obstacle(2028, 1353, "./resources/3.png", 50, 50, 19, 80, 5));
+		entities.push(new Obstacle(2030, 1350, "./resources/3.png", 50, 50, 19, 80, 5));
 		//p1
 		//south 0
 		entities.push(new Obstacle(2223, 2218, "./resources/3.png", 50, 50, 327, 19, 5));
@@ -434,13 +433,13 @@ const setupEnvironment = (entities, currMap) => {
 		entities.push(new Tree(5254, 824, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
 		entities.push(new Tree(3991, 993, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
 		entities.push(new Tree(5892, 956, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
-		
+
 		entities.push(new Tree(2651, 1012, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
 		entities.push(new Tree(4187, 857, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
 		entities.push(new Tree(2064, 765, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
 		entities.push(new Tree(2409, 1018, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
 		entities.push(new Tree(4347, 917, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
-		
+
 		entities.push(new Tree(6461, 1032, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
 		entities.push(new Tree(5457, 791, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
 		entities.push(new Tree(2122, 971, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
@@ -473,10 +472,10 @@ const setupEnvironment = (entities, currMap) => {
 		//barn
 		entities.push(new Barn(820, 1500, "./resources/starDewBuildings.png", 130, 0, 111, 104, 3, 10));
 		//statue
-		entities.push(new Obstacle(1700, 1690, "./resources/TX Props.png", 445, 21, 36, 74, 2, 70, 50, false));
-		entities.push(new Obstacle(1940, 1690, "./resources/TX Props.png", 445, 21, 36, 74, 2, 70, 50, false));
+		entities.push(new Obstacle(1700, 1650, "./resources/TX Props.png", 445, 21, 36, 74, 2, 70, 50, false));
+		entities.push(new Obstacle(1940, 1650, "./resources/TX Props.png", 445, 21, 36, 74, 2, 70, 50, false));
 		//chest
-		entities.push(new Obstacle(1830, 1682, "./resources/TX Props.png", 96, 30, 31, 30, 2, 50, 50, false));
+		entities.push(new Chest(1830, 1650, "./resources/TX Props.png", 96, 30, 31, 30, 2, 50, 50, false));
 		//trees
 		entities.push(new Tree(1600, 1710, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
 		//hidden block
@@ -568,9 +567,9 @@ const setupEnvironment = (entities, currMap) => {
 		//OBSTACLES
 		// east vWall (shadow)
 		entities.push(new Obstacle(4000, 1690, "./resources/TX Wall.png", 290, 113, 10, 96, 2));
-		
+
 		//STARTING AREA
-		
+
 
 		//tileset
 		let tx = new Image(256, 256);

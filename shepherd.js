@@ -134,10 +134,11 @@ class Shepherd extends Entity {
             if (this.collidesWith(entity)) {
                 if (entity.isCollidable) {
                     if (entity instanceof Sheep) return;
-                    if (this.y - 15 > entity.y - this.height && this.y + 15 < entity.y + entity.height) {
+                    const collisionTolerance = 10;
+                    if (this.y - collisionTolerance > entity.y - this.height && this.y + collisionTolerance < entity.y + entity.height) {
                         if (this.x < entity.x) this.x = entity.x - this.width;
                         if (this.x > entity.x) this.x = entity.x + entity.width;
-                    } if (this.x - 15 > entity.x - this.width && this.x + 15 < entity.x + entity.width) {
+                    } if (this.x - collisionTolerance > entity.x - this.width && this.x + collisionTolerance < entity.x + entity.width) {
                         if (this.y < entity.y) this.y = entity.y - this.height;
                         if (this.y > entity.y) this.y = entity.y + entity.height;
                     }
@@ -148,6 +149,10 @@ class Shepherd extends Entity {
                 // } else
                 if (entity instanceof Coin || entity instanceof Log) {
                     entity.taken();
+                }
+                if (entity instanceof Chest) {
+                    inventory.gold += 100;
+                    entity.removeFromWorld = true;
                 }
             }
         });

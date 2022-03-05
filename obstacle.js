@@ -85,8 +85,6 @@ Barn.sheepRequired = 10;
 class Tree extends Obstacle {
     constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH) {
         super(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH, true);
-        //super(x, y, src, 0, 0, 50, 82, 3, 40 * 2, 70 * 2, true);
-        //super(x, y, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40 * 2, 70 * 2, true);
     }
     update(gameEngine) {
         super.update(gameEngine);
@@ -94,8 +92,14 @@ class Tree extends Obstacle {
         if (this.dead) {
             this.removeFromWorld = true;
             console.log("tree destroyed: x = " + this.x + " y = " + this.y)
-            gameEngine.addEntity(new Log(this.x, this.y));
+            gameEngine.addEntity(new Log(this.xCenter, this.yCenter));
         }
+    }
+}
+
+class Chest extends Obstacle {
+    constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH) {
+        super(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH);
     }
 }
 
