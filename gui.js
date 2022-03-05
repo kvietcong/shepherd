@@ -187,12 +187,16 @@ class ScaledRelativeButton extends GUIElement {
     }
 
     draw(ctx, gameEngine) {
-        const { width, height } = gameEngine;
-        const { padding } = this;
-        const maxTextWidth = width * this.width - padding * 2;
-
         ctx.save();
         {
+            const { width, height } = gameEngine;
+            const buttonWidth = width * this.width;
+            const buttonHeight = height * this.height;
+            const padding = this.padding < 1
+                ? buttonWidth * this.padding
+                : this.padding;
+            const maxTextWidth = width * this.width - padding * 2;
+
             ctx.font = `bold 1px ${this.font}`;
             const text = this.text instanceof Function
                 ? this.text(gameEngine)
@@ -205,9 +209,6 @@ class ScaledRelativeButton extends GUIElement {
             const y = (this.yInfo instanceof Array)
                 ? height * this.yInfo[0] + this.yInfo[1]
                 : height * this.yInfo;
-
-            const buttonWidth = width * this.width;
-            const buttonHeight = height * this.height;
 
             const metrics = ctx.measureText(text);
             const textHeight =
@@ -222,9 +223,7 @@ class ScaledRelativeButton extends GUIElement {
             roundRect.stroke();
 
             ctx.fillStyle = this.colors[this.state].text;
-            ctx.fillText(text,
-                x + padding - buttonWidth / 2, y + textHeight / 2 - 3,
-                maxTextWidth);
+            ctx.fillText(text, x + padding - buttonWidth / 2, y + textHeight / 2);
         }
         ctx.restore();
     }

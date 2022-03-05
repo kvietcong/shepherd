@@ -25,7 +25,7 @@ class SceneManager {
             0, 0, this.width, this.height
         );
 
-        const playButton = new ScaledRelativeButton(0.5, 0.4, 0.5, 0.2, "Play Game", 100);
+        const playButton = new ScaledRelativeButton(0.5, 0.4, 0.5, 0.2, "Start Game", 0.08);
         gameEngine.addEntity(playButton);
         playButton.onClick = () => {
             this.currentScene = "level1";
@@ -33,7 +33,7 @@ class SceneManager {
             this.loadLevelOne(gameEngine);
         };
 
-        const instructions = new ScaledRelativeButton(0.5, 0.6, 0.2, 0.1, "Instructions", 20);
+        const instructions = new ScaledRelativeButton(0.5, 0.6, 0.2, 0.1, "Instructions", 0.1);
         gameEngine.addEntity(instructions);
         instructions.onClick = () => {
             const instructionsElement = document.getElementById("instructions");
@@ -41,7 +41,7 @@ class SceneManager {
             instructionsElement.scrollIntoView({ behavior: "smooth" });
         };
 
-        const settings = new ScaledRelativeButton(0.5, 0.73, 0.15, 0.1, "Settings", 20);
+        const settings = new ScaledRelativeButton(0.5, 0.73, 0.15, 0.1, "Settings", 0.125);
         gameEngine.addEntity(settings);
         settings.onClick = () => {
             const settingsElement = document.getElementById("settings");
@@ -49,7 +49,7 @@ class SceneManager {
             settingsElement.scrollIntoView({ behavior: "smooth" });
         };
 
-        const credits = new ScaledRelativeButton(0.5, 0.85, 0.12, 0.08, "Credits", 20);
+        const credits = new ScaledRelativeButton(0.5, 0.85, 0.12, 0.08, "Credits", 0.15);
         gameEngine.addEntity(credits);
         credits.onClick = () => {
             const creditsElement = document.getElementById("credits");
@@ -62,7 +62,7 @@ class SceneManager {
 
     loadLevelAlpha(gameEngine) {
         const shopContainer = document.getElementById("shop");
-        shopContainer.children[0].classList.remove("disabled");
+        shopContainer.classList.remove("disabled");
 
         const entities = [];
 
@@ -151,7 +151,7 @@ class SceneManager {
 
     loadLevelOne(gameEngine) {
         const shopContainer = document.getElementById("shop");
-        shopContainer.children[0].classList.remove("disabled");
+        shopContainer.classList.remove("disabled");
 
         const entities = [];
 
@@ -244,14 +244,14 @@ class SceneManager {
         let screen = new Icon(assetManager.getAsset("./resources/pixel_landscape_1.jpg"), 0, 0, this.width, this.height);
         gameEngine.addEntity(screen);
 
-        const congrats = new ScaledRelativeButton(0.5, 0.4, 0.6, 0.3, "You Win!", 50, {
+        const congrats = new ScaledRelativeButton(0.5, 0.4, 0.6, 0.3, "You Win!", 0.1, {
             normal: { text: "Gold", background: rgba(0, 0, 0, 0.35), border: rgba(0, 0, 0, 0) },
             hover: { text: "Gold", background: rgba(0, 0, 0, 0.35), border: rgba(0, 0, 0, 0) },
         });
         gameEngine.addEntity(congrats);
         congrats.z = 10;
 
-        const playAgainButton = new ScaledRelativeButton(0.5, 0.7, 0.2, 0.15, "Play Again", 20);
+        const playAgainButton = new ScaledRelativeButton(0.5, 0.7, 0.25, 0.2, "Go Again", 0.1);
         gameEngine.addEntity(playAgainButton);
         playAgainButton.onClick = () => {
             this.currentScene = "level1";
@@ -268,14 +268,14 @@ class SceneManager {
             0, 0, this.width, this.height);
         gameEngine.addEntity(screen);
 
-        const failure = new ScaledRelativeButton(0.5, 0.4, 0.6, 0.3, "You Lost 😔", 50, {
+        const failure = new ScaledRelativeButton(0.5, 0.4, 0.6, 0.3, "You Lost :(", 0.1, {
             normal: { text: "Red", background: rgba(0, 0, 0, 0.35), border: rgba(0, 0, 0, 0) },
             hover: { text: "Red", background: rgba(0, 0, 0, 0.35), border: rgba(0, 0, 0, 0) },
         });
         gameEngine.addEntity(failure);
         failure.z = 10;
 
-        const playAgainButton = new ScaledRelativeButton(0.5, 0.7, 0.2, 0.15, "Play Again", 20);
+        const playAgainButton = new ScaledRelativeButton(0.5, 0.7, 0.2, 0.15, "Retry Game", 0.1);
         gameEngine.addEntity(playAgainButton);
         playAgainButton.onClick = () => {
             // TODO Fix Duplicating Sheep and Probably Wolves!

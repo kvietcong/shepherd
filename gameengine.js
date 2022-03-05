@@ -179,6 +179,7 @@ class GameEngine {
         // Draw latest things first
         for (let i = this.entities.length - 1; i >= 0; i--) {
             const entity = this.entities[i];
+            if (entity.noDraw) continue;
             this.drawEffects(entity, () => entity.draw(this.ctx, this));
         }
 

@@ -122,3 +122,39 @@ setInterval(() => {
 	const { isPaused } = gameEngine;
 	pausePlayButton.innerText = `${isPaused ? "Play" : "Pause"} Game`;
 }, 200);
+
+const killAllWolves = () => gameEngine.entities.forEach(entity => {
+	if (entity instanceof Wolf) entity.removeFromWorld = true;
+});
+
+const killGUI = () => gameEngine.entities.forEach(entity => {
+	if (entity instanceof GUIElement) entity.removeFromWorld = true;
+});
+
+const toggleGUI = () => {
+	gameEngine.entities.forEach(entity => {
+		if (entity instanceof GUIElement) entity.noDraw = !entity.noDraw;
+	});
+}
+
+const commandsElement = document.getElementById("commands");
+commandsElement.addEventListener("change", event => {
+	const { value } = event.target;
+	let commanded = true;
+	switch(value) {
+		case "Kill All Wolves":
+			killAllWolves();
+			break;
+		case "greedisgood":
+			inventory.gold += 100;
+			inventory.wood += 100;
+			break;
+		case "Save The Trees":
+			inventory.wood += 100;
+			break;
+		case "I Want Mods":
+			inventory.modificationPoints += 100;
+			break;
+	}
+	if (commanded) event.target.value = "";
+});
