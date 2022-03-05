@@ -15,9 +15,8 @@ class Darkness {
         const { offscreenContext, offscreenCanvas } = Darkness;
         const { width, height } = gameEngine;
 
-        offscreenCanvas.width = width;
-        offscreenCanvas.height = height;
-
+        offscreenCanvas.width = width*2;
+        offscreenCanvas.height = height*2;
         var g = offscreenContext.createRadialGradient(x, y, 0, x, y, radius);
         g.addColorStop(1, 'rgba(0,0,0,0)');
         g.addColorStop(0, this.amb);
@@ -28,13 +27,13 @@ class Darkness {
         const { offscreenContext, offscreenCanvas } = Darkness;
         const { width, height } = gameEngine;
         offscreenContext.save();
-        offscreenCanvas.width = width;
-        offscreenCanvas.height = height;
+        offscreenCanvas.width = width*2;
+        offscreenCanvas.height = height*2;
         
         //gameEngine.camera.zoom;
         let scale = gameEngine.width/1210;
         // Shepherd Light
-        this.addLight(gameEngine.camera.x, gameEngine.camera.y, this.radius);
+        this.addLight(width, height, this.radius);
         // Map Light
         //this.addLight(scale*1110, scale*110, scale*110);
         // offscreenContext.translate(
@@ -43,9 +42,9 @@ class Darkness {
         // );
         offscreenContext.fillStyle = this.amb;
         offscreenContext.globalCompositeOperation = 'xor';
-        offscreenContext.fillRect(0, 0, width, height);
+        offscreenContext.fillRect(0, 0, width*2, height*2);
 
-        ctx.drawImage(offscreenContext.canvas, 0, 0);
+        ctx.drawImage(offscreenContext.canvas, gameEngine.camera.x - width, gameEngine.camera.y - height);
         offscreenContext.restore();
 
         offscreenContext.clearRect(0, 0, width, height);
