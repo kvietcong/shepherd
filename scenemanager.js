@@ -37,14 +37,16 @@ class SceneManager {
         gameEngine.addEntity(instructions);
         instructions.onClick = () => {
             const instructionsElement = document.getElementById("instructions");
-            instructionsElement.open = !instructionsElement.open;
+            instructionsElement.open = true;
+            instructionsElement.scrollIntoView({ behavior: "smooth" });
         };
 
         const settings = new ScaledRelativeButton(0.5, 0.73, 0.1, 0.08, "Settings", 20);
         gameEngine.addEntity(settings);
         settings.onClick = () => {
             const settingsElement = document.getElementById("settings");
-            settingsElement.open = !settingsElement.open;
+            settingsElement.open = true;
+            settingsElement.scrollIntoView({ behavior: "smooth" });
         };
 
 	    gameEngine.addEntity(screen);
