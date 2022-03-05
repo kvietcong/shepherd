@@ -139,6 +139,12 @@ const toggleGUI = () => {
 	});
 }
 
+const toggleDarkness = () => {
+	gameEngine.entities.forEach(entity => {
+		if (entity instanceof Darkness) entity.noDraw = !entity.noDraw;
+	});
+}
+
 const commandsElement = document.getElementById("commands");
 commandsElement.addEventListener("change", event => {
 	const { value } = event.target;
@@ -156,6 +162,9 @@ commandsElement.addEventListener("change", event => {
 			break;
 		case "I Want Mods":
 			inventory.modificationPoints += 100;
+			break;
+		case "Win The Round":
+			Barn.sheepCount = 100;
 			break;
 	}
 	if (commanded) event.target.value = "";

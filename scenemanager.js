@@ -103,8 +103,10 @@ class SceneManager {
         const sheepText = new SheepText(760, 50, 100, 40);
         const sheepLeftText = new ScaledRelativeText(
             [0.0, 10], [1.0, -10], 0.2, () => `${Sheep.count} Sheep Left`);
+        const roundsWonText = new ScaledRelativeText(
+            [0.8, -10], [1.0, -10], 0.2, `Rounds Won: ${this.successfulRuns - 1}`);
 
-        entities.push(fenceIcon, fireIcon, goldIcon, goldText, woodIcon, woodText, sheepIcon, sheepText, sheepLeftText);
+        entities.push(fenceIcon, fireIcon, goldIcon, goldText, woodIcon, woodText, sheepIcon, sheepText, sheepLeftText, roundsWonText);
 
         const miniMap = new MiniMap(mainEnvironment, camera);
         entities.push(miniMap);
@@ -113,7 +115,7 @@ class SceneManager {
             const darkness = new Darkness();
             entities.push(darkness);
             // Make Darkness Scale With Level
-            // darkness.radius -= (this.successfulRuns)
+            darkness.radius = max(darkness.radius - this.successfulRuns * 40, 200);
         }
 
         gameEngine.addEntities(entities);

@@ -2,7 +2,7 @@ class Darkness {
     constructor() {
         //the lower the darker.
         this.ambientLight = .01;
-        this.radius = 200;
+        this.radius = 600;
         this.amb = 'rgba(0,0,0,' + (1-this.ambientLight) + ')';
         this.z = 4;
         this.isZoomable = true;
