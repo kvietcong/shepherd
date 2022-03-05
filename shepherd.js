@@ -173,7 +173,7 @@ class Shepherd extends Entity {
                         if (entity instanceof Fence) {
                             fence.removeFromWorld = true;
                             if (flag)
-                                inventory.addWood(params.inventory.fenceCost);
+                                inventory.wood += params.inventory.fenceCost;
                             flag = false;
                         }
                     }
@@ -186,7 +186,7 @@ class Shepherd extends Entity {
             }
         }
         if (two) {
-            if (this.actionTimeElapsed.fire2 >= 1 &&
+            if (this.actionTimeElapsed.fire2 >= params.shepherd.fireCooldown &&
                     inventory.attemptSpend(params.inventory.fireCost, "wood")) {
                 let fire;
                 if (this.facing == 0) fire = new Fire(this.x, this.y - 50);
@@ -201,7 +201,7 @@ class Shepherd extends Entity {
                         if (entity instanceof Fire) {
                             fire.removeFromWorld = true;
                             if (flag)
-                                inventory.addWood(params.inventory.fireCost);
+                                inventory.wood += params.inventory.fireCost;
                             flag = false;
                         }
                     }
