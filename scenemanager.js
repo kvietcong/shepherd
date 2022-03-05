@@ -1,3 +1,5 @@
+const allLevelNames = ["levelOne", "alpha", "levelTwo"];
+
 class SceneManager {
             //x= 1210, y = 681.
     constructor() {
@@ -61,7 +63,7 @@ class SceneManager {
     }
 
     loadLevel() {
-        this.currentScene = ["levelOne", "alpha"][this.successfulRuns++ % 2];
+        this.currentScene = allLevelNames[this.successfulRuns++ % allLevelNames.length];
 
         const shopContainer = document.getElementById("shop");
         shopContainer.classList.remove("disabled");
@@ -163,6 +165,9 @@ class SceneManager {
                 break;
             case "alpha":
             case "levelOne":
+            case "levelTwo":
+            case "levelThree":
+            case "levelFour":
                 if (gameOver()) {
                     this.currentScene = "gameOver";
                     this.resetGameEngine(gameEngine);
