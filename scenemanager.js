@@ -33,7 +33,7 @@ class SceneManager {
 	    gameEngine.addEntity(begin);
     }
 
-    loadLevelOne(gameEngine) {
+    loadLevelAlpha(gameEngine) {
         const shopContainer = document.getElementById("shop");
         shopContainer.children[0].classList.remove("disabled");
 
@@ -41,7 +41,7 @@ class SceneManager {
 
         //Alpha: 1200, 1200
         //LevelOne: 1000, 2200
-        const shepherd = new Shepherd(1000, 2200);
+        const shepherd = new Shepherd(1200, 1200);
         //const shepherd = new Shepherd(this.width / 2, this.height / 2);
         params.debugEntities.shepherd = shepherd;
         entities.push(shepherd);
@@ -59,7 +59,7 @@ class SceneManager {
             const [spawnPoint, amount] = info;
             spawnPoint.spawnEntity(Wolf, amount, gameEngine);
         });
-        const mainEnvironment = setupEnvironment(entities);
+        const mainEnvironment = setupEnvironment(entities, "alpha");
         gameEngine.addEntity(sceneManager);
 
         const volumeSlider = document.getElementById("volume-slider");
@@ -116,6 +116,99 @@ class SceneManager {
         gameEngine.addEntities(entities);
         //gameEngine.addEntity(darkness);
     }
+
+
+
+
+    loadLevelOne(gameEngine) {
+        const shopContainer = document.getElementById("shop");
+        shopContainer.children[0].classList.remove("disabled");
+
+        const entities = [];
+
+        //Alpha: 1200, 1200
+        //LevelOne: 1000, 2200
+        const shepherd = new Shepherd(1000, 2200);
+        //const shepherd = new Shepherd(this.width / 2, this.height / 2);
+        params.debugEntities.shepherd = shepherd;
+        entities.push(shepherd);
+
+        const startingArea = new SpawnPoint(900, 2100, 200, 200);
+        startingArea.spawnEntity(Sheep, 15, gameEngine);
+
+        const wolfPacks = [
+            [new SpawnPoint(2600, 1500, 330, 300), 3], // rocks by first path
+            [new SpawnPoint(5650, 1500, 300, 300), 2], // bridge over water
+            [new SpawnPoint(4650, 800, 450, 450), 2], // big open area after bridge
+            [new SpawnPoint(2600, 800, 450, 350), 3]  // small area by barn
+        ];
+        
+        wolfPacks.forEach((info) => {
+            const [spawnPoint, amount] = info;
+            spawnPoint.spawnEntity(Wolf, amount, gameEngine);
+        });
+        
+        const mainEnvironment = setupEnvironment(entities, "levelOne");
+        gameEngine.addEntity(sceneManager);
+
+        const volumeSlider = document.getElementById("volume-slider");
+        volumeSlider.value = params.volume;
+        const backgroundMusic = assetManager.getAsset("./resources/No Worries.mp3");
+        backgroundMusic.loop = true;
+        volumeSlider.addEventListener("change", event => {
+            const newVolume = event.target.value;
+            backgroundMusic.volume = newVolume;
+            params.volume = newVolume;
+            backgroundMusic.play();
+        });
+        backgroundMusic.volume = volumeSlider.value;
+        const autoPlayID = setInterval(() => {
+            backgroundMusic.play()
+                .then(() => clearInterval(autoPlayID))
+                .catch(console.error);
+        }, 500);
+
+        const camera = new Camera(gameEngine.width / 2, gameEngine.height / 2);
+        camera.follow(shepherd);
+        gameEngine.setCamera(camera);
+
+        const fenceIcon = new Icon(assetManager.getAsset("./resources/fence_horizontal.png")
+            , 50, 25, 50, 50, params.inventory.fenceCost);
+        const fireIcon = new Icon(assetManager.getAsset("./resources/fireicon.png")
+            , 100, 25, 50, 50, params.inventory.fireCost);
+        // const treeIcon = new Icon(assetManager.getAsset("./resources/pinetree.png")
+        //     , 150, 25, 50, 50, "20");
+        const goldIcon = new Icon(assetManager.getAsset("./resources/coin_01.png")
+            , 400, 25, 50, 50);
+        const goldText = new GoldText(
+            450, 65, 85, 40);
+        const woodIcon = new Icon(assetManager.getAsset("./resources/logs.png")
+            , 550, 25, 50, 50);
+        const woodText = new WoodText(600, 65, 85, 40);
+        const sheepIcon = new Icon(assetManager.getAsset("./resources/just1Sheep.png"), 700, 18, 60, 60);
+        const sheepText = new SheepText(760, 65, 100, 40);
+        const sheepLeftText = new Text(10, 500, 400, 40, () => `${Sheep.count} Sheep Left`);
+        entities.push(fenceIcon);
+        entities.push(fireIcon);
+        //entities.push(treeIcon);
+        entities.push(goldIcon);
+        entities.push(goldText);
+        entities.push(woodIcon);
+        entities.push(woodText);
+        entities.push(sheepIcon);
+        entities.push(sheepText);
+        entities.push(sheepLeftText)
+
+        const miniMap = new MiniMap(mainEnvironment, camera);
+        entities.push(miniMap);
+
+        gameEngine.addEntities(entities);
+        //gameEngine.addEntity(darkness);
+    }
+
+
+
+    
 
     loadCredits(gameEngine) {
         let screen = new Icon(assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
