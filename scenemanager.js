@@ -240,6 +240,7 @@ class SceneManager {
         gameEngine.addEntities(entities);
         const darkness = new Darkness();
         gameEngine.addEntity(darkness);
+        gameEngine.addEntity(new Chest(1030, 2250, "./resources/TX Props.png", 96, 30, 31, 30, 2, 50, 50, false));
     }
 
 

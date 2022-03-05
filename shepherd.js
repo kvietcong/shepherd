@@ -151,8 +151,8 @@ class Shepherd extends Entity {
                     entity.taken();
                 }
                 if (entity instanceof Chest) {
-                    inventory.gold += 100;
-                    entity.removeFromWorld = true;
+                    //inventory.gold += 100;
+                    entity.dead = true;
                 }
             }
         });

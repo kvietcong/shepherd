@@ -98,8 +98,21 @@ class Tree extends Obstacle {
 }
 
 class Chest extends Obstacle {
-    constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH) {
-        super(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH);
+    constructor(x, y) {
+        super(x, y, "./resources/TX Props.png", 96, 30, 31, 30, 2, 50, 50, false);
+        this.dead = false;
+    }
+    update(gameEngine) {
+        if (this.dead) {
+            this.removeFromWorld = true;
+            gameEngine.addEntity(new Coin(this.x, this.y, 10));
+            gameEngine.addEntity(new Coin(this.x - 5, this.y - 5, 10));
+            gameEngine.addEntity(new Coin(this.x - 5, this.y, 10));
+            gameEngine.addEntity(new Coin(this.x, this.y - 5, 10));
+            gameEngine.addEntity(new Coin(this.x + 5, this.y + 5, 10));
+            gameEngine.addEntity(new Coin(this.x, this.y + 5, 10));
+            gameEngine.addEntity(new Coin(this.x - 5, this.y - 5, 10));
+        }
     }
 }
 
