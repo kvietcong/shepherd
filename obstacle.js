@@ -140,7 +140,7 @@ class Fire extends Obstacle {
         gameEngine.entities.forEach(entity => {
             const distance = this.distanceTo(entity);
             if ((entity instanceof Wolf) || distance > 200) return;
-            if (entity instanceof Sheep) entity.heal(5 * gameEngine.deltaTime);
+            if (entity instanceof Sheep || entity instanceof Fire) entity.heal(5 * gameEngine.deltaTime);
             if (entity instanceof Shepherd) entity.energy = min(entity.energy + 25 * gameEngine.deltaTime, entity.maxEnergy);
         });
     }
