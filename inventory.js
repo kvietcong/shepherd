@@ -14,6 +14,9 @@ class Inventory {
         this.modificationPoints = 0;
         this.fenceLevel = fenceLevel;
         this.fireLevel = fireLevel;
+
+        this.initialGold = gold;
+        this.initialWood = wood;
     }
 
     // Ex: inventory.get("gold"); or inventory.set("wood", 100);
@@ -31,9 +34,11 @@ class Inventory {
     set gold(newGold) {
         this.set("gold", newGold);
     }
+    resetGold() { this.gold = this.initialGold; }
 
     get wood() { return this.resources.wood; }
     set wood(newWood) { this.set("wood", newWood); }
+    resetWood() { this.wood = this.initialWood; }
 
     get modificationPoints() { return this.resources.modificationPoints; }
     set modificationPoints(newModificationPoints) { this.set("modificationPoints", newModificationPoints); }

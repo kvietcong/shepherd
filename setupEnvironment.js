@@ -607,11 +607,10 @@ const setupEnvironment = (entities, currMap) => {
         params.debugEntities.shepherd = shepherd;
         entities.push(shepherd);
 
-		
         const startingArea = new SpawnPoint(3800, 3000, 200, 200);
         startingArea.addToList(entities, Sheep, 20);
 		entities.push(startingArea);
-		
+
         const wolfPacks = [
             [new SpawnPoint(2100, 1100, 450, 350), 5], // east path north
             [new SpawnPoint(2200, 2300, 330, 300), 5], // bridge over water
@@ -625,7 +624,7 @@ const setupEnvironment = (entities, currMap) => {
 			entities.push(spawnPoint);
             spawnPoint.addToList(entities, Wolf, amount);
         });
-		
+
 
 
 		//COLLISION
@@ -710,14 +709,14 @@ const setupEnvironment = (entities, currMap) => {
 		entities.push(new Obstacle(4025, 1250, "./resources/TX Props.png", 225, 239, 30, 41, 2, 64, 56, false));
 		//small
 		entities.push(new Obstacle(4125, 1250, "./resources/TX Props.png", 289, 251, 30, 29, 2, 64, 56, false));
-		
+
 		//upper trees
 		entities.push(new Tree(3900, 680, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
 		entities.push(new Tree(3601, 340, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
 		entities.push(new Tree(4353, 379, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
 		entities.push(new Tree(3700, 1300, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
 		entities.push(new Tree(4100, 1100, "./resources/TX Plant.png", 161, 17, 94, 135, 2, 20, 10));
-		
+
 		entities.push(new Tree(4300, 1180, "./resources/TX Plant.png", 24, 14, 112, 138, 2, 20, 10));
 		entities.push(new Tree(3400, 1200, "./resources/TX Plant.png", 24, 14, 112, 138, 2, 20, 10));
 		entities.push(new Tree(2720, 1900, "./resources/TX Plant.png", 24, 14, 112, 138, 2, 20, 10));
@@ -909,7 +908,7 @@ const setupEnvironment = (entities, currMap) => {
         params.debugEntities.shepherd = shepherd;
         entities.push(shepherd);
 
-		
+
         const startingArea = new SpawnPoint(6400, 800, 200, 200);
         startingArea.addToList(entities, Sheep, 20);
 		entities.push(startingArea);
@@ -1067,7 +1066,7 @@ const setupEnvironment = (entities, currMap) => {
 		//r5
 		//crumbled column
 		entities.push(new Obstacle(3415, 1700, "./resources/TX Props.png", 416, 194, 32, 57, 2, 64, 56, false));
-		
+
 		//r6
 		//cross
 		entities.push(new Obstacle(4930, 1850, "./resources/TX Props.png", 227, 303, 26, 40, 2, 64, 56, false));
@@ -1191,7 +1190,7 @@ const setupEnvironment = (entities, currMap) => {
 		//COLLISION
 
 		//OBSTACLES
-		
+
 
 		//STARTING AREA
 

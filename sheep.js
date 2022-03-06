@@ -227,31 +227,31 @@ class Sheep extends Entity {
 
         // Separation
         this.velocity.lerpToInPlace(
-            separation.scale(speed * (separationFactor + params.sheep.modifications.separationFactor * 10)),
+            separation.scale(speed * (separationFactor + params.sheep.modifications.separationFactor * 8)),
             1 * gameEngine.deltaTime
         );
 
         // Cohesion
         this.velocity.lerpToInPlace(
-            cohesion.scale(speed * (cohesionFactor + params.sheep.modifications.cohesionFactor * 10)),
+            cohesion.scale(speed * (cohesionFactor + params.sheep.modifications.cohesionFactor * 5)),
             1 * gameEngine.deltaTime
         );
 
         // Alignment
         this.velocity.lerpToInPlace(
-            alignment.scale(speed * (alignmentFactor + params.sheep.modifications.alignmentFactor * 10)),
+            alignment.scale(speed * (alignmentFactor + params.sheep.modifications.alignmentFactor * 8)),
             1 * gameEngine.deltaTime
         );
 
         // Align to shepherd
         this.velocity.lerpToInPlace(
-            shepAlignment.scale(speed * (shepherdFactor + params.sheep.modifications.shepherdFactor * 10)),
+            shepAlignment.scale(speed * (shepherdFactor + params.sheep.modifications.shepherdFactor * 2)),
             1 * gameEngine.deltaTime
         );
 
         // Repel from Wolf
         this.velocity.lerpToInPlace(
-            wolfRepel.scale(speed * (wolfFactor + params.sheep.modifications.wolfFactor * 10)),
+            wolfRepel.scale(speed * (wolfFactor + params.sheep.modifications.wolfFactor * 8)),
             1 * gameEngine.deltaTime
         );
 

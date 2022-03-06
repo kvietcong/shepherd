@@ -1,4 +1,4 @@
-const allLevelNames = ["levelThree", "levelTwo", "levelOne", "alpha"];
+const allLevelNames = ["levelThree", "levelOne", "levelTwo"];
 
 class SceneManager {
     constructor() {
@@ -122,23 +122,27 @@ class SceneManager {
     }
 
     loadCredits(gameEngine) {
-        let screen = new Icon(assetManager.getAsset("./resources/pixel_landscape_1.jpg"), 0, 0, this.width, this.height);
+        const isWinRound = this.successfulRuns === (allLevelNames.length * 2);
+        const background = `./resources/pixel_landscape_${isWinRound ? 2 : 1}.jpg`;
+        let screen = new Icon(assetManager.getAsset(background), 0, 0, this.width, this.height);
         gameEngine.addEntity(screen);
 
-        const congrats = new ScaledRelativeButton(0.5, 0.4, 0.6, 0.3, "You Win!", 0.1, {
+        const congratsText = isWinRound ? "You Win!" : "Nice Round!";
+        const congrats = new ScaledRelativeButton(0.5, 0.4, 0.6, 0.3, congratsText, 0.1, {
             normal: { text: "Gold", background: rgba(0, 0, 0, 0.35), border: rgba(0, 0, 0, 0) },
             hover: { text: "Gold", background: rgba(0, 0, 0, 0.35), border: rgba(0, 0, 0, 0) },
         });
         gameEngine.addEntity(congrats);
         congrats.z = 10;
 
-        const playAgainButton = new ScaledRelativeButton(0.5, 0.7, 0.25, 0.2, "Go Again", 0.1);
+        const inFreeplay = this.successfulRuns >= (allLevelNames.length * 2);
+        const playAgainText = inFreeplay ? "Free Play" : "Next Level";
+        const playAgainButton = new ScaledRelativeButton(0.5, 0.7, 0.25, 0.2, playAgainText, 0.1);
         gameEngine.addEntity(playAgainButton);
         playAgainButton.onClick = () => {
             this.resetGameEngine(gameEngine);
             Barn.sheepRequired = min(Barn.sheepRequired + 1, 20);
-            inventory.gold = floor(inventory.gold / 2);
-            inventory.wood = floor(inventory.wood / 2);
+            inventory.resetWood();
             this.loadLevel();
         };
         playAgainButton.z = 10;
@@ -157,10 +161,13 @@ class SceneManager {
         gameEngine.addEntity(failure);
         failure.z = 10;
 
-        const playAgainButton = new ScaledRelativeButton(0.5, 0.7, 0.2, 0.15, "Retry Game", 0.1);
+        const playAgainButton = new ScaledRelativeButton(0.5, 0.7, 0.2, 0.15, "Retry Round", 0.1);
         gameEngine.addEntity(playAgainButton);
         playAgainButton.onClick = () => {
             this.resetGameEngine(gameEngine);
+            // You keep gold you had before
+            inventory.resetWood();
+            inventory.wood += 20; // Little Extra to help from the loss
             this.successfulRuns--;
             this.loadLevel();
         };

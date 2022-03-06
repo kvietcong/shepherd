@@ -4,7 +4,8 @@ params.shepherd = {
     fenceCooldown: 0.25,
     fireCooldown: 1,
     action3Cooldown: 2,
-    attackCooldown: 0.7
+    attackCooldown: 0.7,
+    attack2Cooldown: 1.1,
 };
 
 const makeShepherdAnimator = () => {
@@ -52,13 +53,14 @@ class Shepherd extends Entity {
         this.velocity = new Vector(0, 0);
         this.maxSpeed = maxSpeed;
         this.slashDamage = 25;
-        this.jabDamage = 25;
+        this.jabDamage = 50;
         // shepherds's fire state variables
         this.actionTimeElapsed = {
             fence1: params.shepherd.fenceCooldown,
             fire2: params.shepherd.fireCooldown,
             action3: params.shepherd.action3Cooldown,
-            attack: params.shepherd.attackCooldown
+            attack: params.shepherd.attackCooldown,
+            attack2: params.shepherd.attack2Cooldown
         };
         this.time = 0;
         this.setAnimator(makeShepherdAnimator());
@@ -130,6 +132,7 @@ class Shepherd extends Entity {
             isAttacking = true;
         }
         gameEngine.entities.forEach(entity => {
+            if (params.isGhost) return;
             if (entity === this) return;
             if (this.collidesWith(entity)) {
                 if (entity.isCollidable) {
@@ -151,7 +154,6 @@ class Shepherd extends Entity {
                     entity.taken();
                 }
                 if (entity instanceof Chest) {
-                    //inventory.gold += 100;
                     entity.dead = true;
                 }
             }
@@ -182,7 +184,7 @@ class Shepherd extends Entity {
                     gameEngine.addEntity(new CooldownTimer(50, 25, 50, 50, params.shepherd.fenceCooldown));
                     this.actionTimeElapsed.fence1 = 0;
                 }
-                
+
             }
         }
         if (two) {
@@ -224,13 +226,13 @@ class Shepherd extends Entity {
             }
         }
         if (!(space || click) && (q || rightclick)) {
-            if (this.actionTimeElapsed.attack >= params.shepherd.attackCooldown) {
+            if (this.actionTimeElapsed.attack2 >= params.shepherd.attack2Cooldown) {
                 //x - 40, y - 30, left; x + 10, y - 30, right; x - 10, y + 10, down; x - 10, y - 60, up.
                 if (this.facing == 0) gameEngine.addEntity(new Attack(this.x - 10, this.y - 60, this.jabDamage, 3, new Vector(0, -100)));
                 if (this.facing == 1) gameEngine.addEntity(new Attack(this.x - 40, this.y - 30, this.jabDamage, 2, new Vector(-100, 0)));
                 if (this.facing == 2) gameEngine.addEntity(new Attack(this.x - 10, this.y + 10, this.jabDamage, 1, new Vector(0, 100)));
                 if (this.facing == 3) gameEngine.addEntity(new Attack(this.x + 10, this.y - 30, this.jabDamage, 0, new Vector(100, 0)));
-                this.actionTimeElapsed.attack = 0;
+                this.actionTimeElapsed.attack2 = 0;
 
                 // different attack cooldown for jab vs slash?
             }
@@ -240,7 +242,7 @@ class Shepherd extends Entity {
 
         this.velocity
             .setUnit()
-            .scaleInPlace(this.maxSpeed * (isAttacking ? 0.5 : 1));
+            .scaleInPlace(this.maxSpeed * (isAttacking ? 0.5 : 1) * (params.isGhost ? 5 : 1));
 
         // Sprinting
         this.timeSinceLostEnergy += gameEngine.deltaTime;
