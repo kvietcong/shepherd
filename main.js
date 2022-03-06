@@ -34,6 +34,7 @@ const levelWon = () => {
 }
 
 assetManager.queueDownload("./resources/pixel_landscape_1.jpg");
+assetManager.queueDownload("./resources/pixel_landscape_2.jpg");
 assetManager.queueDownload("./resources/Play.png");
 assetManager.queueDownload("./resources/wolf.png");
 assetManager.queueDownload("./resources/shepherd.png")
@@ -149,21 +150,26 @@ const commandsElement = document.getElementById("commands");
 commandsElement.addEventListener("change", event => {
 	const { value } = event.target;
 	let commanded = true;
-	switch(value) {
-		case "Kill All Wolves":
+	switch(value.toLowerCase()) {
+		case "killallwolves":
+		case "kill all wolves":
 			killAllWolves();
 			break;
 		case "greedisgood":
+		case "greed is good":
 			inventory.gold += 100;
 			inventory.wood += 100;
 			break;
-		case "Save The Trees":
+		case "savethetrees":
+		case "save the trees":
 			inventory.wood += 100;
 			break;
-		case "I Want Mods":
+		case "iwantmods":
+		case "i want mods":
 			inventory.modificationPoints += 100;
 			break;
-		case "Win The Round":
+		case "wintheround":
+		case "win the round":
 			Barn.sheepCount = 100;
 			break;
 	}
