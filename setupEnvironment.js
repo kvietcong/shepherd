@@ -611,7 +611,7 @@ const setupEnvironment = (entities, currMap) => {
         const startingArea = new SpawnPoint(3800, 3000, 200, 200);
         startingArea.addToList(entities, Sheep, 20);
 		entities.push(startingArea);
-		/*
+		
         const wolfPacks = [
             [new SpawnPoint(2100, 1100, 450, 350), 5], // east path north
             [new SpawnPoint(2200, 2300, 330, 300), 5], // bridge over water
@@ -625,7 +625,7 @@ const setupEnvironment = (entities, currMap) => {
 			entities.push(spawnPoint);
             spawnPoint.addToList(entities, Wolf, amount);
         });
-		*/
+		
 
 
 		//COLLISION
@@ -904,10 +904,62 @@ const setupEnvironment = (entities, currMap) => {
 
 
 	if(importedMap.mapType == "levelThree") {
+
+		const shepherd = new Shepherd(4400, 4000);
+        params.debugEntities.shepherd = shepherd;
+        entities.push(shepherd);
+
+		
+        const startingArea = new SpawnPoint(3800, 3000, 200, 200);
+        startingArea.addToList(entities, Sheep, 20);
+		entities.push(startingArea);
+
+		//wolves
+
 		//COLLISION
-		//starting area
-		entities.push(new Obstacle(3100, 3100, "./resources/3.png", 50, 50, 19, 80, 5));
-		entities.push(new Obstacle(3100, 3100, "./resources/3.png", 50, 50, 327, 19, 5));
+		//vertical - right most is 0
+		//0
+		entities.push(new Obstacle(7050, 450, "./resources/3.png", 50, 50, 19, 950, 5));
+		//1-0
+		entities.push(new Obstacle(6180, 450, "./resources/3.png", 50, 50, 19, 335, 5));
+		//1-1
+		entities.push(new Obstacle(6180, 2415, "./resources/3.png", 50, 50, 19, 308, 5));
+		//2-0
+		entities.push(new Obstacle(4730, 450, "./resources/3.png", 50, 50, 19, 566, 5));
+		//2-1
+		entities.push(new Obstacle(4730, 3575, "./resources/3.png", 50, 50, 19, 75, 5));
+		//3-0
+		entities.push(new Obstacle(3280, 450, "./resources/3.png", 50, 50, 19, 122, 5));
+		//3-1
+		entities.push(new Obstacle(3280, 1350, "./resources/3.png", 50, 50, 19, 520, 5));
+		//4
+		entities.push(new Obstacle(1830, 450, "./resources/3.png", 50, 50, 19, 950, 5));
+
+		//horizontal - top most is 0
+		//0
+		entities.push(new Obstacle(1830, 470, "./resources/3.png", 50, 50, 1050, 19, 5));
+		//1-0
+		entities.push(new Obstacle(1830, 1550, "./resources/3.png", 50, 50, 425, 19, 5));
+		//1-1
+		entities.push(new Obstacle(4250, 1550, "./resources/3.png", 50, 50, 230, 19, 5));
+		//1-2
+		entities.push(new Obstacle(5700, 1550, "./resources/3.png", 50, 50, 100, 19, 5));
+		//2-0
+		entities.push(new Obstacle(1830, 2800, "./resources/3.png", 50, 50, 135, 19, 5));
+		//2-1
+		entities.push(new Obstacle(2800, 2800, "./resources/3.png", 50, 50, 230, 19, 5));
+		//2-2
+		entities.push(new Obstacle(4250, 2800, "./resources/3.png", 50, 50, 230, 19, 5));
+		//2-3
+		entities.push(new Obstacle(5700, 2800, "./resources/3.png", 50, 50, 100, 19, 5));
+		//3-0
+		entities.push(new Obstacle(1830, 3860, "./resources/3.png", 50, 50, 135, 19, 5));
+		//3-1
+		entities.push(new Obstacle(2800, 3860, "./resources/3.png", 50, 50, 230, 19, 5));
+		//3-2
+		entities.push(new Obstacle(4250, 3860, "./resources/3.png", 50, 50, 400, 19, 5));
+		//4
+		entities.push(new Obstacle(1830, 5020, "./resources/3.png", 50, 50, 1050, 19, 5));
 
 		//OBSTACLES
 		

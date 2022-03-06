@@ -1,4 +1,4 @@
-const allLevelNames = ["levelTwo", "levelOne", "alpha"];
+const allLevelNames = ["levelThree", "levelTwo", "levelOne", "alpha"];
 
 class SceneManager {
     constructor() {
