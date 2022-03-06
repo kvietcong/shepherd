@@ -172,6 +172,11 @@ commandsElement.addEventListener("change", event => {
 		case "win the round":
 			Barn.sheepCount = 100;
 			break;
+		case "ghost":
+		case "ghostmode":
+		case "ghost mode":
+			params.isGhost = !params.isGhost;
+			break;
 	}
 	if (commanded) event.target.value = "";
 });

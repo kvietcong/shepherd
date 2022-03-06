@@ -130,6 +130,7 @@ class Shepherd extends Entity {
             isAttacking = true;
         }
         gameEngine.entities.forEach(entity => {
+            if (params.isGhost) return;
             if (entity === this) return;
             if (this.collidesWith(entity)) {
                 if (entity.isCollidable) {
@@ -151,7 +152,6 @@ class Shepherd extends Entity {
                     entity.taken();
                 }
                 if (entity instanceof Chest) {
-                    //inventory.gold += 100;
                     entity.dead = true;
                 }
             }
@@ -182,7 +182,7 @@ class Shepherd extends Entity {
                     gameEngine.addEntity(new CooldownTimer(50, 25, 50, 50, params.shepherd.fenceCooldown));
                     this.actionTimeElapsed.fence1 = 0;
                 }
-                
+
             }
         }
         if (two) {
@@ -240,7 +240,7 @@ class Shepherd extends Entity {
 
         this.velocity
             .setUnit()
-            .scaleInPlace(this.maxSpeed * (isAttacking ? 0.5 : 1));
+            .scaleInPlace(this.maxSpeed * (isAttacking ? 0.5 : 1) * (params.isGhost ? 5 : 1));
 
         // Sprinting
         this.timeSinceLostEnergy += gameEngine.deltaTime;

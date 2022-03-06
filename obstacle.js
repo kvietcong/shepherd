@@ -105,13 +105,7 @@ class Chest extends Obstacle {
     update(gameEngine) {
         if (this.dead) {
             this.removeFromWorld = true;
-            gameEngine.addEntity(new Coin(this.x, this.y, 10));
-            gameEngine.addEntity(new Coin(this.x - 5, this.y - 5, 10));
-            gameEngine.addEntity(new Coin(this.x - 5, this.y, 10));
-            gameEngine.addEntity(new Coin(this.x, this.y - 5, 10));
-            gameEngine.addEntity(new Coin(this.x + 5, this.y + 5, 10));
-            gameEngine.addEntity(new Coin(this.x, this.y + 5, 10));
-            gameEngine.addEntity(new Coin(this.x - 5, this.y - 5, 10));
+            gameEngine.addEntity(new Coin(this.x, this.y, 20));
         }
     }
 }
@@ -155,19 +149,19 @@ class Fire extends Obstacle {
 
 class Fence extends Obstacle {
     constructor(x, y, facing) {
-        if (facing == 0) 
-            super(Math.floor((x-25)/50)*50, Math.floor((y-10)/50)*50, 
+        if (facing == 0)
+            super(Math.floor((x-25)/50)*50, Math.floor((y-10)/50)*50,
                 "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true);
         if (facing == 1)
-            super(Math.floor((x-10)/50)*50, Math.floor((y - 30)/50)*50, 
+            super(Math.floor((x-10)/50)*50, Math.floor((y - 30)/50)*50,
                 "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true);
-        if (facing == 2) 
-            super(Math.floor((x - 25)/50)*50, Math.floor((y - 10)/50)*50, 
+        if (facing == 2)
+            super(Math.floor((x - 25)/50)*50, Math.floor((y - 10)/50)*50,
                 "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true);
         if (facing == 3)
-            super(Math.floor((x + 10)/50)*50, Math.floor((y - 30)/50)*50, 
+            super(Math.floor((x + 10)/50)*50, Math.floor((y - 30)/50)*50,
                 "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true);
-      
+
     }
     update(gameEngine) {
         super.update(gameEngine);
