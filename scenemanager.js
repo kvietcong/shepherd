@@ -161,10 +161,13 @@ class SceneManager {
         gameEngine.addEntity(failure);
         failure.z = 10;
 
-        const playAgainButton = new ScaledRelativeButton(0.5, 0.7, 0.2, 0.15, "Retry Game", 0.1);
+        const playAgainButton = new ScaledRelativeButton(0.5, 0.7, 0.2, 0.15, "Retry Round", 0.1);
         gameEngine.addEntity(playAgainButton);
         playAgainButton.onClick = () => {
             this.resetGameEngine(gameEngine);
+            // You keep gold you had before
+            inventory.resetWood();
+            inventory.wood += 20; // Little Extra to help from the loss
             this.successfulRuns--;
             this.loadLevel();
         };
