@@ -2,7 +2,7 @@ class Camera {
     constructor(
         x = 0, y = 0,
         lerpRate = 5, isLerping = true,
-        zoom = 1, zoomMax = 2, zoomMin = 0.1
+        zoom = 1, zoomMax = 2, zoomMin = 0.8
     ) {
         this.x = x;
         this.y = y;
