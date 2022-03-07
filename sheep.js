@@ -8,6 +8,8 @@ attachPropertiesWithCallbacks(params.sheep, [
     [ "wolfFactor", 100 ],
     [ "walkSpeed", 100 ],
     [ "maxSpeed", 200 ],
+    [ "barnFactor", 20],
+    [ "obstacleFactor", 50 ],
     [ "modifications", {} ]
 ]);
 
@@ -22,6 +24,8 @@ attachPropertiesWithCallbacks(params.sheep.modifications, [
     [ "alignmentFactor", 0, changeLevelCallback ],
     [ "wolfFactor", 0, changeLevelCallback ],
     [ "shepherdFactor", 0, changeLevelCallback ],
+    // [ "barnFactor", 0, changeLevelCallback ],
+    // [ "obstacleFactor", 0, changeLevelCallback ],
 ]);
 
 const makeSheepAnimator = () => {
@@ -116,6 +120,8 @@ class Sheep extends Entity {
         const averageRepel = this.velocity.unit.scale(-1);
         //const averageToShep = new Vector(shepherd.x - this.x, shepherd.y - this.y);
         const averageWolfRepel = this.velocity.unit.scale(-1);
+        const averageBarnDirection = this.velocity.clone();
+        const averageObstacleRepel = this.velocity.unit.scale(-1);
 
         let shepherd = null;
         // let toObstacle = null;
@@ -123,20 +129,27 @@ class Sheep extends Entity {
 
         let flock = 1;
         let close = 1;
+        let obstacles = 1;
 
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
 
             const distance = this.distanceTo(entity);
             if (entity instanceof Barn) {
-                if (distance < this.detectionRadius) {
+                if (distance < this.detectionRadius / 2) {
                     // Be attracted to barn?
+                    averageBarnDirection.addInPlace(
+                        new Vector(entity.x - this.x, entity.y - this.y).setUnit()
+                    )
                 }
             } else if (entity instanceof Obstacle) {
-                // if (distance < this.detectionRadius) {
-                //     toObstacle = new Vector(entity.x - this.x, entity.y - this.y);
-                //     //const newDirection = toObstacle.add()
-                // }
+                if (distance < this.detectionRadius / 2) {
+                    averageObstacleRepel.addInPlace(
+                        new Vector(entity.x - this.x, entity.y - this.y)
+                            .setUnit().scale(-1)
+                    )
+                    obstacles++;
+                }
             }
             if (entity instanceof Shepherd) {
                 shepherd = entity;
@@ -210,9 +223,11 @@ class Sheep extends Entity {
         const alignment = averageDirection.scale(1/flock).unit;
         const distToShep = new Vector(shepherd.x - this.x, shepherd.y - this.y);
         const shepAlignment = distToShep.magnitude < 75 ? distToShep.scale(-75).unit : distToShep.scale(50).unit;
+        const barnAlignment = averageBarnDirection.scale(1/flock).unit;
+        const obstacleRepel = averageObstacleRepel.scale(1/obstacles).unit;
 
         const {
-            separationFactor, cohesionFactor, alignmentFactor, shepherdFactor, wolfFactor, obstacleFactor
+            separationFactor, cohesionFactor, alignmentFactor, shepherdFactor, wolfFactor, barnFactor, obstacleFactor
         } = params.sheep;
 
         //const speed = this.maxSpeed * distToShep / 100
@@ -250,13 +265,17 @@ class Sheep extends Entity {
             1 * gameEngine.deltaTime
         );
 
-        // Avoid Obstacles
-        // if (newDirection) {
-        //     this.velocity.lerpToInPlace(
-        //         newDirection.scale(speed * obstacleFactor),
-        //         1 * gameEngine.deltaTime
-        //     );
-        // }
+        // Repel from Obstacles
+        this.velocity.lerpToInPlace(
+            obstacleRepel.scale(speed * obstacleFactor),
+            1 * gameEngine.deltaTime
+        );
+
+        // Align to Barn
+        this.velocity.lerpToInPlace(
+            barnAlignment.scale(speed * barnFactor),
+            1 * gameEngine.deltaTime
+        );
 
         this.velocity.setUnit().scaleInPlace(speed);
 

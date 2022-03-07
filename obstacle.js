@@ -19,7 +19,7 @@ class Obstacle extends Entity {
         super(x, y, collisionWidth, collisionHeight);
         this.isDestructible = isDestructible;
         this.healthAPI = new HealthAPI(
-            100, 100, 1.5, true, true
+            75, 75, 1.5, true, true
         ).attachShortcutsTo(this);
         this.dead = false;
         if (src) {
