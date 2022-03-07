@@ -62,6 +62,7 @@ assetManager.queueDownload("./resources/fireicon.png");
 assetManager.queueDownload("./resources/campfire.png");
 assetManager.queueDownload("./resources/pinetree.png");
 assetManager.queueDownload("./resources/just1Sheep.png");
+assetManager.queueDownload("./resources/sheep_icon.png");
 assetManager.queueDownload("./resources/No Worries.mp3");
 assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3");
 assetManager.queueDownload("./resources/audio/sheep_baa.mp3");
@@ -72,6 +73,7 @@ assetManager.queueDownload("./resources/audio/ding_2.mp3");
 assetManager.queueDownload("./resources/audio/ding_3.mp3");
 assetManager.queueDownload("./resources/audio/whoosh.mp3");
 assetManager.queueDownload("./resources/audio/wolf_bark.mp3");
+assetManager.queueDownload("./resources/audio/wolf_whimper.mp3");
 assetManager.queueDownload("./resources/audio/wood_drop.mp3");
 assetManager.queueDownload("./resources/audio/hit.mp3");
 assetManager.queueDownload("./resources/audio/slot_machine.mp3");
@@ -83,6 +85,7 @@ assetManager.queueDownload("./resources/campfire_3.png");
 assetManager.queueDownload("./resources/game_over.png");
 assetManager.queueDownload("./resources/play_again.png");
 assetManager.queueDownload("./resources/logs.png");
+assetManager.queueDownload("./resources/wood_log.png");
 
 assetManager.downloadAll(() => {
 	const ctx = canvas.getContext("2d");

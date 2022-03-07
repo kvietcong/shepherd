@@ -97,9 +97,10 @@ class SceneManager {
         const fireIcon = new Icon(assetManager.getAsset("./resources/fireicon.png"), 100, 25, 50, 50, params.inventory.fireCost);
         const goldIcon = new Icon(assetManager.getAsset("./resources/coin_01.png"), 400, 25, 50, 50);
         const goldText = new GoldText(450, 50, 85, 40);
-        const woodIcon = new Icon(assetManager.getAsset("./resources/logs.png"), 550, 25, 50, 50);
+        const woodIcon = new Icon(assetManager.getAsset("./resources/wood_log.png"), 550, 25, 50, 50);
         const woodText = new WoodText(600, 50, 85, 40);
-        const sheepIcon = new Icon(assetManager.getAsset("./resources/just1Sheep.png"), 700, 18, 60, 60);
+        //const sheepIcon = new Icon(assetManager.getAsset("./resources/just1Sheep.png"), 700, 18, 60, 60);
+        const sheepIcon = new Icon(assetManager.getAsset("./resources/sheep_icon.png"), 700, 30, 50, 50);
         const sheepText = new SheepText(760, 50, 100, 40);
         const sheepLeftText = new ScaledRelativeText(
             [0.0, 10], [1.0, -10], 0.2, () => `${Sheep.count} Sheep Left`);

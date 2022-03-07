@@ -70,6 +70,7 @@ class Wolf extends Entity {
         this.timeSinceStunned = 0;
         if (this.healthAPI.health <= 0) {
             this.dead = true;
+            assetManager.playSound("wolf_whimper", 0.7);
             this.animator.setAnimation("staticRight");
         }
     }

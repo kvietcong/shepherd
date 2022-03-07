@@ -338,7 +338,8 @@ class Coin extends Entity {
 }
 class Log extends Obstacle {
     constructor(x, y) {
-        super(x, y, "./resources/logs.png", 0, 0, 1200, 940, 1/25, 50, 30);
+        //super(x, y, "./resources/logs.png", 0, 0, 1200, 940, 1/25, 50, 30);
+        super(x, y, "./resources/wood_log.png", 0, 0, 168, 166, 1/4, 50, 30);
         this.isCollidable = false;
     }
     taken() {
