@@ -54,7 +54,8 @@ class AssetManager {
 
     downloadAudio(path, callback) {
         const audio = new Audio();
-        const name = path.match(/[^\/]+$/)[0].split('.')[1];
+        const name = path.match(/[^\/]+$/)[0].split('.')[0];
+        console.log(name)
 
         audio.addEventListener("loadeddata", () => {
             if (params.isDebugging) console.log("Loaded " + path);
@@ -83,9 +84,9 @@ class AssetManager {
     }
 
     playSound(name, volume=1) {
-        const sound = this.sounds[name].cloneNode();
+        const sound = this.sounds[name]?.cloneNode();
         sound.volume = volume * params.volume;
-        sound.play();
+        sound?.play();
     }
 
     getAsset(path) {

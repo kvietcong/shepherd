@@ -53,6 +53,7 @@ class Wolf extends Entity {
         this.timeSinceRest = 0;
         this.restTime = 1.5;
         this.damage = 50;
+        this.barked = false;
 
         // media
         this.setAnimator(makeWolfAnimator());
@@ -131,6 +132,10 @@ class Wolf extends Entity {
                     (distance < this.detectionRadius)
                     && (!closestSheep || (distance < closestSheep.distanceTo(this)))
                 ) {
+                    if (!this.barked) {
+                        assetManager.playSound('wolf_bark', 0.6);
+                        this.barked = true;
+                    }
                     closestSheep = entity;
                 }
             }

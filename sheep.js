@@ -46,7 +46,7 @@ const makeSheepAnimator = () => {
         walkS: {frameAmount: 7, startX: 0, startY: 7 * size}
     };
 
-    const sheep = assetManager.getAsset("./resources/audio/sheep.png");
+    const sheep = assetManager.getAsset("./resources/sheep.png");
     return new Animator(
         sheep, "walkSE", sheepAnimations, size, size, 1/15, scale=0.5
     );
@@ -75,16 +75,13 @@ class Sheep extends Entity {
         this.setAnimator(makeSheepAnimator());
         this.animator.setIsLooping();
         this.animator.play();
-        //this.sheepBaa = assetManager.getAsset("./resources/sheep_baa.mp3").cloneNode();
     }
 
     attacked(damage) {
         this.healthAPI.damage(damage);
         this.animator.untint();
         this.animator.tint("red", this.deathLength, 0.5);
-        //this.sheepBaa.volume = 0.4 * params.volume;
-        //this.sheepBaa.play();
-        assetManager.playSound('sheep_baa', 0.4);
+        assetManager.playSound('sheep_baa', 0.5);
         if (this.healthAPI.health <= 0) {
             this.dead = true;
             Sheep.count--;

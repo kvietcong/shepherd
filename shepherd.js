@@ -327,6 +327,7 @@ class Coin extends Entity {
             inventory.gold += this.value;
             this.removeFromWorld = true;
         }
+        assetManager.playSound('ding_1', 0.6);
     }
     update(gameEngine) {
         super.update(gameEngine);
@@ -345,6 +346,7 @@ class Log extends Obstacle {
             inventory.wood += 10;
             this.removeFromWorld = true;
         }
+        assetManager.playSound('wood_drop');
     }
     update(gameEngine){
         super.update(gameEngine);
@@ -385,6 +387,7 @@ class Attack extends Entity {
         this.isCollidable = false;
         this.damage = damage;
         this.entitiesToIgnore = new Set();
+        assetManager.playSound("whoosh", 0.5);
     }
 
     update(gameEngine) {
@@ -399,9 +402,11 @@ class Attack extends Entity {
                 if (!this.entitiesToIgnore.has(entity) && !entity.dead) {
                     if (entity instanceof Wolf) {
                         entity.attacked(this.damage);
+                        assetManager.playSound("hit", 1);
                         this.entitiesToIgnore.add(entity);
                     } else if (entity instanceof Obstacle && entity.isDestructible) {
                         entity.attacked(this.damage);
+                        assetManager.playSound("hit", 0.5);
                         this.entitiesToIgnore.add(entity);
                     }
                 }

@@ -41,13 +41,16 @@ class Inventory {
     resetWood() { this.wood = this.initialWood; }
 
     get modificationPoints() { return this.resources.modificationPoints; }
-    set modificationPoints(newModificationPoints) { this.set("modificationPoints", newModificationPoints); }
+    set modificationPoints(newModificationPoints) {
+        this.set("modificationPoints", newModificationPoints);
+    }
 
     attemptSpend(charge, resourceType = "gold", callback = null) {
         const resourceAmount = this.get(resourceType);
         if (resourceAmount >= charge) {
             this.set(resourceType, resourceAmount - charge);
             if (callback) callback(this.resources[resourceType]);
+            if (resourceType == "gold") assetManager.playSound('slot_machine');
             return true;
         }
         return false;
