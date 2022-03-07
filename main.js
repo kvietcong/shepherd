@@ -64,7 +64,6 @@ assetManager.queueDownload("./resources/pinetree.png");
 assetManager.queueDownload("./resources/just1Sheep.png");
 assetManager.queueDownload("./resources/No Worries.mp3");
 assetManager.queueDownload("./resources/Kevin MacLeod - Pixelland.mp3");
-assetManager.queueDownload("./resources/sheep_baa.mp3");
 assetManager.queueDownload("./resources/audio/sheep_baa.mp3");
 assetManager.queueDownload("./resources/audio/spend_point.mp3");
 assetManager.queueDownload("./resources/audio/refund_point.mp3");
