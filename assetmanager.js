@@ -6,6 +6,7 @@ class AssetManager {
         this.successCount = 0;
         this.errorCount = 0;
         this.cache = [];
+        this.sounds = [];
         this.downloadQueue = [];
     };
 
@@ -29,7 +30,6 @@ class AssetManager {
                 this.downloadImage(path, callback);
             else if (params.supportedAudioTypes.includes(extension))
                 this.downloadAudio(path, callback);
-
         }
     };
 
@@ -54,6 +54,7 @@ class AssetManager {
 
     downloadAudio(path, callback) {
         const audio = new Audio();
+        const name = path.match(/[^\/]+$/)[0].split('.')[1];
 
         audio.addEventListener("loadeddata", () => {
             if (params.isDebugging) console.log("Loaded " + path);
@@ -76,6 +77,15 @@ class AssetManager {
         audio.load();
 
         this.cache[path] = audio;
+        if (name) {
+            this.sounds[name] = audio;
+        }
+    }
+
+    playSound(name, volume=1) {
+        const sound = this.sounds[name].cloneNode();
+        sound.volume = volume * params.volume;
+        sound.play();
     }
 
     getAsset(path) {
