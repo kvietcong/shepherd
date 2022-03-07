@@ -55,7 +55,6 @@ class AssetManager {
     downloadAudio(path, callback) {
         const audio = new Audio();
         const name = path.match(/[^\/]+$/)[0].split('.')[0];
-        console.log(name)
 
         audio.addEventListener("loadeddata", () => {
             if (params.isDebugging) console.log("Loaded " + path);

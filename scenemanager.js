@@ -73,7 +73,7 @@ class SceneManager {
 
         const volumeSlider = document.getElementById("volume-slider");
         volumeSlider.value = params.volume;
-        const backgroundMusic = assetManager.getAsset("./resources/audio/No Worries.mp3");
+        const backgroundMusic = assetManager.getAsset("./resources/No Worries.mp3");
         backgroundMusic.loop = true;
         volumeSlider.addEventListener("change", event => {
             const newVolume = event.target.value;
