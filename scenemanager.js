@@ -1,65 +1,75 @@
+const allLevelNames = ["levelOne", "levelTwo"];
+
 class SceneManager {
-            //x= 1210, y = 681.
     constructor() {
         this.scenes = ["title", "level1", "credits", "gameOver"];
         this.currentScene = "";
         this.width = 1210;
         this.height = 681;
+        this.successfulRuns = 0;
     }
 
-    clearEntities(gameEngine) {
+    resetGameEngine(gameEngine) {
         gameEngine.entities.forEach(entity => {
             if (entity === this) return;
             entity.removeFromWorld = true;
         });
+        Barn.sheepCount = 0;
+        Sheep.count = 0;
     }
 
     loadTitle(gameEngine) {
         const shopContainer = document.getElementById("shop");
-        shopContainer.children[0].classList.add("disabled");
+        shopContainer.classList.add("disabled");
 
         const screen = new Icon(
             assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
             0, 0, this.width, this.height
         );
-        screen.z = 8;
-	    const begin = new Icon(
-            assetManager.getAsset("./resources/Play.png"),
-            this.width/2 - 150, this.height/2 - 40,
-            300, 80
-        );
-        begin.z = 9;
+
+        const playButton = new ScaledRelativeButton(0.5, 0.4, 0.5, 0.2, "Start Game", 0.08);
+        gameEngine.addEntity(playButton);
+        playButton.onClick = () => {
+            this.resetGameEngine(gameEngine);
+            this.loadLevel();
+        };
+
+        const instructions = new ScaledRelativeButton(0.5, 0.6, 0.2, 0.1, "Instructions", 0.05);
+        gameEngine.addEntity(instructions);
+        instructions.onClick = () => {
+            const instructionsElement = document.getElementById("instructions");
+            instructionsElement.open = true;
+            instructionsElement.scrollIntoView({ behavior: "smooth" });
+        };
+
+        const settings = new ScaledRelativeButton(0.5, 0.73, 0.2, 0.1, "Settings", 0.2);
+        gameEngine.addEntity(settings);
+        settings.onClick = () => {
+            const settingsElement = document.getElementById("settings");
+            settingsElement.open = true;
+            settingsElement.scrollIntoView({ behavior: "smooth" });
+        };
+
+        const credits = new ScaledRelativeButton(0.5, 0.85, 0.2, 0.1, "Credits", 0.225);
+        gameEngine.addEntity(credits);
+        credits.onClick = () => {
+            const creditsElement = document.getElementById("credits");
+            creditsElement.open = true;
+            creditsElement.scrollIntoView({ behavior: "smooth" });
+        };
+
 	    gameEngine.addEntity(screen);
-	    gameEngine.addEntity(begin);
     }
 
-    loadLevelOne(gameEngine) {
+    loadLevel() {
+        this.currentScene = allLevelNames[this.successfulRuns++ % allLevelNames.length];
+
         const shopContainer = document.getElementById("shop");
-        shopContainer.children[0].classList.remove("disabled");
+        shopContainer.classList.remove("disabled");
 
         const entities = [];
 
-        const shepherd = new Shepherd(1200, 1200);
-        //const shepherd = new Shepherd(this.width / 2, this.height / 2);
-        params.debugEntities.shepherd = shepherd;
-        entities.push(shepherd);
-
-        const startingArea = new SpawnPoint(1200, 650, 900, 750);
-        startingArea.spawnEntity(Sheep, 20, gameEngine);
-
-        const wolfPacks = [
-            [new SpawnPoint(1830, 1830, 330, 200), 2], // rocks by first path
-            [new SpawnPoint(2650, 2230, 500, 300), 4], // bridge over water
-            [new SpawnPoint(3850, 950, 650, 1650), 6], // big open area after bridge
-            [new SpawnPoint(5350, 1960, 650, 250), 3]  // small area by barn
-        ];
-        wolfPacks.forEach((info) => {
-            const [spawnPoint, amount] = info;
-            spawnPoint.spawnEntity(Wolf, amount, gameEngine);
-        });
-
-        const mainEnvironment = setupEnvironment(entities);
-        gameEngine.addEntity(sceneManager);
+        const mainEnvironment = setupEnvironment(entities, this.currentScene);
 
         const volumeSlider = document.getElementById("volume-slider");
         volumeSlider.value = params.volume;
@@ -78,105 +88,116 @@ class SceneManager {
                 .catch(console.error);
         }, 500);
 
+        const shepherd = entities.filter(entity => entity instanceof Shepherd)[0];
         const camera = new Camera(gameEngine.width / 2, gameEngine.height / 2);
         camera.follow(shepherd);
         gameEngine.setCamera(camera);
 
-        const fenceIcon = new Icon(assetManager.getAsset("./resources/fence_horizontal.png")
-            , 50, 25, 50, 50, params.inventory.fenceCost);
-        const fireIcon = new Icon(assetManager.getAsset("./resources/fireicon.png")
-            , 100, 25, 50, 50, params.inventory.fireCost);
-        // const treeIcon = new Icon(assetManager.getAsset("./resources/pinetree.png")
-        //     , 150, 25, 50, 50, "20");
-        const goldIcon = new Icon(assetManager.getAsset("./resources/coin_01.png")
-            , 400, 25, 50, 50);
-        const goldText = new GoldText(
-            450, 65, 85, 40);
-        const woodIcon = new Icon(assetManager.getAsset("./resources/logs.png")
-            , 550, 25, 50, 50);
-        const woodText = new WoodText(600, 65, 85, 40);
+        const fenceIcon = new Icon(assetManager.getAsset("./resources/fence_horizontal.png"), 50, 25, 50, 50, params.inventory.fenceCost);
+        const fireIcon = new Icon(assetManager.getAsset("./resources/fireicon.png"), 100, 25, 50, 50, params.inventory.fireCost);
+        const goldIcon = new Icon(assetManager.getAsset("./resources/coin_01.png"), 400, 25, 50, 50);
+        const goldText = new GoldText(450, 50, 85, 40);
+        const woodIcon = new Icon(assetManager.getAsset("./resources/logs.png"), 550, 25, 50, 50);
+        const woodText = new WoodText(600, 50, 85, 40);
         const sheepIcon = new Icon(assetManager.getAsset("./resources/just1Sheep.png"), 700, 18, 60, 60);
-        const sheepText = new SheepText(760, 65, 100, 40);
-        const sheepLeftText = new Text(10, 500, 400, 40, () => `${Sheep.count} Sheep Left`);
-        entities.push(fenceIcon);
-        entities.push(fireIcon);
-        //entities.push(treeIcon);
-        entities.push(goldIcon);
-        entities.push(goldText);
-        entities.push(woodIcon);
-        entities.push(woodText);
-        entities.push(sheepIcon);
-        entities.push(sheepText);
-        entities.push(sheepLeftText)
+        const sheepText = new SheepText(760, 50, 100, 40);
+        const sheepLeftText = new ScaledRelativeText(
+            [0.0, 10], [1.0, -10], 0.2, () => `${Sheep.count} Sheep Left`);
+        const roundsWonText = new ScaledRelativeText(
+            [0.8, -10], [1.0, -10], 0.2, `Rounds Won: ${this.successfulRuns - 1}`);
+
+        entities.push(fenceIcon, fireIcon, goldIcon, goldText, woodIcon, woodText, sheepIcon, sheepText, sheepLeftText, roundsWonText);
 
         const miniMap = new MiniMap(mainEnvironment, camera);
         entities.push(miniMap);
 
+        if (this.successfulRuns > allLevelNames.length) {
+            const darkness = new Darkness();
+            entities.push(darkness);
+            // Make Darkness Scale With Level
+            darkness.radius = max(darkness.radius - this.successfulRuns * 40, 200);
+        }
+
         gameEngine.addEntities(entities);
-        //gameEngine.addEntity(darkness);
     }
 
     loadCredits(gameEngine) {
-        let screen = new Icon(assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
-		0, 0, this.width, this.height);
-        screen.z = 8;
-	    let end = new Icon(assetManager.getAsset("./resources/level_completed.png"), this.width/2 - 150, this.height/2 - 40, 300, 80);
-	    end.z = 9;
+        const isWinRound = this.successfulRuns === (allLevelNames.length * 2);
+        const background = `./resources/pixel_landscape_${isWinRound ? 2 : 1}.jpg`;
+        let screen = new Icon(assetManager.getAsset(background), 0, 0, this.width, this.height);
         gameEngine.addEntity(screen);
-	    gameEngine.addEntity(end);
+
+        const congratsText = isWinRound ? "You Win!" : "Nice Round!";
+        const congrats = new ScaledRelativeButton(0.5, 0.4, 0.6, 0.3, congratsText, 0.1, {
+            normal: { text: "Gold", background: rgba(0, 0, 0, 0.35), border: rgba(0, 0, 0, 0) },
+            hover: { text: "Gold", background: rgba(0, 0, 0, 0.35), border: rgba(0, 0, 0, 0) },
+        });
+        gameEngine.addEntity(congrats);
+        congrats.z = 10;
+
+        const inFreeplay = this.successfulRuns >= (allLevelNames.length * 2);
+        const playAgainText = inFreeplay ? "Free Play" : "Next Level";
+        const playAgainButton = new ScaledRelativeButton(0.5, 0.7, 0.25, 0.2, playAgainText, 0.1);
+        gameEngine.addEntity(playAgainButton);
+        playAgainButton.onClick = () => {
+            this.resetGameEngine(gameEngine);
+            Barn.sheepRequired = min(Barn.sheepRequired + 1, 20);
+            inventory.resetWood();
+            this.loadLevel();
+        };
+        playAgainButton.z = 10;
     }
 
     loadGameOver(gameEngine) {
-        const screen = new Icon(assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
-		0, 0, this.width, this.height);
-        screen.z = 8;
-	    const end = new Icon(assetManager.getAsset("./resources/game_over.png"), this.width/2 - 150, this.height/2 - 160, 300, 80);
-        const again = new Icon(assetManager.getAsset("./resources/play_again.png"), this.width/2 - 150, this.height/2 - 40, 300, 80);
-        again.z = 9;
-        end.z = 9;
+        const screen = new Icon(
+            assetManager.getAsset("./resources/pixel_landscape_1.jpg"),
+            0, 0, this.width, this.height);
         gameEngine.addEntity(screen);
-	    gameEngine.addEntity(end);
-        gameEngine.addEntity(again);
+
+        const failure = new ScaledRelativeButton(0.5, 0.4, 0.6, 0.3, "You Lost :(", 0.1, {
+            normal: { text: "Red", background: rgba(0, 0, 0, 0.35), border: rgba(0, 0, 0, 0) },
+            hover: { text: "Red", background: rgba(0, 0, 0, 0.35), border: rgba(0, 0, 0, 0) },
+        });
+        gameEngine.addEntity(failure);
+        failure.z = 10;
+
+        const playAgainButton = new ScaledRelativeButton(0.5, 0.7, 0.2, 0.15, "Retry Round", 0.1);
+        gameEngine.addEntity(playAgainButton);
+        playAgainButton.onClick = () => {
+            this.resetGameEngine(gameEngine);
+            // You keep gold you had before
+            inventory.resetWood();
+            inventory.wood += 20; // Little Extra to help from the loss
+            this.successfulRuns--;
+            this.loadLevel();
+        };
+        playAgainButton.z = 10;
     }
 
     update(gameEngine) {
-        let scale = gameEngine.width/1210;
         switch(this.currentScene) {
-            case "":
-                this.currentScene = "title";
-                this.loadTitle(gameEngine);
-                break;
             case "title":
-                // switch to level1 when start button is clicked
-                let click = gameEngine.click;
-                if (click && click.x > scale*this.width/2 - 150 && click.x < scale*this.width/2 + 150
-                    && click.y > scale*this.height/2 - 40 && click.y < scale*this.height/2 + 40) {
-                    this.currentScene = "level1";
-                    this.clearEntities(gameEngine);
-                    this.loadLevelOne(gameEngine);
-                    //this.loadLevel(this.currentScene);
-                }
                 break;
-            case "level1":
+            case "alpha":
+            case "levelOne":
+            case "levelTwo":
+            case "levelThree":
+            case "levelFour":
                 if (gameOver()) {
                     this.currentScene = "gameOver";
-                    this.clearEntities(gameEngine);
+                    this.resetGameEngine(gameEngine);
                     this.loadGameOver(gameEngine);
                 } else if (levelWon()) {
                     this.currentScene = "credits";
-                    this.clearEntities(gameEngine);
+                    this.resetGameEngine(gameEngine);
                     this.loadCredits(gameEngine);
                 }
                 break;
             case "gameOver":
-                let click2 = gameEngine.click;
-                if (click2 && click2.x > scale*this.width/2 - 150 && click2.x < scale*this.width/2 + 150
-                    && click2.y > scale*this.height/2 - 40 && click2.y < scale*this.height/2 + 40) {
-                    this.currentScene = "level1";
-                    this.clearEntities(gameEngine);
-                    this.loadLevelOne(gameEngine);
-                    //this.loadLevel(this.currentScene);
-                }
+                break;
+            default:
+                this.currentScene = "title";
+                this.loadTitle(gameEngine);
                 break;
         }
     }
@@ -184,13 +205,20 @@ class SceneManager {
     draw(ctx, gameEngine) {}
 }
 
-class SpawnPoint {
+class SpawnPoint extends Entity {
+    constructor(x, y, width, height) {
+        super(x, y, width, height);
+        this.isCollidable = false;
+    }
 
-    constructor(x, y, w, h) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
+    draw(ctx) {
+        if (params.isDebugging) {
+            ctx.fillStyle = rgba(100, 100, 255, 0.2);
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+
+            ctx.strokeStyle = "cyan";
+            ctx.strokeRect(this.x, this.y, this.width, this.height);
+        }
     }
 
     /**
@@ -202,9 +230,17 @@ class SpawnPoint {
         if (!(entity.prototype instanceof Entity)) return;
 
         for (let i = 0; i < amount; i++) {
-            let randX = this.x + randomInt(this.w);
-            let randY = this.y + randomInt(this.h);
+            let randX = this.x + randomInt(this.width);
+            let randY = this.y + randomInt(this.height);
             gameEngine.addEntity(new entity(randX, randY));
+        }
+    }
+
+    addToList(entities, entity, amount) {
+        for (let i = 0; i < amount; i++) {
+            let randX = this.x + randomInt(this.width);
+            let randY = this.y + randomInt(this.height);
+            entities.push(new entity(randX, randY));
         }
     }
 }

@@ -3,7 +3,7 @@ const assetManager = new AssetManager();
 
 const resizeCanvas = canvas => {
 	const main = document.getElementsByTagName("main")[0];
-	canvas.width = round(main.clientWidth * 0.65);
+	canvas.width = round(main.clientWidth * 0.7);
 	canvas.height = round(canvas.width / (16 / 9));
 	return canvas;
 };
@@ -12,6 +12,7 @@ const initializeCanvas = () => {
 	const canvas = document.createElement("canvas");
 	document.getElementById("canvas-container").appendChild(canvas);
 	canvas.style.border = "1px solid black";
+	//canvas.style.background = "Green";
 	canvas.style.background = "url('./resources/forestTile.png')";
 	canvas.style.backgroundSize = "100%";
 	canvas.autofocus = true;
@@ -23,7 +24,7 @@ const initializeCanvas = () => {
 const canvas = initializeCanvas();
 const sceneManager = new SceneManager();
 const inventory = new Inventory(10, 10, 5, 5, 1);
-const darkness = new Darkness();
+
 
 const gameOver = () => {
 	return (Barn.sheepRequired - Barn.sheepCount) > Sheep.count;
@@ -33,6 +34,7 @@ const levelWon = () => {
 }
 
 assetManager.queueDownload("./resources/pixel_landscape_1.jpg");
+assetManager.queueDownload("./resources/pixel_landscape_2.jpg");
 assetManager.queueDownload("./resources/Play.png");
 assetManager.queueDownload("./resources/wolf.png");
 assetManager.queueDownload("./resources/shepherd.png")
@@ -49,6 +51,9 @@ assetManager.queueDownload("./resources/Map_tiles.png");
 assetManager.queueDownload("./resources/plants.png");
 assetManager.queueDownload("./resources/TX Tileset Grass.png");
 assetManager.queueDownload("./resources/TX Tileset Stone Ground.png");
+assetManager.queueDownload("./resources/TX Wall.png");
+assetManager.queueDownload("./resources/TX Plant.png");
+assetManager.queueDownload("./resources/TX Props.png");
 assetManager.queueDownload("./resources/slash.png");
 assetManager.queueDownload("./resources/fence_00.png");
 assetManager.queueDownload("./resources/fence_vertical.png");
@@ -81,7 +86,9 @@ assetManager.queueDownload("./resources/logs.png");
 
 assetManager.downloadAll(() => {
 	const ctx = canvas.getContext("2d");
+	//const ctxDark = canvasDark.getContext("2d");
 	gameEngine.init(ctx);
+	//gameEngine.initDark(ctxDark);
 	gameEngine.addEntity(sceneManager);
 	gameEngine.start();
 });
@@ -128,3 +135,58 @@ setInterval(() => {
 	const { isPaused } = gameEngine;
 	pausePlayButton.innerText = `${isPaused ? "Play" : "Pause"} Game`;
 }, 200);
+
+const killAllWolves = () => gameEngine.entities.forEach(entity => {
+	if (entity instanceof Wolf) entity.removeFromWorld = true;
+});
+
+const killGUI = () => gameEngine.entities.forEach(entity => {
+	if (entity instanceof GUIElement) entity.removeFromWorld = true;
+});
+
+const toggleGUI = () => {
+	gameEngine.entities.forEach(entity => {
+		if (entity instanceof GUIElement) entity.noDraw = !entity.noDraw;
+	});
+}
+
+const toggleDarkness = () => {
+	gameEngine.entities.forEach(entity => {
+		if (entity instanceof Darkness) entity.noDraw = !entity.noDraw;
+	});
+}
+
+const commandsElement = document.getElementById("commands");
+commandsElement.addEventListener("change", event => {
+	const { value } = event.target;
+	let commanded = true;
+	switch(value.toLowerCase()) {
+		case "killallwolves":
+		case "kill all wolves":
+			killAllWolves();
+			break;
+		case "greedisgood":
+		case "greed is good":
+			inventory.gold += 100;
+			inventory.wood += 100;
+			break;
+		case "savethetrees":
+		case "save the trees":
+			inventory.wood += 100;
+			break;
+		case "iwantmods":
+		case "i want mods":
+			inventory.modificationPoints += 100;
+			break;
+		case "wintheround":
+		case "win the round":
+			Barn.sheepCount = 100;
+			break;
+		case "ghost":
+		case "ghostmode":
+		case "ghost mode":
+			params.isGhost = !params.isGhost;
+			break;
+	}
+	if (commanded) event.target.value = "";
+});

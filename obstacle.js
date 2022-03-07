@@ -83,15 +83,29 @@ Barn.sheepCount = 0;
 Barn.sheepRequired = 10;
 
 class Tree extends Obstacle {
-    constructor(x, y) {
-        super(x, y, "./resources/pinetree.png", 0, 0, 50, 82, 3, 40, 75, true);
+    constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH) {
+        super(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH, true);
     }
     update(gameEngine) {
         super.update(gameEngine);
         this.healthAPI.update(gameEngine);
         if (this.dead) {
             this.removeFromWorld = true;
-            gameEngine.addEntity(new Log(this.x, this.y + 100));
+            console.log("tree destroyed: x = " + this.x + " y = " + this.y)
+            gameEngine.addEntity(new Log(this.xCenter, this.yCenter));
+        }
+    }
+}
+
+class Chest extends Obstacle {
+    constructor(x, y) {
+        super(x, y, "./resources/TX Props.png", 96, 30, 31, 30, 2, 50, 50, false);
+        this.dead = false;
+    }
+    update(gameEngine) {
+        if (this.dead) {
+            this.removeFromWorld = true;
+            gameEngine.addEntity(new Coin(this.x, this.y, 20));
         }
     }
 }
@@ -113,8 +127,8 @@ const makeCampfireAnimator = () => {
 
 class Fire extends Obstacle {
 
-    constructor(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH) {
-        super(x, y, src, startX, startY, sizeX, sizeY, scale, collisionW, collisionH);
+    constructor(x, y) {
+        super(Math.floor(x/50)*50, Math.floor(y/50)*50, "./resources/campfire_2.png", 0, 0, 33, 38, 2, 50, 30, true);
         this.setAnimator(makeCampfireAnimator());
         this.animator.setIsLooping();
         this.animator.play();
@@ -123,5 +137,37 @@ class Fire extends Obstacle {
     update(gameEngine){
         super.update(gameEngine);
         this.animator.update(gameEngine);
+        gameEngine.entities.forEach(entity => {
+            const distance = this.distanceTo(entity);
+            if ((entity instanceof Wolf) || distance > 200) return;
+            if (entity instanceof Sheep || entity instanceof Fire) entity.heal(5 * gameEngine.deltaTime);
+            if (entity instanceof Shepherd) entity.energy = min(entity.energy + 25 * gameEngine.deltaTime, entity.maxEnergy);
+        });
+    }
+}
+
+class Fence extends Obstacle {
+    constructor(x, y, facing) {
+        if (facing == 0)
+            super(Math.floor((x-25)/50)*50, Math.floor((y-10)/50)*50,
+                "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true);
+        if (facing == 1)
+            super(Math.floor((x-10)/50)*50, Math.floor((y - 30)/50)*50,
+                "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true);
+        if (facing == 2)
+            super(Math.floor((x - 25)/50)*50, Math.floor((y - 10)/50)*50,
+                "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true);
+        if (facing == 3)
+            super(Math.floor((x + 10)/50)*50, Math.floor((y - 30)/50)*50,
+                "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true);
+
+    }
+    update(gameEngine) {
+        super.update(gameEngine);
+        this.healthAPI.update(gameEngine);
+        if (this.dead) {
+            this.removeFromWorld = true;
+            gameEngine.addEntity(new Log(this.x, this.y + 100));
+        }
     }
 }

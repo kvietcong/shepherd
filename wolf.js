@@ -3,7 +3,7 @@ params.wolf = {
     cohesionFactor: 5,
     alignmentFactor: 400,
     chaseFactor: 50,
-    fearFactor: 200 // With Joe Rogan
+    fearFactor: 75 // With Joe Rogan
 };
 
 const makeWolfAnimator = (color = "brown") => {
