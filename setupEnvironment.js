@@ -904,7 +904,7 @@ const setupEnvironment = (entities, currMap) => {
 
 	if(importedMap.mapType == "levelThree") {
 		//starting area spawn: 6700, 900
-		const shepherd = new Shepherd(2700, 3000);
+		const shepherd = new Shepherd(2700, 4000);
         params.debugEntities.shepherd = shepherd;
         entities.push(shepherd);
 
