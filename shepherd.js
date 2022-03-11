@@ -3,7 +3,7 @@ params.shepherd = {
     energyRegenRate: 10,
     fenceCooldown: 0.25,
     fireCooldown: 1,
-    action3Cooldown: 2,
+    torchCooldown: 1,
     attackCooldown: 0.7,
     attack2Cooldown: 1.1,
 };
@@ -58,7 +58,7 @@ class Shepherd extends Entity {
         this.actionTimeElapsed = {
             fence1: params.shepherd.fenceCooldown,
             fire2: params.shepherd.fireCooldown,
-            action3: params.shepherd.action3Cooldown,
+            torch3: params.shepherd.torchCooldown,
             attack: params.shepherd.attackCooldown,
             attack2: params.shepherd.attack2Cooldown
         };
@@ -98,6 +98,7 @@ class Shepherd extends Entity {
         const space = gameEngine.keys[" "];
         const one = gameEngine.keys["1"];
         const two = gameEngine.keys["2"];
+        const three = gameEngine.keys["3"];
         if (!Alt) {
             if (w) {
                 this.velocity.y -= 1;
@@ -172,7 +173,7 @@ class Shepherd extends Entity {
                 gameEngine.entities.forEach(entity => {
                     if (entity === fence) return;
                     if (fence.collidesWith(entity)) {
-                        if (entity instanceof Fence) {
+                        if (entity instanceof Fence && entity.facing == fence.facing) {
                             fence.removeFromWorld = true;
                             if (flag)
                                 inventory.wood += params.inventory.fenceCost;
@@ -211,6 +212,33 @@ class Shepherd extends Entity {
                 if (flag) {
                     gameEngine.addEntity(new CooldownTimer(100, 25, 50, 50, params.inventory.fireCooldown));
                     this.actionTimeElapsed.fire2 = 0;
+                }
+            }
+        }
+        if (three) {
+            if (this.actionTimeElapsed.torch3 >= params.shepherd.torchCooldown &&
+                    inventory.attemptSpend(params.inventory.fireCost/2, "wood")) {
+                let torch;
+                if (this.facing == 0) torch = new Torch(this.x, this.y - 50);
+                if (this.facing == 1) torch = new Torch(this.x - 50, this.y);
+                if (this.facing == 2) torch = new Torch(this.x, this.y + 50);
+                if (this.facing == 3) torch = new Torch(this.x + 50, this.y);
+                gameEngine.addEntity(torch);
+                let flag = true;
+                gameEngine.entities.forEach(entity => {
+                    if (entity === torch) return;
+                    if (torch.collidesWith(entity)) {
+                        if (entity instanceof Torch) {
+                            torch.removeFromWorld = true;
+                            if (flag)
+                                inventory.wood += params.inventory.fireCost/2;
+                            flag = false;
+                        }
+                    }
+                });
+                if (flag) {
+                    gameEngine.addEntity(new CooldownTimer(150, 25, 50, 50, params.inventory.torchCooldown));
+                    this.actionTimeElapsed.torch3 = 0;
                 }
             }
         }
@@ -337,14 +365,15 @@ class Coin extends Entity {
     }
 }
 class Log extends Obstacle {
-    constructor(x, y) {
+    constructor(x, y, value=10) {
         //super(x, y, "./resources/logs.png", 0, 0, 1200, 940, 1/25, 50, 30);
         super(x, y, "./resources/wood_log.png", 0, 0, 168, 166, 1/4, 50, 30);
         this.isCollidable = false;
+        this.value = value;
     }
     taken() {
         if (!this.removeFromWorld) {
-            inventory.wood += 10;
+            inventory.wood += this.value;
             this.removeFromWorld = true;
         }
         assetManager.playSound('wood_drop');

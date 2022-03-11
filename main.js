@@ -86,6 +86,8 @@ assetManager.queueDownload("./resources/game_over.png");
 assetManager.queueDownload("./resources/play_again.png");
 assetManager.queueDownload("./resources/logs.png");
 assetManager.queueDownload("./resources/wood_log.png");
+assetManager.queueDownload("./resources/Torch_Sheet.png");
+assetManager.queueDownload("./resources/Torch.png");
 
 assetManager.downloadAll(() => {
 	const ctx = canvas.getContext("2d");
