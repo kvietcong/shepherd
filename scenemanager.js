@@ -104,7 +104,7 @@ class SceneManager {
         const sheepIcon = new Icon(assetManager.getAsset("./resources/sheep_icon.png"), 700, 30, 50, 50);
         const sheepText = new SheepText(760, 50, 100, 40);
         const sheepLeftText = new ScaledRelativeText(
-            [0.0, 10], [1.0, -10], 0.2, () => `${Sheep.count} Sheep Left`);
+            [0.0, 10], [1.0, -10], 0.2, () => `${Sheep.count} Sheep Remaining`);
         const roundsWonText = new ScaledRelativeText(
             [0.8, -10], [1.0, -10], 0.2, `Rounds Won: ${this.successfulRuns - 1}`);
 
