@@ -95,6 +95,7 @@ class SceneManager {
 
         const fenceIcon = new Icon(assetManager.getAsset("./resources/fence_horizontal.png"), 50, 25, 50, 50, params.inventory.fenceCost);
         const fireIcon = new Icon(assetManager.getAsset("./resources/fireicon.png"), 100, 25, 50, 50, params.inventory.fireCost);
+        const torchIcon = new Icon(assetManager.getAsset("./resources/Torch.png"), 150, 25, 50, 50, params.inventory.fireCost/2);
         const goldIcon = new Icon(assetManager.getAsset("./resources/coin_01.png"), 400, 25, 50, 50);
         const goldText = new GoldText(450, 50, 85, 40);
         const woodIcon = new Icon(assetManager.getAsset("./resources/wood_log.png"), 550, 25, 50, 50);
@@ -107,7 +108,7 @@ class SceneManager {
         const roundsWonText = new ScaledRelativeText(
             [0.8, -10], [1.0, -10], 0.2, `Rounds Won: ${this.successfulRuns - 1}`);
 
-        entities.push(fenceIcon, fireIcon, goldIcon, goldText, woodIcon, woodText, sheepIcon, sheepText, sheepLeftText, roundsWonText);
+        entities.push(fenceIcon, fireIcon, torchIcon, goldIcon, goldText, woodIcon, woodText, sheepIcon, sheepText, sheepLeftText, roundsWonText);
 
         const miniMap = new MiniMap(mainEnvironment, camera);
         entities.push(miniMap);

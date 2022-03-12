@@ -92,7 +92,7 @@ class Tree extends Obstacle {
         if (this.dead) {
             this.removeFromWorld = true;
             console.log("tree destroyed: x = " + this.x + " y = " + this.y)
-            gameEngine.addEntity(new Log(this.xCenter, this.yCenter));
+            gameEngine.addEntity(new Log(this.xCenter, this.yCenter, 10));
         }
     }
 }
@@ -107,6 +107,42 @@ class Chest extends Obstacle {
             this.removeFromWorld = true;
             gameEngine.addEntity(new Coin(this.x, this.y, 20));
         }
+    }
+}
+
+const makeTorchAnimator = () => {
+    const size = 32;
+    const torchAnimations = {
+        main: {frameAmount: 3, startX: 0, startY: 0},
+    };
+    return new Animator(
+        assetManager.getAsset("./resources/Torch_Sheet.png"),
+        "main",
+        torchAnimations,
+        size,
+        size,
+        1/5
+    );
+};
+
+class Torch extends Obstacle {
+
+    constructor(x, y) {
+        super(Math.floor(x/50)*50, Math.floor(y/50)*50, "./resources/Torch_Sheet.png", 0, 0, 32, 32, 1, 25, 15, true);
+        this.setAnimator(makeTorchAnimator());
+        this.animator.setIsLooping();
+        this.animator.play();
+    }
+
+    update(gameEngine){
+        super.update(gameEngine);
+        this.animator.update(gameEngine);
+        gameEngine.entities.forEach(entity => {
+            const distance = this.distanceTo(entity);
+            if ((entity instanceof Wolf) || distance > 100) return;
+            if (entity instanceof Sheep || entity instanceof Fire) entity.heal(5 * gameEngine.deltaTime);
+            if (entity instanceof Shepherd) entity.energy = min(entity.energy + 25 * gameEngine.deltaTime, entity.maxEnergy);
+        });
     }
 }
 
@@ -148,26 +184,27 @@ class Fire extends Obstacle {
 
 class Fence extends Obstacle {
     constructor(x, y, facing) {
+        
         if (facing == 0)
             super(Math.floor((x-25)/50)*50, Math.floor((y-10)/50)*50,
                 "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true);
         if (facing == 1)
-            super(Math.floor((x-10)/50)*50, Math.floor((y - 30)/50)*50,
+            super(Math.floor((x-10)/50)*50, Math.floor((y - 25)/50)*50,
                 "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true);
         if (facing == 2)
             super(Math.floor((x - 25)/50)*50, Math.floor((y - 10)/50)*50,
                 "./resources/fence_vertical.png", 0, 0, 20, 63, 1, 15, 50, true);
         if (facing == 3)
-            super(Math.floor((x + 10)/50)*50, Math.floor((y - 30)/50)*50,
+            super(Math.floor((x + 10)/50)*50, Math.floor((y - 25)/50)*50,
                 "./resources/fence_horizontal.png", 0, 0, 46, 32, 1, 50, 15, true);
-
+        this.facing = facing;
     }
     update(gameEngine) {
         super.update(gameEngine);
         this.healthAPI.update(gameEngine);
         if (this.dead) {
             this.removeFromWorld = true;
-            gameEngine.addEntity(new Log(this.x, this.y + 100));
+            gameEngine.addEntity(new Log(this.x, this.y, 5));
         }
     }
 }

@@ -33,6 +33,9 @@ class Darkness {
             if (entity instanceof Fire) {
                 this.addLight(entity.xCenter - (gameEngine.camera.x - width), entity.yCenter - (gameEngine.camera.y - height), this.radius);
             }
+            if (entity instanceof Torch) {
+                this.addLight(entity.xCenter - (gameEngine.camera.x - width), entity.yCenter - (gameEngine.camera.y - height), this.radius/2);
+            }
         });
 
         offscreenContext.fillStyle = this.amb;
