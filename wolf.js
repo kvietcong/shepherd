@@ -7,33 +7,36 @@ params.wolf = {
 };
 
 const makeWolfAnimator = (color = "brown") => {
-    const size = 48;
-    const frameAmount = 3;
+    const size = 144;
     const wolfAnimations = {
-        staticForward: { frameAmount: 1, startX: 1 * size, startY: 0 * size  },
-        staticLeft: { frameAmount: 1, startX: 1 * size, startY: 1 * size  },
-        staticRight: { frameAmount: 1, startX: 1 * size, startY: 2 * size  },
-        staticBack: { frameAmount: 1, startX: 1 * size, startY: 3 * size  },
+        staticSE: {frameAmount: 1, startX: 0, startY: 0},
+        staticSW: {frameAmount: 1, startX: 0, startY: size},
+        staticS: {frameAmount: 1, startX: 0, startY: 2 * size},
+        staticN: {frameAmount: 1, startX: 0, startY: 3 * size},
+        staticE: {frameAmount: 1, startX: 0, startY: 4 * size},
+        staticW: {frameAmount: 1, startX: 0, startY: 5 * size},
+        staticNE: {frameAmount: 1, startX: 0, startY: 6 * size},
+        staticNW: {frameAmount: 1, startX: 0, startY: 7 * size},
 
-        walkS: { frameAmount, startX: 6 * size, startY: 0 * size  },
-        walkW: { frameAmount, startX: 6 * size, startY: 1 * size  },
-        walkE: { frameAmount, startX: 6 * size, startY: 2 * size  },
-        walkN: { frameAmount, startX: 6 * size, startY: 3 * size  },
-
-        walkNE: { frameAmount, startX: 6 * size, startY: 3 * size  },
-        walkNW: { frameAmount, startX: 6 * size, startY: 3 * size  },
-        walkSE: { frameAmount, startX: 6 * size, startY: 0 * size  },
-        walkSW: { frameAmount, startX: 6 * size, startY: 0 * size  },
+        walkSE: {frameAmount: 8, startX: 0, startY: 0},
+        walkSW: {frameAmount: 8, startX: 0, startY: size},
+        walkS: {frameAmount: 8, startX: 0, startY: 2 * size},
+        walkN: {frameAmount: 8, startX: 0, startY: 3 * size},
+        walkE: {frameAmount: 8, startX: 0, startY: 4 * size},
+        walkW: {frameAmount: 8, startX: 0, startY: 5 * size},
+        walkNE: {frameAmount: 8, startX: 0, startY: 6 * size},
+        walkNW: {frameAmount: 8, startX: 0, startY: 7 * size},
     };
     const wolf = assetManager.getAsset("./resources/wolf.png");
     return new Animator(
-        wolf, "walkS", wolfAnimations, size, size, 1/12, scale=1.3
+        wolf, "walkS", wolfAnimations, size, size, 1/12, scale=0.7
     );
 };
 
 class Wolf extends Entity {
+
     constructor(x, y, velocity, walkSpeed = 110, maxSpeed = 210) {
-        super(x, y, 40, 20);
+        super(x, y, 80, 35);
         // movement
         this.velocity = velocity || Vector.randomUnitVector();
         this.detectionRadius = this.width * 12;
@@ -51,7 +54,7 @@ class Wolf extends Entity {
         this.stunTime = 0.5;
         this.resting = false;
         this.timeSinceRest = 0;
-        this.restTime = 1.5;
+        this.restTime = 1.25;
         this.damage = 50;
         this.barked = false;
 
@@ -59,6 +62,16 @@ class Wolf extends Entity {
         this.setAnimator(makeWolfAnimator());
         this.animator.setIsLooping();
         this.animator.play();
+        this.staticFrames = {
+            "walkE": "staticE",
+            "walkW": "staticW",
+            "walkN": "staticN",
+            "walkS": "staticS",
+            "walkNE": "staticNE",
+            "walkNW": "staticNW",
+            "walkSE": "staticSE",
+            "walkSW": "staticSW"
+        }
     }
 
     attacked(damage) {
@@ -71,7 +84,9 @@ class Wolf extends Entity {
         if (this.healthAPI.health <= 0) {
             this.dead = true;
             assetManager.playSound("wolf_whimper", 0.7);
-            this.animator.setAnimation("staticRight");
+            if (this.animator.currentAnimationKey in this.staticFrames) {
+                this.animator.setAnimation(this.staticFrames[this.animator.currentAnimationKey]);
+            }
         }
     }
 
@@ -81,6 +96,9 @@ class Wolf extends Entity {
 
         // Check if resting or stunned before updating
         if (this.stunned) {
+            if (this.animator.currentAnimationKey in this.staticFrames)
+                this.animator.setAnimation(this.staticFrames[this.animator.currentAnimationKey]);
+
             this.timeSinceStunned += gameEngine.deltaTime;
             if (this.timeSinceStunned >= this.stunTime) {
                 this.stunned = false;
@@ -92,6 +110,9 @@ class Wolf extends Entity {
             return;
         }
         if (this.resting) {
+            if (this.animator.currentAnimationKey in this.staticFrames)
+                this.animator.setAnimation(this.staticFrames[this.animator.currentAnimationKey]);
+
             this.timeSinceRest += gameEngine.deltaTime;
             if (this.timeSinceRest >= this.restTime) {
                 this.resting = false;

@@ -5,7 +5,6 @@ class Serializable {
     static deserialize(data) { throw new Error("Not implemented!"); }
 }
 
-// Everything has circle colliders XD
 class Entity {
     constructor(x = 0, y, width, height) {
         if (!y) y = x;

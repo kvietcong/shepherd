@@ -79,6 +79,16 @@ class Sheep extends Entity {
         this.setAnimator(makeSheepAnimator());
         this.animator.setIsLooping();
         this.animator.play();
+        this.staticFrames = {
+            "walkE": "staticE",
+            "walkW": "staticW",
+            "walkN": "staticN",
+            "walkS": "staticS",
+            "walkNE": "staticNE",
+            "walkNW": "staticNW",
+            "walkSE": "staticSE",
+            "walkSW": "staticSW"
+        }
     }
 
     attacked(damage) {
@@ -89,17 +99,8 @@ class Sheep extends Entity {
         if (this.healthAPI.health <= 0) {
             this.dead = true;
             Sheep.count--;
-            const staticFrames = {
-                "walkE": "staticE",
-                "walkW": "staticW",
-                "walkN": "staticN",
-                "walkS": "staticS",
-                "walkNE": "staticNE",
-                "walkNW": "staticNW",
-                "walkSE": "staticSE",
-                "walkSW": "staticSW"
-            }
-            this.animator.setAnimation(staticFrames[this.animator.currentAnimationKey]);
+            if (this.animator.currentAnimationKey in this.staticFrames)
+                this.animator.setAnimation(this.staticFrames[this.animator.currentAnimationKey]);
         }
     }
 
@@ -280,8 +281,8 @@ class Sheep extends Entity {
 
         this.velocity.setUnit().scaleInPlace(speed);
 
-        // Attempt to do cardinal and ordinal directions
-        // Note: In the game engine canvas, +y is down, -y is up
+        // Visual
+        if (!this.velocity.magnitude) return;
         const directionInfo = {
             // cardinal
             walkN: new Vector(0, -1),
@@ -303,12 +304,11 @@ class Sheep extends Entity {
         });
         let direction = directions[0];
 
-        // Scale with velocity x and y components
+        this.animator.setAnimation(direction);
+
+        // Movement
         this.x += Math.abs(this.velocity.x) * directionInfo[direction].x * gameEngine.deltaTime;
         this.y += Math.abs(this.velocity.y) * directionInfo[direction].y * gameEngine.deltaTime;
-
-        //const animationList = Object.keys(this.animator.animationInfo);
-        this.animator.setAnimation(direction);
     }
 
     draw(ctx, gameEngine) {
