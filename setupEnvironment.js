@@ -751,55 +751,55 @@ const setupEnvironment = (entities, currMap) => {
 		//ring thing
 		entities.push(new Obstacle(6620, 800, "./resources/TX Props.png", 353, 269, 94, 72, 3));
 
-		//east pathway (hard)
+		//west pathway (hard)
 		//bush barriers
-		entities.push(new Obstacle(1930, 970, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2014, 970, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2098, 970, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2182, 970, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2266, 970, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2350, 970, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2434, 970, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2518, 970, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
+		entities.push(new Obstacle(1930, 970, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2014, 970, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2098, 970, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2182, 970, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2266, 970, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2350, 970, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2434, 970, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2518, 970, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
 
-		entities.push(new Obstacle(1930, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2014, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2098, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2182, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2266, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2350, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2434, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2518, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
+		entities.push(new Obstacle(1930, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2014, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2098, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2182, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2266, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2350, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2434, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2518, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
 
-		entities.push(new Obstacle(1930, 3100, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2014, 3100, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2098, 3100, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2182, 3100, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2266, 3100, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2350, 3100, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2434, 3100, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(2518, 3100, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
+		entities.push(new Obstacle(1930, 3100, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2014, 3100, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2098, 3100, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2182, 3100, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2266, 3100, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2350, 3100, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2434, 3100, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(2518, 3100, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
 
-		//west pathwaty
+		//east pathwaty
 		//bush barriers
-		entities.push(new Obstacle(5510, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(5594, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(5678, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(5762, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(5846, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(5930, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(6014, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(6098, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(6182, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(6266, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
+		entities.push(new Obstacle(5510, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(5594, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(5678, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(5762, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(5846, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(5930, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(6014, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(6098, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(6187, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(6280, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
 
-		entities.push(new Obstacle(6476, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(6560, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(6644, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(6729, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(6812, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(6896, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
-		entities.push(new Obstacle(6980, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 78, 84, true));
+		entities.push(new Obstacle(6456, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(6540, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(6624, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(6709, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(6792, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(6876, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
+		entities.push(new Obstacle(6960, 2035, "./resources/forestground.png", 423, 481, 78, 84, 1.5, 85, 84, true));
 		//statue
 		entities.push(new Obstacle(6650, 600, "./resources/TX Props.png", 445, 21, 36, 74, 2, 70, 50, false));
 		entities.push(new Obstacle(6890, 600, "./resources/TX Props.png", 445, 21, 36, 74, 2, 70, 50, false));
@@ -904,7 +904,7 @@ const setupEnvironment = (entities, currMap) => {
 
 	if(importedMap.mapType == "levelThree") {
 		//starting area spawn: 6700, 900
-		const shepherd = new Shepherd(4000, 1400);
+		const shepherd = new Shepherd(6700, 900);
         params.debugEntities.shepherd = shepherd;
         entities.push(shepherd);
 
@@ -914,6 +914,19 @@ const setupEnvironment = (entities, currMap) => {
 		entities.push(startingArea);
 
 		//wolves
+		const wolfPacks = [
+            [new SpawnPoint(2100, 1100, 450, 350), 5], // east path north
+            [new SpawnPoint(2200, 2300, 330, 300), 5], // bridge over water
+            [new SpawnPoint(5450, 1000, 450, 450), 4], // big open area after bridge
+            [new SpawnPoint(5250, 3500, 300, 300), 4],
+			[new SpawnPoint(4200, 4000, 300, 300), 4]  // small area by barn
+        ];
+
+        wolfPacks.forEach((info) => {
+            const [spawnPoint, amount] = info;
+			entities.push(spawnPoint);
+            spawnPoint.addToList(entities, Wolf, amount);
+        });
 
 		//COLLISION
 		//vertical - right most is 0
